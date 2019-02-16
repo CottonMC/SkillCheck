@@ -16,8 +16,8 @@ public class Skillworks implements ModInitializer {
     public static TraitEntry<FloatTrait> FISTICUFFS = (TraitEntry<FloatTrait>) TraitRegistry.register(new Identifier("skillworks", "fisticuffs"), FloatTrait.class);
     public static TraitEntry<BooleanTrait> WEAVER = (TraitEntry<BooleanTrait>) TraitRegistry.register(new Identifier("skillworks", "weaver"), BooleanTrait.class);
 
-    public static Item UNARMED__ZERO = register("unarmed_zero_debug", new TraitModItem( 0));
-    public static Item UNARMED__FIVE = register("unarmed_five_debug", new TraitModItem(5));
+    public static Item UNARMED__ZERO = register("unarmed_zero_debug", new TraitModItem( 0f));
+    public static Item UNARMED__FIVE = register("unarmed_five_debug", new TraitModItem(5f));
     public static Item WEAVER_TRUE = register("weaver_true", new TraitModItem(true));
     public static Item WEAVER_FALSE = register("weaver_false", new TraitModItem(false));
 

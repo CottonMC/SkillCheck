@@ -26,12 +26,13 @@ public class TraitModItem extends Item {
 
 	public TraitModItem(boolean value) {
 		this();
+		this.floatToSet = -1;
 		this.booleanToSet = value;
 	}
 
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-		if (floatToSet != 0) {
+		if (floatToSet != -1) {
 			Traits.get(player, Skillworks.FISTICUFFS).setValue(floatToSet);
 			player.addChatMessage(new StringTextComponent("Trait value set to " + floatToSet), true);
 		} else {
