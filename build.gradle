@@ -1,0 +1,69 @@
+buildscript {
+	repositories {
+		mavenCentral()
+		jcenter()
+		maven {
+			name = 'Fabric'
+			url = 'http://maven.modmuss50.me/'
+		}
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
+
+	}
+	dependencies {
+		classpath "com.github.jengelman.gradle.plugins:shadow:2.0.0"
+		classpath "net.fabricmc:fabric-loom:0.2.0-SNAPSHOT"
+	}
+}
+
+apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: net.fabricmc.loom.LoomGradlePlugin
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+archivesBaseName = "skillworks"
+group = "io.github.cottonmc"
+version = "1.0.0+19w07a"
+
+minecraft {
+	refmapName = 'mixins.skillworks.refmap.json'
+}
+
+repositories {
+	mavenLocal()
+	flatDir {
+		// earl gray
+		dirs 'libs'
+	}
+	maven {url "https://maven.jamieswhiteshirt.com/libs-release/"}
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:19w07a"
+	mappings "net.fabricmc:yarn:19w07a.7"
+	modCompile "net.fabricmc:fabric-loader:0.3.6.107"
+	modCompile "net.fabricmc:fabric:0.2.1.94"
+
+	modCompile name: "earlgray-0.3-dev"
+
+	shadow "blue.endless:jankson:1.1.1-SNAPSHOT"
+	implementation "blue.endless:jankson:1.1.1-SNAPSHOT"
+
+	modCompile "com.jamieswhiteshirt:developer-mode:1.0.1"
+}
+
+jar {
+	classifier = "slim"
+}
+
+shadowJar {
+	classifier = "shadow"
+	configurations = [project.configurations.shadow]
+}
+
+remapJar {
+	jar = shadowJar.archivePath
+	dependsOn shadowJar
+}

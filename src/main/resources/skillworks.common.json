@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "io.github.cottonmc.skillworks.mixins",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "mixins.skillworks.refmap.json",
+  "mixins": [
+    "MixinPlayerAttack",
+    "MixinWeaver",
+    "MixinBannerTooltip"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

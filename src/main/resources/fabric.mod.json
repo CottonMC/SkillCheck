@@ -1,0 +1,16 @@
+{
+  "id": "skillworks",
+  "name": "Skillworks",
+  "version": "1.0.0",
+  "side": "universal",
+  "initializers": [
+    "io.github.cottonmc.skillworks.Skillworks"
+    ],
+    "mixins": {
+        "common": "skillworks.common.json"
+    },
+    "requires": {
+        "fabric": "*",
+        "earlgray": "*"
+    }
+}
