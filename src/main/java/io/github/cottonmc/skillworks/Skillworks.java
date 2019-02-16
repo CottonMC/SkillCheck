@@ -20,7 +20,7 @@ public class Skillworks implements ModInitializer {
     public static Item UNARMED__FIVE = register("unarmed_five_debug", new TraitModItem(5));
     public static Item WEAVER_TRUE = register("weaver_true", new TraitModItem(true));
     public static Item WEAVER_FALSE = register("weaver_false", new TraitModItem(false));
-    
+
     public static Item register(String name, Item item) {
         Registry.register(Registry.ITEM, "skillworks:" + name, item);
         return item;
@@ -30,5 +30,6 @@ public class Skillworks implements ModInitializer {
     public void onInitialize() {
         config = ConfigManager.load(SkillworksConfig.class);
         TraitRegistry.addInherent(PlayerEntity.class, (PlayerEntity e) -> new FloatTrait());
+        TraitRegistry.addInherent(PlayerEntity.class, (PlayerEntity e) -> new BooleanTrait());
     }
 }
