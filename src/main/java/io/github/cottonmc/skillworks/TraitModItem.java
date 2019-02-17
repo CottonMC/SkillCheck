@@ -1,5 +1,9 @@
 package io.github.cottonmc.skillworks;
 
+import io.github.cottonmc.skillworks.traits.ClassTrait;
+import io.github.cottonmc.skillworks.traits.FloatTrait;
+import me.elucent.earlgray.api.TraitEntry;
+import me.elucent.earlgray.api.TraitRegistry;
 import me.elucent.earlgray.api.Traits;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -8,36 +12,35 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.text.StringTextComponent;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 public class TraitModItem extends Item {
+	boolean setFloatValue;
 	private float floatToSet;
-	private boolean booleanToSet;
+	private Identifier traitToSet;
 
-	public TraitModItem() {
+	public TraitModItem(Identifier trait) {
 		super(new Item.Settings().itemGroup(ItemGroup.MISC));
+		this.traitToSet = trait;
 	}
 
-	public TraitModItem(float value) {
-		this();
+	public TraitModItem(Identifier trait, float value) {
+		this(trait);
+		this.setFloatValue = true;
 		this.floatToSet = value;
 	}
 
-	public TraitModItem(boolean value) {
-		this();
-		this.floatToSet = -1;
-		this.booleanToSet = value;
-	}
 
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-		if (floatToSet != -1) {
+		if (setFloatValue) {
 			Traits.get(player, Skillworks.FISTICUFFS).setValue(floatToSet);
 			player.addChatMessage(new StringTextComponent("Trait value set to " + floatToSet), true);
 		} else {
-			Traits.get(player, Skillworks.WEAVER).setValue(booleanToSet);
-			player.addChatMessage(new StringTextComponent("Trait value set to " + booleanToSet), true);
+			Traits.add(player, TraitRegistry.getEntry(traitToSet).generate());
+			player.addChatMessage(new StringTextComponent("Class " + traitToSet.getPath() + " added"), true);
 		}
 		return new TypedActionResult<>(ActionResult.SUCCESS, player.getStackInHand(hand));
 	}

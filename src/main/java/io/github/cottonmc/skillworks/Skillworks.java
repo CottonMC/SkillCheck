@@ -1,6 +1,6 @@
 package io.github.cottonmc.skillworks;
 
-import io.github.cottonmc.skillworks.traits.BooleanTrait;
+import io.github.cottonmc.skillworks.traits.ClassTrait;
 import io.github.cottonmc.skillworks.traits.FloatTrait;
 import me.elucent.earlgray.api.TraitEntry;
 import me.elucent.earlgray.api.TraitRegistry;
@@ -14,12 +14,13 @@ public class Skillworks implements ModInitializer {
     public static SkillworksConfig config;
 
     public static TraitEntry<FloatTrait> FISTICUFFS = (TraitEntry<FloatTrait>) TraitRegistry.register(new Identifier("skillworks", "fisticuffs"), FloatTrait.class);
-    public static TraitEntry<BooleanTrait> WEAVER = (TraitEntry<BooleanTrait>) TraitRegistry.register(new Identifier("skillworks", "weaver"), BooleanTrait.class);
+    public static TraitEntry<ClassTrait> WEAVER = (TraitEntry<ClassTrait>) TraitRegistry.register(new Identifier("skillworks", "weaver"), ClassTrait.class);
+    public static TraitEntry<ClassTrait> GYMNIST = (TraitEntry<ClassTrait>) TraitRegistry.register(new Identifier("skillworks", "gymnist"), ClassTrait.class);
 
-    public static Item UNARMED__ZERO = register("unarmed_zero_debug", new TraitModItem( 0f));
-    public static Item UNARMED__FIVE = register("unarmed_five_debug", new TraitModItem(5f));
-    public static Item WEAVER_TRUE = register("weaver_true", new TraitModItem(true));
-    public static Item WEAVER_FALSE = register("weaver_false", new TraitModItem(false));
+    public static Item FISTICUFFS_FIVE = register("fisticuffs_five", new TraitModItem(new Identifier("skillworks", "fisticuffs"), 5f));
+    public static Item CLASS_WEAVER = register("class_weaver", new TraitModItem(new Identifier("skillworks", "weaver")));
+    public static Item CLASS_GYMNIST = register("class_gymnist", new TraitModItem(new Identifier("skillworks", "gymnist")));
+    public static Item PRESTIGE = register("class_prestige", new TraitPrestigeItem());
 
     public static Item register(String name, Item item) {
         Registry.register(Registry.ITEM, "skillworks:" + name, item);
@@ -30,6 +31,6 @@ public class Skillworks implements ModInitializer {
     public void onInitialize() {
         config = ConfigManager.load(SkillworksConfig.class);
         TraitRegistry.addInherent(PlayerEntity.class, (PlayerEntity e) -> new FloatTrait());
-        TraitRegistry.addInherent(PlayerEntity.class, (PlayerEntity e) -> new BooleanTrait());
+        if (config.disableClasses) TraitRegistry.addInherent(PlayerEntity.class, (PlayerEntity e) -> new ClassTrait());
     }
 }

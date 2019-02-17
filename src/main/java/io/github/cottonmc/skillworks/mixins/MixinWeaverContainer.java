@@ -28,7 +28,7 @@ public abstract class MixinWeaverContainer {
 
 	@ModifyConstant(method = "onContentChanged", constant = @Constant(intValue = 6))
 	private int changeBannerPatternLimit(int orig) {
-		if (Traits.get(player, Skillworks.WEAVER).getValue()) return 16;
+		if (Traits.has(player, Skillworks.WEAVER)) return 16;
 		else return orig;
 	}
 
