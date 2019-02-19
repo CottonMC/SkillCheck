@@ -30,6 +30,8 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
+import static net.minecraft.util.math.Direction.*;
+
 /*
 	Much code in this class is taken from Wall-Jump, and modified for Yarn, 1.14, and the Gymnast skill.
 	The original repository can be found here: https://github.com/genandnic/Wall-Jump
@@ -48,10 +50,10 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 	private static int clingTime;
 	private static int keyTimer;
 	private static double clingX, clingZ;
-	private static Direction clingDirection = Direction.UP;
-	private static Direction lastDirection = Direction.DOWN;
-	private static Direction clingDirection2 = Direction.UP;
-	private static Direction lastDirection2 = Direction.DOWN;
+	private static Direction clingDirection = UP;
+	private static Direction lastDirection = DOWN;
+	private static Direction clingDirection2 = UP;
+	private static Direction lastDirection2 = DOWN;
 	private static double lastJumpY = Double.MAX_VALUE;
 
 	private static int airTime;
@@ -72,10 +74,10 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 			if (this.onGround || this.abilities.flying) {
 
 				clingTime = 0;
-				clingDirection = Direction.UP;
-				clingDirection2 = Direction.UP;
-				lastDirection = Direction.DOWN;
-				lastDirection2 = Direction.DOWN;
+				clingDirection = UP;
+				clingDirection2 = UP;
+				lastDirection = DOWN;
+				lastDirection2 = DOWN;
 
 			} else if (clingTime > 0) {
 
@@ -84,8 +86,7 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 				if (keyTimer == 0 || this.onGround || !nearWall(this, 0.2)) {
 
 					clingTime = 0;
-//					CommonProxy.NETWORK.sendToServer(new PacketWallCling(false));
-					if ((this.field_6250 != 0 || this.field_6212 != 0) && this.getHungerManager().getFoodLevel() > 6 && nearWall(this, 0.2)) {
+					if ((this.field_6250 != 0 || this.field_6212 != 0) && this.getHungerManager().getFoodLevel() > 6 && nearWall(this, 0.5)) {
 
 						lastDirection = clingDirection;
 						lastDirection2 = clingDirection2;
@@ -94,13 +95,12 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 						playBreakSound(this, wall);
 						spawnWallParticle(this, wall);
 						wallJump(this, wallJumpHeight, this.field_6212, this.field_6250);
-//						CommonProxy.NETWORK.sendToServer(new PacketWallJump());
 
 					}
 
 				} else {
 
-					this.setPosition(clingX+0.5, this.getPos().getY(), clingZ+0.5);
+					this.setPosition(clingX, this.getPos().getY(), clingZ);
 					this.fallDistance = 0.0F;
 					this.velocityX = 0.0;
 					this.velocityZ = 0.0;
@@ -139,6 +139,40 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 					clingTime = 1;
 					clingX = this.getPos().getX();
 					clingZ = this.getPos().getZ();
+					switch(clingDirection) {
+						// all these are player's direction from block view
+						case NORTH:
+							clingZ += 0.7;
+							break;
+						case SOUTH:
+							clingZ += 0.3;
+							break;
+						case EAST:
+							clingX += 0.3;
+							break;
+						case WEST:
+							clingX += 0.7;
+							break;
+						default:
+							break;
+					}
+					switch(clingDirection2) {
+						case NORTH:
+							clingZ += 0.7;
+							break;
+						case SOUTH:
+							clingZ += 0.3;
+							break;
+						case EAST:
+							clingX += 0.3;
+							break;
+						case WEST:
+							clingX += 0.7;
+							break;
+						default:
+							break;
+					}
+
 
 					BlockPos wall = getWallPos(this);
 					playHitSound(this, wall);
@@ -188,20 +222,20 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 		if (player.world.getBlockState(new BlockPos(player.getPos().getX(), player.getPos().getY() - 0.8, player.getPos().getZ())).isFullBoundsCubeForCulling()) return false;
 
 		double dist = 0.4;
-		BoundingBox box = player.getBoundingBox().shrink(0.3, 0, 0.3);
+		BoundingBox box = player.getBoundingBox().shrink(0.2, 0, 0.2);
 		BoundingBox[] axes = { box.stretch(0, 0, -dist), box.stretch(dist, 0, 0), box.stretch(0, 0, dist), box.stretch(-dist, 0, 0) };
 
 		Set<Direction> walls = new HashSet<>();
-		clingDirection = Direction.UP;
-		clingDirection2 = Direction.UP;
+		clingDirection = UP;
+		clingDirection2 = UP;
 		Direction direction;
 
 		int i = 0;
 		for (BoundingBox axis : axes) {
-			direction = Direction.fromHorizontal(i++);
+			direction = fromHorizontal(i++);
 			if (player.world.isAreaNotEmpty(axis)) {
 
-				if (clingDirection == Direction.UP) clingDirection = direction;
+				if (clingDirection == UP) clingDirection = direction;
 				else clingDirection2 = direction;
 
 				walls.add(direction);
@@ -224,7 +258,7 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 
 	private static BlockPos getWallPos(Entity entity) {
 		BlockPos pos = new BlockPos(entity).offset(clingDirection);
-		return entity.world.getBlockState(pos).getMaterial().suffocates()? pos : pos.offset(Direction.UP);
+		return entity.world.getBlockState(pos).getMaterial().suffocates()? pos : pos.offset(UP);
 	}
 
 	private static void wallJump(PlayerEntity player, float up, float strafe, float forward) {
