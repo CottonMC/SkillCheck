@@ -10,7 +10,6 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,6 +19,7 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -85,7 +85,7 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 
 					clingTime = 0;
 //					CommonProxy.NETWORK.sendToServer(new PacketWallCling(false));
-					if ((this.input.forward || this.input.back || this.input.left || this.input.right) && this.getHungerManager().getFoodLevel() > 6 && nearWall(this, 0.2)) {
+					if ((this.field_6250 != 0 || this.field_6212 != 0) && this.getHungerManager().getFoodLevel() > 6 && nearWall(this, 0.2)) {
 
 						lastDirection = clingDirection;
 						lastDirection2 = clingDirection2;
@@ -93,7 +93,7 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 
 						playBreakSound(this, wall);
 						spawnWallParticle(this, wall);
-						wallJump(this, wallJumpHeight, this.velocityX, this.velocityZ);
+						wallJump(this, wallJumpHeight, this.field_6212, this.field_6250);
 //						CommonProxy.NETWORK.sendToServer(new PacketWallJump());
 
 					}
@@ -227,15 +227,24 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 		return entity.world.getBlockState(pos).getMaterial().suffocates()? pos : pos.offset(Direction.UP);
 	}
 
-	private static void wallJump(LivingEntity entity, float up, double velX, double velZ) {
+	private static void wallJump(PlayerEntity player, float up, float strafe, float forward) {
+
+		float f = 1.0F / MathHelper.sqrt(strafe * strafe + up * up + forward * forward);
+
+		up = up * f;
+		strafe = strafe * f;
+		forward = forward * f;
+
+		float f1 = MathHelper.sin(player.yaw * 0.017453292F) / 5;
+		float f2 = MathHelper.cos(player.yaw * 0.017453292F) / 5;
 
 		int jumpBoostLevel = 0;
-		StatusEffectInstance jumpBoost = entity.getPotionEffect(StatusEffects.JUMP_BOOST);
-		if (jumpBoost != null) jumpBoostLevel = jumpBoost.getAmplifier() + 1;
+		StatusEffectInstance jumpBoostEffect = player.getPotionEffect(StatusEffects.JUMP_BOOST);
+		if (jumpBoostEffect != null) jumpBoostLevel = jumpBoostEffect.getAmplifier() + 1;
 
-		entity.velocityY = up + (jumpBoostLevel * .075);
-		entity.velocityX += velX;
-		entity.velocityZ += velZ;
+		player.velocityY = up + (jumpBoostLevel * .075);
+		player.velocityX += strafe * f2 - forward * f1;
+		player.velocityZ += forward * f2 + strafe * f1;
 
 	}
 
@@ -254,8 +263,6 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 		entity.playSound(soundtype.getFallSound(), soundtype.getVolume() * 0.5F, soundtype.getPitch());
 
 	}
-
-	private static Random rand = new Random();
 
 	private static void spawnWallParticle(Entity entity, BlockPos pos) {
 
