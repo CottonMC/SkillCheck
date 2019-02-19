@@ -16,8 +16,8 @@ public class PlayerVectorHelper {
 	}
 
 	public static Vec2f playerHorizontalMotion(PlayerEntity player) {
-		float yawSin = MathHelper.sin(player.yaw * 0.017453292F) / 5; // 0.017453292F is approx. pi/180, converts degrees to radians
-		float yawCos = MathHelper.cos(player.yaw * 0.017453292F) / 5; // equivalent to (sin(θ)/5) and (cos(θ)/5)
+		float yawSin = MathHelper.sin(player.yaw * 0.017453292F); // 0.017453292F is approx. pi/180, converts degrees to radians
+		float yawCos = MathHelper.cos(player.yaw * 0.017453292F); // equivalent to (sin(θ)/5) and (cos(θ)/5)
 
 		// velocityX = strafe * yawCos - forward * yawSin;
 		// strafe * yawCos = velocityX + (forward * yawSin)
@@ -35,6 +35,15 @@ public class PlayerVectorHelper {
 		// strafe = (velocityX + (forward * yawSin)) / yawCos
 		// strafe = (velocityZ - (forward * yawCos)) / yawSin
 		// (velocityX + (forward * yawSin)) / yawCos = (velocityZ - (forward * yawCos)) / yawSin
+
+		double forward = player.velocityX*yawCos - player.velocityZ*yawSin;
+
+		double strafing = player.velocityX*yawSin + player.velocityZ*yawCos;
+
+		if (forward < 1E-4) forward = 0;
+		if (strafing < 1E-4) strafing = 0;
+
+		return new Vec2f((float)forward, (float)strafing);
 
 	}
 
