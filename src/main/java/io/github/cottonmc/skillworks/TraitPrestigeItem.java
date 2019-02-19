@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 
 public class TraitPrestigeItem extends Item {
 	public TraitPrestigeItem() {
-		super(new Item.Settings().itemGroup(ItemGroup.MISC));
+		super(new Item.Settings().itemGroup(Skillworks.SKILLWORKS_GROUP));
 	}
 
 	@Override

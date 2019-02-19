@@ -42,7 +42,7 @@ repositories {
 
 dependencies {
 	minecraft "com.mojang:minecraft:19w07a"
-	mappings "net.fabricmc:yarn:19w07a.7"
+	mappings "net.fabricmc:yarn:19w07a.16"
 	modCompile "net.fabricmc:fabric-loader:0.3.6.107"
 	modCompile "net.fabricmc:fabric:0.2.1.94"
 

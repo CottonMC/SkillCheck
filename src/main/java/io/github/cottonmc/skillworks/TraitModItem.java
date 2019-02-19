@@ -1,8 +1,6 @@
 package io.github.cottonmc.skillworks;
 
-import io.github.cottonmc.skillworks.traits.ClassTrait;
 import io.github.cottonmc.skillworks.traits.FloatTrait;
-import me.elucent.earlgray.api.TraitEntry;
 import me.elucent.earlgray.api.TraitRegistry;
 import me.elucent.earlgray.api.Traits;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,7 +20,7 @@ public class TraitModItem extends Item {
 	private Identifier traitToSet;
 
 	public TraitModItem(Identifier trait) {
-		super(new Item.Settings().itemGroup(ItemGroup.MISC));
+		super(new Item.Settings().itemGroup(Skillworks.SKILLWORKS_GROUP));
 		this.traitToSet = trait;
 	}
 
@@ -32,11 +30,10 @@ public class TraitModItem extends Item {
 		this.floatToSet = value;
 	}
 
-
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
 		if (setFloatValue) {
-			Traits.get(player, Skillworks.FISTICUFFS).setValue(floatToSet);
+			((FloatTrait)Traits.get(player, TraitRegistry.getEntry(traitToSet))).setValue(floatToSet);
 			player.addChatMessage(new StringTextComponent("Trait value set to " + floatToSet), true);
 		} else {
 			Traits.add(player, TraitRegistry.getEntry(traitToSet).generate());
