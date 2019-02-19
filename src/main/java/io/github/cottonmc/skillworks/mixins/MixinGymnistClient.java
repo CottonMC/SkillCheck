@@ -100,7 +100,7 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 
 				} else {
 
-					this.setPosition(clingX, this.getPos().getY(), clingZ);
+					this.setPosition(clingX+0.5, this.getPos().getY(), clingZ+0.5);
 					this.fallDistance = 0.0F;
 					this.velocityX = 0.0;
 					this.velocityZ = 0.0;
@@ -130,7 +130,6 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 			} else {
 
 				clingTime--;
-				System.out.println(canWallCling(this));
 				if (keyTimer > 0 && (keyTimer < 5 || clingTime < -15) && canWallCling(this)) {
 
 					this.velocityX = 0.0;
@@ -189,7 +188,7 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 		if (player.world.getBlockState(new BlockPos(player.getPos().getX(), player.getPos().getY() - 0.8, player.getPos().getZ())).isFullBoundsCubeForCulling()) return false;
 
 		double dist = 0.4;
-		BoundingBox box = new BoundingBox(player.getPos().getX(), player.getPos().getY(), player.getPos().getZ(), player.getPos().getX(), player.getPos().getY() + 1, player.getPos().getZ());
+		BoundingBox box = player.getBoundingBox().shrink(0.3, 0, 0.3);
 		BoundingBox[] axes = { box.stretch(0, 0, -dist), box.stretch(dist, 0, 0), box.stretch(0, 0, dist), box.stretch(-dist, 0, 0) };
 
 		Set<Direction> walls = new HashSet<>();
@@ -200,7 +199,6 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 		int i = 0;
 		for (BoundingBox axis : axes) {
 			direction = Direction.fromHorizontal(i++);
-			System.out.println(Direction.fromHorizontal(i));
 			if (player.world.isAreaNotEmpty(axis)) {
 
 				if (clingDirection == Direction.UP) clingDirection = direction;
@@ -209,7 +207,6 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 				walls.add(direction);
 			}
 		}
-		System.out.println(walls);
 
 		if (walls.size() == 0) return false;
 
