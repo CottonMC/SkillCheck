@@ -143,15 +143,19 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 						// all these are player's direction from block view
 						case NORTH:
 							clingZ += 0.7;
+							clingX += 0.5;
 							break;
 						case SOUTH:
 							clingZ += 0.3;
+							clingX += 0.5;
 							break;
 						case EAST:
 							clingX += 0.3;
+							clingZ += 0.5;
 							break;
 						case WEST:
 							clingX += 0.7;
+							clingZ += 0.5;
 							break;
 						default:
 							break;
@@ -244,7 +248,7 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 
 		if (walls.size() == 0) return false;
 
-		if (Skillworks.config.clingBlackList.contains(player.world.getBlockState(getWallPos(player)).getBlock().getTranslationKey()) ^ Skillworks.config.invertClngBlackList) return false;
+		if (Skillworks.SLIPPERY_BLOCKS.contains(player.world.getBlockState(getWallPos(player)).getBlock()) ^ Skillworks.config.invertClingBlackList) return false;
 
 		if (Traits.has(player, Skillworks.GYMNIST) || player.getPos().getY() < lastJumpY) return true; //TODO: change to use levels later
 

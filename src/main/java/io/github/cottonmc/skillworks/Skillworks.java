@@ -8,11 +8,14 @@ import me.elucent.earlgray.api.TraitRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
+import net.fabricmc.fabric.api.tag.TagRegistry;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -20,6 +23,8 @@ public class Skillworks implements ModInitializer {
     public static SkillworksConfig config;
 
     public static final ItemGroup SKILLWORKS_GROUP = FabricItemGroupBuilder.build(new Identifier("skillworks:skillworks_group"), () -> new ItemStack(Items.ENCHANTED_BOOK));
+
+    public static final Tag<Block> SLIPPERY_BLOCKS = TagRegistry.block(new Identifier("skillworks", "slippery"));
 
     public static TraitEntry<FloatTrait> FISTICUFFS = (TraitEntry<FloatTrait>) TraitRegistry.register(new Identifier("skillworks", "fisticuffs"), FloatTrait.class);
     public static TraitEntry<ClassTrait> WEAVER = (TraitEntry<ClassTrait>) TraitRegistry.register(new Identifier("skillworks", "weaver"), ClassTrait.class);
