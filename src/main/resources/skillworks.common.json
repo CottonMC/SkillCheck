@@ -4,7 +4,6 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "mixins.skillworks.refmap.json",
   "mixins": [
-    "MixinPlayerAttack",
     "MixinWeaverContainer",
     "MixinWeaverScreen",
     "MixinBannerTooltip",

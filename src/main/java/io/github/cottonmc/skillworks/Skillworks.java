@@ -1,11 +1,13 @@
 package io.github.cottonmc.skillworks;
 
+import io.github.cottonmc.skillworks.events.PlayerAttackEvent;
 import io.github.cottonmc.skillworks.traits.ClassTrait;
 import io.github.cottonmc.skillworks.traits.FloatTrait;
 import me.elucent.earlgray.api.TraitEntry;
 import me.elucent.earlgray.api.TraitRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -38,5 +40,6 @@ public class Skillworks implements ModInitializer {
         config = ConfigManager.load(SkillworksConfig.class);
         TraitRegistry.addInherent(PlayerEntity.class, (PlayerEntity e) -> new FloatTrait());
         if (config.disableClasses) TraitRegistry.addInherent(PlayerEntity.class, (PlayerEntity e) -> new ClassTrait());
+        AttackEntityCallback.EVENT.register(PlayerAttackEvent.onPlayerAttack);
     }
 }
