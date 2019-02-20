@@ -248,7 +248,7 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 
 		if (walls.size() == 0) return false;
 
-		if (Skillworks.SLIPPERY_BLOCKS.contains(player.world.getBlockState(getWallPos(player)).getBlock()) ^ Skillworks.config.invertClingBlackList) return false;
+		if (Skillworks.SLIPPERY_BLOCKS.contains(player.world.getBlockState(getWallPos(player)).getBlock()) ^ Skillworks.config.invertSlipperyTag) return false;
 
 		if (Traits.has(player, Skillworks.GYMNIST) || player.getPos().getY() < lastJumpY) return true; //TODO: change to use levels later
 
