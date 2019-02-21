@@ -3,7 +3,7 @@ package io.github.cottonmc.skillworks;
 import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonObject;
 import blue.endless.jankson.impl.SyntaxError;
-import net.fabricmc.loader.FabricLoader;
+import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,7 +13,7 @@ public class ConfigManager {
 	public static <T> T load(Class<T> clazz){
 		System.out.println("Loading config!");
 		try {
-			File file = new File(FabricLoader.INSTANCE.getConfigDirectory().toString() + "/" + "Skillworks.conf");
+			File file = new File(FabricLoader.getInstance().getConfigDirectory().toString() + "/" + "Skillworks.conf");
 			Jankson jankson = Jankson.builder().build();
 
 			//Generate config file if it doesn't exist
@@ -40,7 +40,7 @@ public class ConfigManager {
 	}
 
 	public static void saveDefault(Object obj) {
-		File configFile = new File(FabricLoader.INSTANCE.getConfigDirectory().toString() + "/" + "Skillworks.conf");
+		File configFile = new File(FabricLoader.getInstance().getConfigDirectory().toString() + "/" + "Skillworks.conf");
 		Jankson jankson = Jankson.builder().build();
 		String result = jankson
 				.toJson(obj) //The first call makes a JsonObject

@@ -43,10 +43,12 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 
 	@Shadow public abstract boolean isSneaking();
 
+	//Wall-Jump config default values
 	private static float wallJumpHeight = 0.8f;
 	private static int wallSlideDelay = 15;
 	private static double wallSlideSpeed = 0.1;
 
+	//Wall-Jump cling/jump fields
 	private static int clingTime;
 	private static int keyTimer;
 	private static double clingX, clingZ;
@@ -56,6 +58,7 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 	private static Direction lastDirection2 = DOWN;
 	private static double lastJumpY = Double.MAX_VALUE;
 
+	//Wall-Jump double-jump fields
 	private static int airTime;
 	private static int jumpCount = 0;
 	private static boolean jumpKey = false;
@@ -67,152 +70,135 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 	@Inject(method = "updateMovement", at = @At("TAIL"))
 	public void gymnistMovement(CallbackInfo ci) {
 		if (Traits.has(this, Skillworks.GYMNIST)) {
-			// ### WALL-CLING/WALL-JUMP CODE ###
-			if (this.input.sneaking) keyTimer++;
-			else keyTimer = 0;
+			// double-jump code from Wall-Jump
+			this.handleDoubleJump();
 
-			if (this.onGround || this.abilities.flying) {
+			// wall-cling/wall-jump code from Wall-Jump
+			this.handleWallJump();
+
+		}
+
+	}
+
+	private void handleWallJump() {
+
+		if (this.input.sneaking) keyTimer++;
+		else keyTimer = 0;
+
+		if (this.onGround || this.abilities.flying) {
+
+			clingTime = 0;
+			clingDirection = UP;
+			clingDirection2 = UP;
+			lastDirection = DOWN;
+			lastDirection2 = DOWN;
+
+		} else if (clingTime > 0) {
+
+			BlockPos wall = getWallPos(this);
+
+			if (keyTimer == 0 || this.onGround || !nearWall(this, 0.2)) {
 
 				clingTime = 0;
-				clingDirection = UP;
-				clingDirection2 = UP;
-				lastDirection = DOWN;
-				lastDirection2 = DOWN;
+				if ((this.field_6250 != 0 || this.field_6212 != 0) && this.getHungerManager().getFoodLevel() > 6 && nearWall(this, 0.5)) {
 
-			} else if (clingTime > 0) {
+					lastDirection = clingDirection;
+					lastDirection2 = clingDirection2;
+					lastJumpY = this.getPos().getY() - 2.0;
 
-				BlockPos wall = getWallPos(this);
+					playBreakSound(this, wall);
+					spawnWallParticle(this, wall);
+					wallJump(this, wallJumpHeight, this.field_6212, this.field_6250);
 
-				if (keyTimer == 0 || this.onGround || !nearWall(this, 0.2)) {
+				}
 
-					clingTime = 0;
-					if ((this.field_6250 != 0 || this.field_6212 != 0) && this.getHungerManager().getFoodLevel() > 6 && nearWall(this, 0.5)) {
+			} else {
 
-						lastDirection = clingDirection;
-						lastDirection2 = clingDirection2;
-						lastJumpY = this.getPos().getY() - 2.0;
+				this.setPosition(clingX, this.getPos().getY(), clingZ);
+				this.fallDistance = 0.0F;
+				this.velocityX = 0.0;
+				this.velocityZ = 0.0;
 
-						playBreakSound(this, wall);
-						spawnWallParticle(this, wall);
-						wallJump(this, wallJumpHeight, this.field_6212, this.field_6250);
+				if (this.velocityY < -0.5) {
 
-					}
+					this.velocityY = this.velocityY + 0.25;
+					spawnWallParticle(this, wall);
 
 				} else {
 
-					this.setPosition(clingX, this.getPos().getY(), clingZ);
-					this.fallDistance = 0.0F;
-					this.velocityX = 0.0;
-					this.velocityZ = 0.0;
+					if ((clingTime++ > wallSlideDelay || this.getHungerManager().getFoodLevel() < 7)) {
 
-					if (this.velocityY < -0.5) {
-
-						this.velocityY = this.velocityY + 0.25;
+						this.velocityY = -wallSlideSpeed;
 						spawnWallParticle(this, wall);
 
 					} else {
 
-						if ((clingTime++ > wallSlideDelay || this.getHungerManager().getFoodLevel() < 7)) {
-
-							this.velocityY = -wallSlideSpeed;
-							spawnWallParticle(this, wall);
-
-						} else {
-
-							this.velocityY = 0.0;
-
-						}
+						this.velocityY = 0.0;
 
 					}
-
-				}
-
-			} else {
-
-				clingTime--;
-				if (keyTimer > 0 && (keyTimer < 5 || clingTime < -15) && canWallCling(this)) {
-
-					this.velocityX = 0.0;
-					this.velocityZ = 0.0;
-					if (this.velocityY > -0.75) this.velocityY = 0.0;
-
-					clingTime = 1;
-					clingX = this.getPos().getX();
-					clingZ = this.getPos().getZ();
-					switch(clingDirection) {
-						// all these are player's direction from block view
-						case NORTH:
-							clingZ += 0.7;
-							clingX += 0.5;
-							break;
-						case SOUTH:
-							clingZ += 0.3;
-							clingX += 0.5;
-							break;
-						case EAST:
-							clingX += 0.3;
-							clingZ += 0.5;
-							break;
-						case WEST:
-							clingX += 0.7;
-							clingZ += 0.5;
-							break;
-						default:
-							break;
-					}
-					switch(clingDirection2) {
-						case NORTH:
-							clingZ += 0.7;
-							break;
-						case SOUTH:
-							clingZ += 0.3;
-							break;
-						case EAST:
-							clingX += 0.3;
-							break;
-						case WEST:
-							clingX += 0.7;
-							break;
-						default:
-							break;
-					}
-
-
-					BlockPos wall = getWallPos(this);
-					playHitSound(this, wall);
-					spawnWallParticle(this, wall);
 
 				}
 
 			}
 
-			// ### DOUBLE-JUMP CODE ###
-			if (this.onGround) {
+		} else {
 
-				airTime = 0;
-				jumpCount = 1;
+			clingTime--;
+			if (keyTimer > 0 && (keyTimer < 5 || clingTime < -15) && canWallCling(this)) {
 
-			} else if (this.input.jumping && !this.abilities.flying) {
+				this.velocityX = 0.0;
+				this.velocityZ = 0.0;
+				if (this.velocityY > -0.75) this.velocityY = 0.0;
 
-				if (!jumpKey && jumpCount < 2 && airTime > 1 && this.getHungerManager().getFoodLevel() > 6) {
-
-					this.doJump(true);
-					jumpCount++;
-
-					this.fallDistance = 0.0F;
-
+				clingTime = 1;
+				clingX = this.getPos().getX();
+				clingZ = this.getPos().getZ();
+				switch(clingDirection) {
+					// all these are player's direction from block view
+					case NORTH:
+						clingZ += 0.7;
+						clingX += 0.5;
+						break;
+					case SOUTH:
+						clingZ += 0.3;
+						clingX += 0.5;
+						break;
+					case EAST:
+						clingX += 0.3;
+						clingZ += 0.5;
+						break;
+					case WEST:
+						clingX += 0.7;
+						clingZ += 0.5;
+						break;
+					default:
+						break;
+				}
+				switch(clingDirection2) {
+					case NORTH:
+						clingZ += 0.7;
+						break;
+					case SOUTH:
+						clingZ += 0.3;
+						break;
+					case EAST:
+						clingX += 0.3;
+						break;
+					case WEST:
+						clingX += 0.7;
+						break;
+					default:
+						break;
 				}
 
-				jumpKey = true;
 
-			} else {
-
-				airTime++;
-				jumpKey = false;
+				BlockPos wall = getWallPos(this);
+				playHitSound(this, wall);
+				spawnWallParticle(this, wall);
 
 			}
+
 		}
-
 	}
 
 	private static boolean nearWall(Entity entity, double dist) {
@@ -309,6 +295,33 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 			entity.world.addParticle(new BlockStateParticleParameters(ParticleTypes.BLOCK, state), entity.x, entity.y, entity.z, 0.0D, 0.0D, 0.0D);
 		}
 
+	}
+
+	private void handleDoubleJump() {
+		if (this.onGround) {
+
+			airTime = 0;
+			jumpCount = 1;
+
+		} else if (this.input.jumping && !this.abilities.flying) {
+
+			if (!jumpKey && jumpCount < 2 && airTime > 1 && this.getHungerManager().getFoodLevel() > 6) {
+
+				this.jump();
+				jumpCount++;
+
+				this.fallDistance = 0.0F;
+
+			}
+
+			jumpKey = true;
+
+		} else {
+
+			airTime++;
+			jumpKey = false;
+
+		}
 	}
 
 }
