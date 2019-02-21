@@ -41,9 +41,9 @@ repositories {
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:19w08a"
-	mappings "net.fabricmc:yarn:19w08a.4"
-	modCompile "net.fabricmc:fabric-loader:0.3.7.108"
+	minecraft "com.mojang:minecraft:19w08b"
+	mappings "net.fabricmc:yarn:19w08b.3"
+	modCompile "net.fabricmc:fabric-loader:0.3.7.109"
 	modCompile "net.fabricmc:fabric:0.2.2.103"
 
 	modCompile name: "earlgray-0.3-dev"

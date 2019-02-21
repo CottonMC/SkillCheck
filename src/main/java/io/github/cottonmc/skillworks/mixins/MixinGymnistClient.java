@@ -16,10 +16,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.BlockStateParticleParameters;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BoundingBox;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -100,7 +97,7 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 			if (keyTimer == 0 || this.onGround || !nearWall(this, 0.2)) {
 
 				clingTime = 0;
-				if ((this.field_6250 != 0 || this.field_6212 != 0) && this.getHungerManager().getFoodLevel() > 6 && nearWall(this, 0.5)) {
+				if ((this.movementInputForward != 0 || this.movementInputSideways != 0) && this.getHungerManager().getFoodLevel() > 6 && nearWall(this, 0.5)) {
 
 					lastDirection = clingDirection;
 					lastDirection2 = clingDirection2;
@@ -108,36 +105,37 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 
 					playBreakSound(this, wall);
 					spawnWallParticle(this, wall);
-					wallJump(this, wallJumpHeight, this.field_6212, this.field_6250);
+					wallJump(this, wallJumpHeight, this.movementInputSideways, this.movementInputForward);
 
 				}
 
 			} else {
 
 				this.setPosition(clingX, this.getPos().getY(), clingZ);
+				Vec3d previousVelocity = this.getVelocity();
 				this.fallDistance = 0.0F;
-				this.velocityX = 0.0;
-				this.velocityZ = 0.0;
+				double velY = previousVelocity.y;
 
-				if (this.velocityY < -0.5) {
+				if (previousVelocity.y < -0.5) {
 
-					this.velocityY = this.velocityY + 0.25;
+					velY = velY + 0.25;
 					spawnWallParticle(this, wall);
 
 				} else {
 
 					if ((clingTime++ > wallSlideDelay || this.getHungerManager().getFoodLevel() < 7)) {
 
-						this.velocityY = -wallSlideSpeed;
+						velY = -wallSlideSpeed;
 						spawnWallParticle(this, wall);
 
 					} else {
 
-						this.velocityY = 0.0;
+						velY = 0.0;
 
 					}
 
 				}
+				this.setVelocity(0, velY, 0);
 
 			}
 
@@ -146,9 +144,10 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 			clingTime--;
 			if (keyTimer > 0 && (keyTimer < 5 || clingTime < -15) && canWallCling(this)) {
 
-				this.velocityX = 0.0;
-				this.velocityZ = 0.0;
-				if (this.velocityY > -0.75) this.velocityY = 0.0;
+				Vec3d previousVelocity = this.getVelocity();
+				double velY = previousVelocity.y;
+				if (velY > -0.75) velY = 0.0;
+				this.setVelocity(0, velY, 0);
 
 				clingTime = 1;
 				clingX = this.getPos().getX();
@@ -266,9 +265,7 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 		StatusEffectInstance jumpBoostEffect = player.getPotionEffect(StatusEffects.JUMP_BOOST);
 		if (jumpBoostEffect != null) jumpBoostLevel = jumpBoostEffect.getAmplifier() + 1;
 
-		player.velocityY = up + (jumpBoostLevel * .075);
-		player.velocityX += strafe * f2 - forward * f1;
-		player.velocityZ += forward * f2 + strafe * f1;
+		player.setVelocity(player.getVelocity().x + (strafe * f2 - forward * f1), up + (jumpBoostLevel * .075), player.getVelocity().z + (forward * f2 + strafe * f1));
 
 	}
 
