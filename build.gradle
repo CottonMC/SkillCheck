@@ -25,7 +25,7 @@ targetCompatibility = 1.8
 
 archivesBaseName = "skillworks"
 group = "io.github.cottonmc"
-version = "1.0.0+19w08a"
+version = "1.0.0+19w08b"
 
 minecraft {
 	refmapName = 'mixins.skillworks.refmap.json'
