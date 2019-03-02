@@ -1,19 +1,17 @@
 package io.github.cottonmc.skillworks.mixins;
 
 import com.sun.istack.internal.Nullable;
+import io.github.cottonmc.skillworks.ArrowEffects;
 import io.github.cottonmc.skillworks.Skillworks;
 import io.github.cottonmc.skillworks.traits.ClassManager;
-import me.elucent.earlgray.api.Traits;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.mob.SkeletonEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.projectile.ArrowEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.world.World;
@@ -28,8 +26,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(PlayerEntity.class)
 public abstract class MixinGymnistCommon extends LivingEntity {
 
-	@Shadow @Final public PlayerInventory inventory;
-
 	@Shadow @Nullable
 	public abstract ItemEntity dropItem(ItemStack stack, boolean fromSelf);
 
@@ -42,17 +38,16 @@ public abstract class MixinGymnistCommon extends LivingEntity {
 		if (source.isProjectile() && source.getSource() instanceof ArrowEntity) {
 			if (ClassManager.hasLevel(this, Skillworks.GYMNIST, 3) && world.random.nextFloat() < Skillworks.config.arrowCatchChance) {
 				ArrowEntity arrow = (ArrowEntity) source.getSource();
-				if (!this.getPotionEffects().isEmpty()) {
-					for (StatusEffectInstance effect : getPotionEffects()) {
+				if (!((ArrowEffects)arrow).getEffects().isEmpty()) {
+					for (StatusEffectInstance effect : (((ArrowEffects) arrow).getEffects())) {
 						this.addPotionEffect(effect);
 					}
 				}
-//				if (arrow.pickupType == ProjectileEntity.PickupType.PICKUP) {
+				if (arrow.isOnFire()) this.setOnFireFor(5);
 					if (!((PlayerEntity) (Object) this).inventory.insertStack(new ItemStack(Items.ARROW))) {
 						this.dropItem(new ItemStack(Items.ARROW), false);
 					}
-//				}
-				ci.setReturnValue(false);
+				ci.setReturnValue(true);
 			}
 		}
 	}
