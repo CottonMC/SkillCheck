@@ -2,6 +2,7 @@ package io.github.cottonmc.skillworks.mixins;
 
 import com.mojang.authlib.GameProfile;
 import io.github.cottonmc.skillworks.Skillworks;
+import io.github.cottonmc.skillworks.traits.ClassManager;
 import me.elucent.earlgray.api.Traits;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -66,14 +67,14 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 
 	@Inject(method = "updateMovement", at = @At("TAIL"))
 	public void gymnistMovement(CallbackInfo ci) {
-		if (Traits.has(this, Skillworks.GYMNIST)) {
-			// double-jump code from Wall-Jump
-			this.handleDoubleJump();
 
-			// wall-cling/wall-jump code from Wall-Jump
-			this.handleWallJump();
+		// wall-cling/wall-jump code from Wall-Jump
+		if (ClassManager.hasClass(this, Skillworks.GYMNIST)) this.handleWallJump();
 
-		}
+		// double-jump code from Wall-Jump
+		if (ClassManager.hasLevel(this, Skillworks.GYMNIST, 2)) this.handleDoubleJump();
+
+
 
 	}
 
