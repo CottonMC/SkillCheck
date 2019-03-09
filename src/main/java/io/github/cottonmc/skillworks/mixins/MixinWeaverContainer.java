@@ -1,7 +1,7 @@
 package io.github.cottonmc.skillworks.mixins;
 
 import io.github.cottonmc.skillworks.Skillworks;
-import me.elucent.earlgray.api.Traits;
+import io.github.cottonmc.skillworks.traits.ClassManager;
 import net.minecraft.container.BlockContext;
 import net.minecraft.container.LoomContainer;
 import net.minecraft.entity.player.PlayerEntity;
@@ -24,7 +24,7 @@ public abstract class MixinWeaverContainer {
 
 	@ModifyConstant(method = "onContentChanged", constant = @Constant(intValue = 6))
 	private int changeBannerPatternLimit(int orig) {
-		if (Traits.has(player, Skillworks.WEAVER)) return 16;
+		if (ClassManager.hasClass(player, Skillworks.WEAVER)) return 16;
 		else return orig;
 	}
 

@@ -1,12 +1,20 @@
 {
-  "tooltip.skillworks.banner.1": "+ 1 more...",
-  "tooltip.skillworks.banner.2": "+ 2 more...",
-  "tooltip.skillworks.banner.3": "+ 3 more...",
-  "tooltip.skillworks.banner.4": "+ 4 more...",
-  "tooltip.skillworks.banner.5": "+ 5 more...",
-  "tooltip.skillworks.banner.6": "+ 6 more...",
-  "tooltip.skillworks.banner.7": "+ 7 more...",
-  "tooltip.skillworks.banner.8": "+ 8 more...",
-  "tooltip.skillworks.banner.9": "+ 9 more...",
-  "tooltip.skillworks.banner.10": "+ 10 more..."
+  "item.skillworks.weaver_scroll": "Weaver Scroll",
+  "item.skillworks.gymnist_scroll": "Gymnist Scroll",
+
+  "itemGroup.skillworks.skillworks_group": "Skillworks",
+
+  "tooltip.skillworks.banner": "+ %s more...",
+
+  "trait.skillworks.weaver": "Weaver",
+  "trait.skillworks.gymnist": "Gymnist",
+
+  "tooltip.skillworks.scroll.flavor_0": "A scroll penned by a wandering %s",
+  "tooltip.skillworks.scroll.flavor_1": "An ancient text on the ways of the %s",
+  "tooltip.skillworks.scroll.flavor_2": "A YouTube tutorial on how to be a %s",
+  "tooltip.skillworks.scroll.flavor_3": "A beginner's guide for the aspiring %s",
+  "tooltip.skillworks.scroll.flavor_4": "Lost knowledge on the secrets of being a %s",
+  "tooltip.skillworks.scroll.flavor_5": "A page from the diary of an apprentice %s",
+
+  "msg.skillworks.levelup": "You feel your prowess as a %s grow."
 }

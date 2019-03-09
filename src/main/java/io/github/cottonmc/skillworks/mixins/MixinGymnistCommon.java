@@ -10,13 +10,11 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -29,8 +27,6 @@ public abstract class MixinGymnistCommon extends LivingEntity {
 
 	@Shadow @Nullable
 	public abstract ItemEntity dropItem(ItemStack stack, boolean fromSelf);
-
-	@Shadow @Final public PlayerInventory inventory;
 
 	protected MixinGymnistCommon(EntityType<? extends LivingEntity> type, World world) {
 		super(type, world);

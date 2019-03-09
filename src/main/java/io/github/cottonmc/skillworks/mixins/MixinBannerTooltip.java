@@ -26,7 +26,7 @@ public abstract class MixinBannerTooltip {
 											  CompoundTag var2, ListTag var3) {
 		if (var3 != null) {
 			if (var3.size() > 6) {
-				tooltip.add((new TranslatableTextComponent("tooltip.skillworks.banner."+(var3.size()-6), new Object[0])).applyFormat(TextFormat.GRAY, TextFormat.ITALIC));
+				tooltip.add((new TranslatableTextComponent("tooltip.skillworks.banner", (var3.size()-6))).applyFormat(TextFormat.GRAY, TextFormat.ITALIC));
 			}
 		}
 	}

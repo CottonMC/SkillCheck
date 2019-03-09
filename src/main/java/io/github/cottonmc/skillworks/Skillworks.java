@@ -31,8 +31,8 @@ public class Skillworks implements ModInitializer {
     public static TraitEntry<ClassTrait> GYMNIST = (TraitEntry<ClassTrait>) TraitRegistry.register(new Identifier("skillworks", "gymnist"), ClassTrait.class);
 
     public static Item FISTICUFFS_FIVE = register("fisticuffs_five", new TraitModItem(new Identifier("skillworks", "fisticuffs"), 5f));
-    public static Item CLASS_WEAVER = register("class_weaver", new TraitModItem(new Identifier("skillworks", "weaver")));
-    public static Item CLASS_GYMNIST = register("class_gymnist", new TraitModItem(new Identifier("skillworks", "gymnist")));
+    public static Item WEAVER_SCROLL = register("weaver_scroll", new ClassScrollItem(WEAVER));
+    public static Item GYMNIST_SCROLL = register("gymnist_scroll", new ClassScrollItem(GYMNIST));
     public static Item PRESTIGE = register("class_prestige", new TraitPrestigeItem());
 
     public static Item register(String name, Item item) {

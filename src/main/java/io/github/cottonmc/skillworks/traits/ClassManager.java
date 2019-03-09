@@ -22,4 +22,21 @@ public class ClassManager {
 		}
 		return false;
 	}
+
+	public static void levelUp(Entity target, TraitEntry entry) {
+		levelUp(target, entry, 1);
+	}
+
+	public static void levelUp(Entity target, TraitEntry entry, int amount) {
+		if (Skillworks.config.disableClasses) return;
+		if (!Traits.has(target, entry)) {
+			Traits.add(target, entry.generate());
+		}
+		Trait trait = Traits.get(target, entry);
+		if (trait instanceof ClassTrait) {
+			ClassTrait entityClass = (ClassTrait) trait;
+			entityClass.setLevel(entityClass.getLevel() + amount);
+		}
+
+	}
 }
