@@ -2,7 +2,6 @@ package io.github.cottonmc.skillworks;
 
 import io.github.cottonmc.skillworks.events.PlayerAttackEvent;
 import io.github.cottonmc.skillworks.traits.ClassTrait;
-import io.github.cottonmc.skillworks.traits.FloatTrait;
 import me.elucent.earlgray.api.TraitEntry;
 import me.elucent.earlgray.api.TraitRegistry;
 import net.fabricmc.api.ModInitializer;
@@ -26,11 +25,11 @@ public class Skillworks implements ModInitializer {
 
     public static final Tag<Block> SLIPPERY_BLOCKS = TagRegistry.block(new Identifier("skillworks", "slippery"));
 
-    public static TraitEntry<FloatTrait> FISTICUFFS = (TraitEntry<FloatTrait>) TraitRegistry.register(new Identifier("skillworks", "fisticuffs"), FloatTrait.class);
+    public static TraitEntry<ClassTrait> BRAWLER = (TraitEntry<ClassTrait>) TraitRegistry.register(new Identifier("skillworks, brawler"), ClassTrait.class);
     public static TraitEntry<ClassTrait> WEAVER = (TraitEntry<ClassTrait>) TraitRegistry.register(new Identifier("skillworks", "weaver"), ClassTrait.class);
     public static TraitEntry<ClassTrait> GYMNIST = (TraitEntry<ClassTrait>) TraitRegistry.register(new Identifier("skillworks", "gymnist"), ClassTrait.class);
 
-    public static Item FISTICUFFS_FIVE = register("fisticuffs_five", new TraitModItem(new Identifier("skillworks", "fisticuffs"), 5f));
+    public static Item BRAWLER_SCROLL = register("brawler_scroll", new ClassScrollItem(BRAWLER));
     public static Item WEAVER_SCROLL = register("weaver_scroll", new ClassScrollItem(WEAVER));
     public static Item GYMNIST_SCROLL = register("gymnist_scroll", new ClassScrollItem(GYMNIST));
     public static Item PRESTIGE = register("class_prestige", new TraitPrestigeItem());
@@ -43,7 +42,6 @@ public class Skillworks implements ModInitializer {
     @Override
     public void onInitialize() {
         config = ConfigManager.load(SkillworksConfig.class);
-        TraitRegistry.addInherent(PlayerEntity.class, (PlayerEntity e) -> new FloatTrait());
         if (config.disableClasses) TraitRegistry.addInherent(PlayerEntity.class, (PlayerEntity e) -> new ClassTrait());
         AttackEntityCallback.EVENT.register(PlayerAttackEvent.onPlayerAttack);
     }

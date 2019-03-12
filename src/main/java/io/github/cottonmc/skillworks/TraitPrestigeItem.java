@@ -17,7 +17,7 @@ public class TraitPrestigeItem extends Item {
 
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-		Traits.get(player, Skillworks.FISTICUFFS).setValue(0);
+		Traits.remove(player, Skillworks.BRAWLER);
 		Traits.remove(player, Skillworks.GYMNIST);
 		Traits.remove(player, Skillworks.WEAVER);
 		player.addChatMessage(new StringTextComponent("All traits reset"), true);
