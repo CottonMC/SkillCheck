@@ -18,18 +18,17 @@ public class PlayerAttackEvent {
 	public static AttackEntityCallback onPlayerAttack = (player, world, hand, entity, hitResult) -> {
 		if (player.getStackInHand(hand).isEmpty()) {
 			if (ClassManager.hasClass(player, Skillworks.BRAWLER)) {
-				int level = Traits.get(player, Skillworks.BRAWLER).getLevel();
 				for (ItemStack stack : entity.getItemsArmor()) {
 					if (stack.getItem() instanceof ArmorItem) return ActionResult.PASS;
 				}
 				if (entity instanceof LivingEntity) {
 					LivingEntity mob = (LivingEntity) entity;
-					if (level >= 2 && !hasWeakness(mob)) {
+					if (ClassManager.hasLevel(player, Skillworks.BRAWLER, 2) && !hasWeakness(mob)) {
 						mob.addPotionEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 200));
 						player.playSound(SoundEvents.ITEM_SHIELD_BREAK, 1.0f, 1.0f);
 					}
 				}
-				entity.damage(DamageSource.player(player), level*2);
+				entity.damage(DamageSource.player(player), ClassManager.getLevel(player, Skillworks.BRAWLER)*2);
 				return ActionResult.SUCCESS;
 			}
 		}

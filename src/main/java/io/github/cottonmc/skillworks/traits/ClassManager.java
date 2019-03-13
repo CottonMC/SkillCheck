@@ -23,6 +23,16 @@ public class ClassManager {
 		return false;
 	}
 
+	public static int getLevel(Entity target, TraitEntry entry) {
+		if (Skillworks.config.disableClasses || !Traits.has(target, entry)) return 0;
+		Trait trait = Traits.get(target, entry);
+		if (trait instanceof ClassTrait) {
+			ClassTrait playerClass = (ClassTrait)trait;
+			return playerClass.getLevel();
+		}
+		return 0;
+	}
+
 	public static void levelUp(Entity target, TraitEntry entry) {
 		levelUp(target, entry, 1);
 	}

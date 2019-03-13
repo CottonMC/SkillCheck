@@ -21,11 +21,13 @@ import net.minecraft.util.registry.Registry;
 public class Skillworks implements ModInitializer {
     public static SkillworksConfig config;
 
-    public static final ItemGroup SKILLWORKS_GROUP = FabricItemGroupBuilder.build(new Identifier("skillworks:skillworks_group"), () -> new ItemStack(Items.ENCHANTED_BOOK));
+    public static Item BASE_SCROLL;
+
+    public static final ItemGroup SKILLWORKS_GROUP = FabricItemGroupBuilder.build(new Identifier("skillworks:skillworks_group"), () -> new ItemStack(BASE_SCROLL));
 
     public static final Tag<Block> SLIPPERY_BLOCKS = TagRegistry.block(new Identifier("skillworks", "slippery"));
 
-    public static TraitEntry<ClassTrait> BRAWLER = (TraitEntry<ClassTrait>) TraitRegistry.register(new Identifier("skillworks, brawler"), ClassTrait.class);
+    public static TraitEntry<ClassTrait> BRAWLER = (TraitEntry<ClassTrait>) TraitRegistry.register(new Identifier("skillworks", "brawler"), ClassTrait.class);
     public static TraitEntry<ClassTrait> WEAVER = (TraitEntry<ClassTrait>) TraitRegistry.register(new Identifier("skillworks", "weaver"), ClassTrait.class);
     public static TraitEntry<ClassTrait> GYMNIST = (TraitEntry<ClassTrait>) TraitRegistry.register(new Identifier("skillworks", "gymnist"), ClassTrait.class);
 
@@ -41,6 +43,8 @@ public class Skillworks implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        //to prevent forward reference issue
+        BASE_SCROLL = register("base_scroll", new Item(new Item.Settings().itemGroup(SKILLWORKS_GROUP)));
         config = ConfigManager.load(SkillworksConfig.class);
         if (config.disableClasses) TraitRegistry.addInherent(PlayerEntity.class, (PlayerEntity e) -> new ClassTrait());
         AttackEntityCallback.EVENT.register(PlayerAttackEvent.onPlayerAttack);

@@ -1,6 +1,9 @@
 {
   "item.skillworks.weaver_scroll": "Weaver Scroll",
   "item.skillworks.gymnist_scroll": "Gymnist Scroll",
+  "item.skillworks.brawler_scroll": "Brawler Scroll",
+  "item.skillworks.class_prestige": "Scroll of Prestige",
+  "item.skillworks.base_scroll": "Base Scroll",
 
   "itemGroup.skillworks.skillworks_group": "Skillworks",
 
@@ -8,6 +11,7 @@
 
   "trait.skillworks.weaver": "Weaver",
   "trait.skillworks.gymnist": "Gymnist",
+  "trait.skillworks.brawler": "Brawler",
 
   "tooltip.skillworks.scroll.flavor_0": "A scroll penned by a wandering %s",
   "tooltip.skillworks.scroll.flavor_1": "An ancient text on the ways of the %s",
@@ -15,6 +19,10 @@
   "tooltip.skillworks.scroll.flavor_3": "A beginner's guide for the aspiring %s",
   "tooltip.skillworks.scroll.flavor_4": "Lost knowledge on the secrets of being a %s",
   "tooltip.skillworks.scroll.flavor_5": "A page from the diary of an apprentice %s",
+  "tooltip.skillworks.prestige.0": "Debug item.",
+  "tooltip.skillworks.prestige.1": "Resets progress in all classes.",
+
+  "message.skillworks.prestige": "All classes reset.",
 
   "msg.skillworks.levelup": "You feel your prowess as a %s grow."
 }
