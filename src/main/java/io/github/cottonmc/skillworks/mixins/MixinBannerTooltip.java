@@ -20,8 +20,7 @@ public abstract class MixinBannerTooltip {
 
 	@Inject(method = "buildBannerTooltip",
 			at = @At("TAIL"),
-			locals = LocalCapture.CAPTURE_FAILEXCEPTION,
-			remap = false)
+			locals = LocalCapture.CAPTURE_FAILEXCEPTION)
 	private static void appendBannerHoverText(ItemStack stack, List<TextComponent> tooltip, CallbackInfo ci,
 											  CompoundTag var2, ListTag var3) {
 		if (var3 != null) {

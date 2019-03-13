@@ -71,5 +71,4 @@ public abstract class MixinGymnistCommon extends LivingEntity {
 				|| (this.getOffHandStack().getItem() == Items.ARROW && this.getOffHandStack().getAmount() < Items.ARROW.getMaxAmount());
 	}
 
-
 }
