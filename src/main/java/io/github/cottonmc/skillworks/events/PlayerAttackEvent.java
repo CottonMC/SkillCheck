@@ -2,7 +2,6 @@ package io.github.cottonmc.skillworks.events;
 
 import io.github.cottonmc.skillworks.Skillworks;
 import io.github.cottonmc.skillworks.traits.ClassManager;
-import me.elucent.earlgray.api.Traits;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
