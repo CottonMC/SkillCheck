@@ -25,7 +25,7 @@ targetCompatibility = 1.8
 
 archivesBaseName = "skillworks"
 group = "io.github.cottonmc"
-version = "0.1.1+19w09a"
+version = "0.1.1+19w11b"
 
 minecraft {
 	refmapName = 'mixins.skillworks.refmap.json'
@@ -41,10 +41,10 @@ repositories {
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:19w09a"
-	mappings "net.fabricmc:yarn:19w09a.8"
+	minecraft "com.mojang:minecraft:19w11b"
+	mappings "net.fabricmc:yarn:19w11b.4"
 	modCompile "net.fabricmc:fabric-loader:0.3.7.109"
-	modCompile "net.fabricmc:fabric:0.2.3.109"
+	modCompile "net.fabricmc:fabric:0.2.3.111"
 
 	modCompile name: "earlgray-0.3-dev"
 
@@ -52,6 +52,7 @@ dependencies {
 	implementation "blue.endless:jankson:1.1.1-SNAPSHOT"
 
 	//modCompile "com.jamieswhiteshirt:developer-mode:1.0.1"
+	implementation 'org.jetbrains:annotations:15.0'
 	implementation 'org.jetbrains:annotations:15.0'
 }
 
