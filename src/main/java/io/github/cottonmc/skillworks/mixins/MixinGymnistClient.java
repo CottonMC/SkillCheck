@@ -72,8 +72,6 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 		// double-jump code from Wall-Jump
 		if (ClassManager.hasLevel(this, Skillworks.GYMNIST, 2)) this.handleDoubleJump();
 
-
-
 	}
 
 	private void handleWallJump() {
@@ -105,7 +103,6 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 					playBreakSound(this, wall);
 					spawnWallParticle(this, wall);
 					wallJump(this, wallJumpHeight, this.movementInputSideways, this.movementInputForward);
-
 				}
 
 			} else {
@@ -154,7 +151,7 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 				switch(clingDirection) {
 					// all these are player's direction from block view
 					case NORTH:
-						clingZ += 0.7;
+						//clingZ += 0.3;
 						clingX += 0.5;
 						break;
 					case SOUTH:
@@ -166,7 +163,7 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 						clingZ += 0.5;
 						break;
 					case WEST:
-						clingX += 0.7;
+						//clingX += 0.3;
 						clingZ += 0.5;
 						break;
 					default:
