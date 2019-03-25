@@ -1,6 +1,6 @@
 package io.github.cottonmc.skillworks;
 
-import me.elucent.earlgray.api.Traits;
+import com.raphydaphy.crochet.data.PlayerData;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -22,9 +22,8 @@ public class TraitPrestigeItem extends Item {
 
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-		Traits.remove(player, Skillworks.BRAWLER);
-		Traits.remove(player, Skillworks.GYMNIST);
-		Traits.remove(player, Skillworks.WEAVER);
+		PlayerData.get(player).remove("Classes");
+		PlayerData.markDirty(player);
 		player.addChatMessage(new TranslatableTextComponent("message.skillworks.prestige"), true);
 		return new TypedActionResult<>(ActionResult.SUCCESS, player.getStackInHand(hand));
 	}

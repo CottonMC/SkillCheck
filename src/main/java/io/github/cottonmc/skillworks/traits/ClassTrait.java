@@ -1,23 +1,26 @@
 package io.github.cottonmc.skillworks.traits;
 
-import me.elucent.earlgray.api.Trait;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Identifier;
 
-public class ClassTrait extends Trait {
+public class ClassTrait {
+
+	public Identifier id;
 	int level = 0;
 	int experience = 0;
 
-	public ClassTrait() {
-
+	public ClassTrait(Identifier id) {
+		this.id = id;
 	}
 
-	public CompoundTag write(CompoundTag tag) {
+	public CompoundTag toNBT() {
+		CompoundTag tag = new CompoundTag();
 		tag.putInt("level", this.level);
 		tag.putInt("experience", this.experience);
 		return tag;
 	}
 
-	public Trait read(CompoundTag tag) {
+	public ClassTrait fromNBT(CompoundTag tag) {
 		this.level = tag.getInt("level");
 		this.experience = tag.getInt("experience");
 		return this;

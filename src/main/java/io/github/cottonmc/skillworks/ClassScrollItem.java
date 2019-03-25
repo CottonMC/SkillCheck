@@ -1,7 +1,6 @@
 package io.github.cottonmc.skillworks;
 
 import io.github.cottonmc.skillworks.traits.ClassManager;
-import me.elucent.earlgray.api.TraitEntry;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -13,6 +12,7 @@ import net.minecraft.text.TextFormat;
 import net.minecraft.text.TranslatableTextComponent;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
@@ -21,9 +21,9 @@ import java.util.Random;
 
 public class ClassScrollItem extends Item {
 
-	TraitEntry trait;
+	Identifier trait;
 
-	public ClassScrollItem(TraitEntry trait) {
+	public ClassScrollItem(Identifier trait) {
 		super(new Item.Settings().itemGroup(Skillworks.SKILLWORKS_GROUP).stackSize(1));
 		this.trait = trait;
 	}
@@ -53,6 +53,6 @@ public class ClassScrollItem extends Item {
 	}
 
 	String getTraitName() {
-		return new TranslatableTextComponent("trait."+trait.getName().getNamespace()+"."+trait.getName().getPath()).getText();
+		return new TranslatableTextComponent("trait."+trait.getNamespace()+"."+trait.getPath()).getText();
 	}
 }

@@ -13,7 +13,7 @@ public class ConfigManager {
 	public static <T> T load(Class<T> clazz){
 		System.out.println("Loading config!");
 		try {
-			File file = new File(FabricLoader.getInstance().getConfigDirectory().toString() + "/" + "Skillworks.conf");
+			File file = new File(FabricLoader.getInstance().getConfigDirectory().toString() + "/" + "Skillworks.json5");
 			Jankson jankson = Jankson.builder().build();
 
 			//Generate config file if it doesn't exist
@@ -40,7 +40,7 @@ public class ConfigManager {
 	}
 
 	public static void saveDefault(Object obj) {
-		File configFile = new File(FabricLoader.getInstance().getConfigDirectory().toString() + "/" + "Skillworks.conf");
+		File configFile = new File(FabricLoader.getInstance().getConfigDirectory().toString() + "/" + "Skillworks.json5");
 		Jankson jankson = Jankson.builder().build();
 		String result = jankson
 				.toJson(obj) //The first call makes a JsonObject

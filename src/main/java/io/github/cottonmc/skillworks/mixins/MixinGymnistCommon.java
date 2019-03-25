@@ -1,6 +1,6 @@
 package io.github.cottonmc.skillworks.mixins;
 
-import org.jetbrains.annotations.Nullable;
+import blue.endless.jankson.annotation.Nullable;
 import io.github.cottonmc.skillworks.ArrowEffects;
 import io.github.cottonmc.skillworks.Skillworks;
 import io.github.cottonmc.skillworks.traits.ClassManager;
@@ -34,7 +34,7 @@ public abstract class MixinGymnistCommon extends LivingEntity {
 	@Inject(method = "damage", at = @At("HEAD"), cancellable = true)
 	public void catchArrow(DamageSource source, float amount, CallbackInfoReturnable ci) {
 		if (source.isProjectile() && source.getSource() instanceof ArrowEntity) {
-			if (ClassManager.hasLevel(this, Skillworks.GYMNIST, 3)
+			if (ClassManager.hasLevel((PlayerEntity)(Object)this, Skillworks.GYMNIST, 3)
 					&& world.random.nextFloat() < Skillworks.config.arrowCatchChance
 					&& canCatchArrow()) {
 				ArrowEntity arrow = (ArrowEntity) source.getSource();

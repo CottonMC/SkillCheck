@@ -1,15 +1,11 @@
 package io.github.cottonmc.skillworks;
 
 import io.github.cottonmc.skillworks.events.PlayerAttackEvent;
-import io.github.cottonmc.skillworks.traits.ClassTrait;
-import me.elucent.earlgray.api.TraitEntry;
-import me.elucent.earlgray.api.TraitRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -26,9 +22,9 @@ public class Skillworks implements ModInitializer {
 
     public static final Tag<Block> SLIPPERY_BLOCKS = TagRegistry.block(new Identifier("skillworks", "slippery"));
 
-    public static TraitEntry<ClassTrait> BRAWLER = (TraitEntry<ClassTrait>) TraitRegistry.register(new Identifier("skillworks", "brawler"), ClassTrait.class);
-    public static TraitEntry<ClassTrait> WEAVER = (TraitEntry<ClassTrait>) TraitRegistry.register(new Identifier("skillworks", "weaver"), ClassTrait.class);
-    public static TraitEntry<ClassTrait> GYMNIST = (TraitEntry<ClassTrait>) TraitRegistry.register(new Identifier("skillworks", "gymnist"), ClassTrait.class);
+    public static Identifier BRAWLER = new Identifier("skillworks", "brawler");
+    public static Identifier WEAVER = new Identifier("skillworks", "weaver");
+    public static Identifier GYMNIST = new Identifier("skillworks", "gymnist");
 
     public static Item BRAWLER_SCROLL = register("brawler_scroll", new ClassScrollItem(BRAWLER));
     public static Item WEAVER_SCROLL = register("weaver_scroll", new ClassScrollItem(WEAVER));
@@ -45,7 +41,6 @@ public class Skillworks implements ModInitializer {
         //to prevent forward reference issue
         BASE_SCROLL = register("base_scroll", new Item(new Item.Settings().itemGroup(SKILLWORKS_GROUP)));
         config = ConfigManager.load(SkillworksConfig.class);
-        if (config.disableClasses) TraitRegistry.addInherent(PlayerEntity.class, (PlayerEntity e) -> new ClassTrait());
         AttackEntityCallback.EVENT.register(PlayerAttackEvent.onPlayerAttack);
     }
 }

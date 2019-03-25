@@ -3,7 +3,6 @@ package io.github.cottonmc.skillworks.mixins;
 import com.mojang.authlib.GameProfile;
 import io.github.cottonmc.skillworks.Skillworks;
 import io.github.cottonmc.skillworks.traits.ClassManager;
-import me.elucent.earlgray.api.Traits;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.input.Input;
@@ -25,7 +24,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 import static net.minecraft.util.math.Direction.*;
@@ -236,7 +234,7 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 
 		if (Skillworks.SLIPPERY_BLOCKS.contains(player.world.getBlockState(getWallPos(player)).getBlock()) ^ Skillworks.config.invertSlipperyTag) return false;
 
-		if (Traits.has(player, Skillworks.GYMNIST) || player.getPos().getY() < lastJumpY) return true; //TODO: change to use levels later
+		if (ClassManager.hasClass(player, Skillworks.GYMNIST) || player.getPos().getY() < lastJumpY) return true; //TODO: change to use levels later?
 
 		if (walls.size() == 1) {
 
