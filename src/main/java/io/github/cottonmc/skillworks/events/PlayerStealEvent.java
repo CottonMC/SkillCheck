@@ -18,7 +18,7 @@ public class PlayerStealEvent {
 				|| !ClassManager.hasClass(player, Skillworks.THIEF)
 				|| !(entity instanceof MobEntity)
 				|| world.isClient
-				|| player.isSneaking()) return ActionResult.PASS;
+				|| !player.isSneaking()) return ActionResult.PASS;
 		MobEntity mob = (MobEntity) entity;
 		//TODO: try to figure out a good way to require you to sneak around to pickpocket?
 		for (ItemStack stack : mob.getItemsArmor()) {

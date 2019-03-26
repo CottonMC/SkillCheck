@@ -55,9 +55,9 @@ public class Skillworks implements ModInitializer {
         UseEntityCallback.EVENT.register(PlayerStealEvent.onPlayerInteract);
 
         //register a /roll command
-        CommandRegistry.INSTANCE.register(false, dispatcher -> dispatcher.register(
+        CommandRegistry.INSTANCE.register(false, dispatcher -> dispatcher.register((
                 ServerCommandManager.literal("roll")
-                        .then(ServerCommandManager.argument("formula", StringArgumentType.string()))
+                        .then(ServerCommandManager.argument("formula", StringArgumentType.word())
                         .executes(context -> {
                             String formula = context.getArgument("formula", String.class);
                             int result;
@@ -70,8 +70,7 @@ public class Skillworks implements ModInitializer {
                             if (result == -1) context.getSource().sendFeedback(new TranslatableTextComponent("msg.skillworks.roll.fail"), false);
                             else context.getSource().sendFeedback(new TranslatableTextComponent("msg.skillworks.roll.result", result), false);
                             return 1;
-                        }
-        )));
+                        })))));
     }
 
 }
