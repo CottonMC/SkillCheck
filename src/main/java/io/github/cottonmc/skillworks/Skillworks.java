@@ -60,15 +60,15 @@ public class Skillworks implements ModInitializer {
                         .then(ServerCommandManager.argument("formula", StringArgumentType.word())
                         .executes(context -> {
                             String formula = context.getArgument("formula", String.class);
-                            int result;
+                            int[] result;
                             try {
-                                result = Dice.roll(formula);
+                                result = Dice.rollWithNatural(formula);
                             } catch (IllegalArgumentException e) {
                                 context.getSource().sendError(new StringTextComponent(e.getMessage()));
                                 return -1;
                             }
-                            if (result == -1) context.getSource().sendFeedback(new TranslatableTextComponent("msg.skillworks.roll.fail"), false);
-                            else context.getSource().sendFeedback(new TranslatableTextComponent("msg.skillworks.roll.result", result), false);
+                            if (result[0] == -1) context.getSource().sendFeedback(new TranslatableTextComponent("msg.skillworks.roll.fail"), false);
+                            else context.getSource().sendFeedback(new TranslatableTextComponent("msg.skillworks.roll.result", result[0], result[1]), false);
                             return 1;
                         })))));
     }
