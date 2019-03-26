@@ -5,6 +5,7 @@ import io.github.cottonmc.skillworks.events.PlayerAttackEvent;
 import io.github.cottonmc.skillworks.events.PlayerStealEvent;
 import io.github.cottonmc.skillworks.util.ConfigManager;
 import io.github.cottonmc.skillworks.util.Dice;
+import io.github.cottonmc.skillworks.util.DiceResult;
 import io.github.cottonmc.skillworks.util.SkillworksConfig;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
@@ -60,15 +61,15 @@ public class Skillworks implements ModInitializer {
                         .then(ServerCommandManager.argument("formula", StringArgumentType.word())
                         .executes(context -> {
                             String formula = context.getArgument("formula", String.class);
-                            int[] result;
+                            DiceResult result;
                             try {
-                                result = Dice.rollWithNatural(formula);
+                                result = Dice.roll(formula);
                             } catch (IllegalArgumentException e) {
                                 context.getSource().sendError(new StringTextComponent(e.getMessage()));
                                 return -1;
                             }
-                            if (result[0] == -1) context.getSource().sendFeedback(new TranslatableTextComponent("msg.skillworks.roll.fail"), false);
-                            else context.getSource().sendFeedback(new TranslatableTextComponent("msg.skillworks.roll.result", result[0], result[1]), false);
+                            if (result.isCritFail()) context.getSource().sendFeedback(new TranslatableTextComponent("msg.skillworks.roll.fail", result.getFormattedNaturals()), false);
+                            else context.getSource().sendFeedback(new TranslatableTextComponent("msg.skillworks.roll.result", result.getTotal(), result.getFormattedNaturals()), false);
                             return 1;
                         })))));
     }

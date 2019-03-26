@@ -25,5 +25,5 @@
   "msg.skillworks.prestige": "All classes reset.",
   "msg.skillworks.levelup": "You feel your prowess as a %s grow.",
   "msg.skillworks.roll.result": "Roll result: %s (%s)",
-  "msg.skillworks.roll.fail": "Critical failure! (1)"
+  "msg.skillworks.roll.fail": "Critical failure! (%s)"
 }
