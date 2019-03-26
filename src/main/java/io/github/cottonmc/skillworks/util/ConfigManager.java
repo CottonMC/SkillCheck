@@ -1,4 +1,4 @@
-package io.github.cottonmc.skillworks;
+package io.github.cottonmc.skillworks.util;
 
 import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonObject;

@@ -22,7 +22,8 @@
   "tooltip.skillworks.prestige.0": "Debug item.",
   "tooltip.skillworks.prestige.1": "Resets progress in all classes.",
 
-  "message.skillworks.prestige": "All classes reset.",
-
-  "msg.skillworks.levelup": "You feel your prowess as a %s grow."
+  "msg.skillworks.prestige": "All classes reset.",
+  "msg.skillworks.levelup": "You feel your prowess as a %s grow.",
+  "msg.skillworks.roll.result": "Roll result: %s",
+  "msg.skillworks.roll.fail": "Critical failure! (1)"
 }

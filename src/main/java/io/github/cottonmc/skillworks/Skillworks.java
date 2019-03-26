@@ -1,17 +1,25 @@
 package io.github.cottonmc.skillworks;
 
+import com.mojang.brigadier.arguments.StringArgumentType;
 import io.github.cottonmc.skillworks.events.PlayerAttackEvent;
 import io.github.cottonmc.skillworks.events.PlayerStealEvent;
+import io.github.cottonmc.skillworks.util.ConfigManager;
+import io.github.cottonmc.skillworks.util.Dice;
+import io.github.cottonmc.skillworks.util.SkillworksConfig;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
+import net.fabricmc.fabric.api.registry.CommandRegistry;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.command.ServerCommandManager;
 import net.minecraft.tag.Tag;
+import net.minecraft.text.StringTextComponent;
+import net.minecraft.text.TranslatableTextComponent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -45,5 +53,25 @@ public class Skillworks implements ModInitializer {
         config = ConfigManager.load(SkillworksConfig.class);
         AttackEntityCallback.EVENT.register(PlayerAttackEvent.onPlayerAttack);
         UseEntityCallback.EVENT.register(PlayerStealEvent.onPlayerInteract);
+
+        //register a /roll command
+        CommandRegistry.INSTANCE.register(false, dispatcher -> dispatcher.register(
+                ServerCommandManager.literal("roll")
+                        .then(ServerCommandManager.argument("formula", StringArgumentType.string()))
+                        .executes(context -> {
+                            String formula = context.getArgument("formula", String.class);
+                            int result;
+                            try {
+                                result = Dice.roll(formula);
+                            } catch (IllegalArgumentException e) {
+                                context.getSource().sendError(new StringTextComponent(e.getMessage()));
+                                return -1;
+                            }
+                            if (result == -1) context.getSource().sendFeedback(new TranslatableTextComponent("msg.skillworks.roll.fail"), false);
+                            else context.getSource().sendFeedback(new TranslatableTextComponent("msg.skillworks.roll.result", result), false);
+                            return 1;
+                        }
+        )));
     }
+
 }

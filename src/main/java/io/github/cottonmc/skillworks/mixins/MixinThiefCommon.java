@@ -1,9 +1,10 @@
 package io.github.cottonmc.skillworks.mixins;
 
 import blue.endless.jankson.annotation.Nullable;
-import io.github.cottonmc.skillworks.ArrowEffects;
+import io.github.cottonmc.skillworks.util.ArrowEffects;
 import io.github.cottonmc.skillworks.Skillworks;
 import io.github.cottonmc.skillworks.traits.ClassManager;
+import io.github.cottonmc.skillworks.util.Dice;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
@@ -35,7 +36,7 @@ public abstract class MixinThiefCommon extends LivingEntity {
 	public void catchArrow(DamageSource source, float amount, CallbackInfoReturnable ci) {
 		if (source.isProjectile() && source.getSource() instanceof ArrowEntity) {
 			if (ClassManager.hasLevel((PlayerEntity)(Object)this, Skillworks.THIEF, 3)
-					&& world.random.nextFloat() < Skillworks.config.arrowCatchChance
+					&& Dice.roll("1d20+"+ClassManager.getLevel((PlayerEntity)(Object)this, Skillworks.THIEF)) >= Skillworks.config.arrowCatchRoll
 					&& canCatchArrow()) {
 				ArrowEntity arrow = (ArrowEntity) source.getSource();
 				if (!((ArrowEffects)arrow).getEffects().isEmpty()) {

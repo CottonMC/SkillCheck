@@ -1,4 +1,4 @@
-package io.github.cottonmc.skillworks;
+package io.github.cottonmc.skillworks.util;
 
 import net.minecraft.entity.effect.StatusEffectInstance;
 
