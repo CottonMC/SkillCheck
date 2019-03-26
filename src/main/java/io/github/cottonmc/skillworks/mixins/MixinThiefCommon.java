@@ -1,6 +1,6 @@
 package io.github.cottonmc.skillworks.mixins;
 
-import blue.endless.jankson.annotation.Nullable;
+import io.github.cottonmc.repackage.blue.endless.jankson.annotation.Nullable;
 import io.github.cottonmc.skillworks.util.ArrowEffects;
 import io.github.cottonmc.skillworks.Skillworks;
 import io.github.cottonmc.skillworks.traits.ClassManager;
