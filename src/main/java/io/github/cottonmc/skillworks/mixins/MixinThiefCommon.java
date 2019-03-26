@@ -22,19 +22,19 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlayerEntity.class)
-public abstract class MixinGymnistCommon extends LivingEntity {
+public abstract class MixinThiefCommon extends LivingEntity {
 
 	@Shadow @Nullable
 	public abstract ItemEntity dropItem(ItemStack stack, boolean fromSelf);
 
-	protected MixinGymnistCommon(EntityType<? extends LivingEntity> type, World world) {
+	protected MixinThiefCommon(EntityType<? extends LivingEntity> type, World world) {
 		super(type, world);
 	}
 
 	@Inject(method = "damage", at = @At("HEAD"), cancellable = true)
 	public void catchArrow(DamageSource source, float amount, CallbackInfoReturnable ci) {
 		if (source.isProjectile() && source.getSource() instanceof ArrowEntity) {
-			if (ClassManager.hasLevel((PlayerEntity)(Object)this, Skillworks.GYMNIST, 3)
+			if (ClassManager.hasLevel((PlayerEntity)(Object)this, Skillworks.THIEF, 3)
 					&& world.random.nextFloat() < Skillworks.config.arrowCatchChance
 					&& canCatchArrow()) {
 				ArrowEntity arrow = (ArrowEntity) source.getSource();

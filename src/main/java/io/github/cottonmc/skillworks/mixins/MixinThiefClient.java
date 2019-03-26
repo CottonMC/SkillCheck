@@ -33,7 +33,7 @@ import static net.minecraft.util.math.Direction.*;
 	The original repository can be found here: https://github.com/genandnic/Wall-Jump
  */
 @Mixin(ClientPlayerEntity.class)
-public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
+public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 
 	@Shadow public Input input;
 
@@ -59,7 +59,7 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 	private static int jumpCount = 0;
 	private static boolean jumpKey = false;
 
-	public MixinGymnistClient(ClientWorld world, GameProfile profile) {
+	public MixinThiefClient(ClientWorld world, GameProfile profile) {
 		super(world, profile);
 	}
 
@@ -67,10 +67,10 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 	public void gymnistMovement(CallbackInfo ci) {
 
 		// wall-cling/wall-jump code from Wall-Jump
-		if (ClassManager.hasClass(this, Skillworks.GYMNIST)) this.handleWallJump();
+		if (ClassManager.hasClass(this, Skillworks.THIEF)) this.handleWallJump();
 
 		// double-jump code from Wall-Jump
-		if (ClassManager.hasLevel(this, Skillworks.GYMNIST, 2)) this.handleDoubleJump();
+		if (ClassManager.hasLevel(this, Skillworks.THIEF, 2)) this.handleDoubleJump();
 
 	}
 
@@ -231,7 +231,7 @@ public abstract class MixinGymnistClient extends AbstractClientPlayerEntity {
 
 		if (Skillworks.SLIPPERY_BLOCKS.contains(player.world.getBlockState(getWallPos(player)).getBlock()) ^ Skillworks.config.invertSlipperyTag) return false;
 
-		if (ClassManager.hasClass(player, Skillworks.GYMNIST) || player.getPos().getY() < lastJumpY) return true; //TODO: change to use levels later?
+		if (ClassManager.hasClass(player, Skillworks.THIEF) || player.getPos().getY() < lastJumpY) return true; //TODO: change to use levels later?
 
 		if (walls.size() == 1) {
 

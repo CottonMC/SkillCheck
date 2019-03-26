@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "skillworks:item/gymnist_scroll"
+    "layer0": "skillworks:item/thief_scroll"
   }
 }

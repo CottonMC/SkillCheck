@@ -8,8 +8,8 @@
     "MixinWeaverContainer",
     "MixinWeaverScreen",
     "MixinBannerTooltip",
-    "MixinGymnistClient",
-    "MixinGymnistCommon"
+    "MixinThiefClient",
+    "MixinThiefCommon"
   ],
   "injectors": {
     "defaultRequire": 1

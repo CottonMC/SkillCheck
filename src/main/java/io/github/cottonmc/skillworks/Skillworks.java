@@ -1,9 +1,11 @@
 package io.github.cottonmc.skillworks;
 
 import io.github.cottonmc.skillworks.events.PlayerAttackEvent;
+import io.github.cottonmc.skillworks.events.PlayerStealEvent;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
+import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -24,11 +26,11 @@ public class Skillworks implements ModInitializer {
 
     public static Identifier BRAWLER = new Identifier("skillworks", "brawler");
     public static Identifier WEAVER = new Identifier("skillworks", "weaver");
-    public static Identifier GYMNIST = new Identifier("skillworks", "gymnist");
+    public static Identifier THIEF = new Identifier("skillworks", "thief");
 
     public static Item BRAWLER_SCROLL = register("brawler_scroll", new ClassScrollItem(BRAWLER));
     public static Item WEAVER_SCROLL = register("weaver_scroll", new ClassScrollItem(WEAVER));
-    public static Item GYMNIST_SCROLL = register("gymnist_scroll", new ClassScrollItem(GYMNIST));
+    public static Item THIEF_SCROLL = register("thief_scroll", new ClassScrollItem(THIEF));
     public static Item PRESTIGE = register("class_prestige", new TraitPrestigeItem());
 
     public static Item register(String name, Item item) {
@@ -42,5 +44,6 @@ public class Skillworks implements ModInitializer {
         BASE_SCROLL = register("base_scroll", new Item(new Item.Settings().itemGroup(SKILLWORKS_GROUP)));
         config = ConfigManager.load(SkillworksConfig.class);
         AttackEntityCallback.EVENT.register(PlayerAttackEvent.onPlayerAttack);
+        UseEntityCallback.EVENT.register(PlayerStealEvent.onPlayerInteract);
     }
 }

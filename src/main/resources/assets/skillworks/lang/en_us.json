@@ -1,6 +1,6 @@
 {
   "item.skillworks.weaver_scroll": "Weaver Scroll",
-  "item.skillworks.gymnist_scroll": "Gymnist Scroll",
+  "item.skillworks.thief_scroll": "Thief Scroll",
   "item.skillworks.brawler_scroll": "Brawler Scroll",
   "item.skillworks.class_prestige": "Scroll of Prestige",
   "item.skillworks.base_scroll": "Base Scroll",
@@ -10,7 +10,7 @@
   "tooltip.skillworks.banner": "+ %s more...",
 
   "trait.skillworks.weaver": "Weaver",
-  "trait.skillworks.gymnist": "Gymnist",
+  "trait.skillworks.thief": "Thief",
   "trait.skillworks.brawler": "Brawler",
 
   "tooltip.skillworks.scroll.flavor_0": "A scroll penned by a wandering %s",
