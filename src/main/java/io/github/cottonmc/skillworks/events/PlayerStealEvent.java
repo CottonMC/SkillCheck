@@ -30,6 +30,7 @@ public class PlayerStealEvent {
 				mob.addPotionEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 2000));
 				mob.attack(player);
 				if (!player.isCreative()) mob.setTarget(player);
+				player.swingHand(hand);
 				return ActionResult.SUCCESS;
 			}
 			if (roll.getTotal() >= Skillworks.config.stealArmorRoll) {
@@ -40,11 +41,13 @@ public class PlayerStealEvent {
 					player.attack(mob);
 					if (!player.isCreative()) mob.setTarget(player);
 				}
+				player.swingHand(hand);
 				return ActionResult.SUCCESS;
 			}
 		}
 		player.attack(mob);
 		if (!player.isCreative()) mob.setTarget(player);
+		player.swingHand(hand);
 		return ActionResult.SUCCESS;
 
 	};

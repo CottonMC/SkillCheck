@@ -16,6 +16,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.BlockStateParticleParameters;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.tag.BlockTags;
+import net.minecraft.tag.ItemTags;
 import net.minecraft.util.math.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -151,19 +153,15 @@ public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 				switch(clingDirection) {
 					// all these are player's direction from block view
 					case NORTH:
-						//clingZ += 0.3;
 						clingX += 0.5;
 						break;
 					case SOUTH:
-						clingZ += 0.3;
 						clingX += 0.5;
 						break;
 					case EAST:
-						clingX += 0.3;
 						clingZ += 0.5;
 						break;
 					case WEST:
-						//clingX += 0.3;
 						clingZ += 0.5;
 						break;
 					default:
@@ -242,7 +240,7 @@ public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 	}
 
 	private static BlockPos getWallPos(Entity entity) {
-		BlockPos pos = new BlockPos(entity).offset(clingDirection);
+		BlockPos pos = new BlockPos(entity).offset(clingDirection.getOpposite());
 		return entity.world.getBlockState(pos).getMaterial().suffocates()? pos : pos.offset(UP);
 	}
 

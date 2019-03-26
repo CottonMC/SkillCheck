@@ -47,13 +47,7 @@ public class DiceResult {
 	}
 
 	public String getFormattedNaturals() {
-		StringBuilder result = new StringBuilder();
-		for (int i = 0; i < naturals.size(); i++) {
-			result.append(naturals.get(i));
-			if (i < naturals.size() - 1) {
-				result.append(", ");
-			}
-		}
-		return result.toString();
+		String text = naturals.toString();
+		return text.substring(1, text.length()-1);
 	}
 }
