@@ -1,9 +1,9 @@
 package io.github.cottonmc.skillworks;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
+import io.github.cottonmc.cotton.config.ConfigManager;
 import io.github.cottonmc.skillworks.events.PlayerAttackEvent;
 import io.github.cottonmc.skillworks.events.PlayerStealEvent;
-import io.github.cottonmc.skillworks.util.ConfigManager;
 import io.github.cottonmc.skillworks.util.Dice;
 import io.github.cottonmc.skillworks.util.DiceResult;
 import io.github.cottonmc.skillworks.util.SkillworksConfig;
@@ -51,7 +51,7 @@ public class Skillworks implements ModInitializer {
     public void onInitialize() {
         //to prevent forward reference issue
         BASE_SCROLL = register("base_scroll", new Item(new Item.Settings().itemGroup(SKILLWORKS_GROUP)));
-        config = ConfigManager.load(SkillworksConfig.class);
+        config = ConfigManager.loadConfig(SkillworksConfig.class);
         AttackEntityCallback.EVENT.register(PlayerAttackEvent.onPlayerAttack);
         UseEntityCallback.EVENT.register(PlayerStealEvent.onPlayerInteract);
 
