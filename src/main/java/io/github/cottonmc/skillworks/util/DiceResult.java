@@ -1,5 +1,7 @@
 package io.github.cottonmc.skillworks.util;
 
+import io.github.cottonmc.skillworks.Skillworks;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +37,7 @@ public class DiceResult {
 	}
 
 	public boolean isCritFail() {
+		if (!Skillworks.config.haveCriticalFailures) return false;
 		return critFail;
 	}
 

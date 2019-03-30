@@ -26,16 +26,17 @@ import net.minecraft.util.registry.Registry;
 
 public class Skillworks implements ModInitializer {
     public static SkillworksConfig config;
+    public static final String MOD_ID = "skillworks";
 
     public static Item BASE_SCROLL;
 
     public static final ItemGroup SKILLWORKS_GROUP = FabricItemGroupBuilder.build(new Identifier("skillworks:skillworks_group"), () -> new ItemStack(BASE_SCROLL));
 
-    public static final Tag<Block> SLIPPERY_BLOCKS = TagRegistry.block(new Identifier("skillworks", "slippery"));
+    public static final Tag<Block> SLIPPERY_BLOCKS = TagRegistry.block(new Identifier(MOD_ID, "slippery"));
 
-    public static Identifier BRAWLER = new Identifier("skillworks", "brawler");
-    public static Identifier WEAVER = new Identifier("skillworks", "weaver");
-    public static Identifier THIEF = new Identifier("skillworks", "thief");
+    public static Identifier BRAWLER = new Identifier(MOD_ID, "brawler");
+    public static Identifier WEAVER = new Identifier(MOD_ID, "weaver");
+    public static Identifier THIEF = new Identifier(MOD_ID, "thief");
 
     public static Item BRAWLER_SCROLL = register("brawler_scroll", new ClassScrollItem(BRAWLER));
     public static Item WEAVER_SCROLL = register("weaver_scroll", new ClassScrollItem(WEAVER));
@@ -43,7 +44,7 @@ public class Skillworks implements ModInitializer {
     public static Item PRESTIGE = register("class_prestige", new TraitPrestigeItem());
 
     public static Item register(String name, Item item) {
-        Registry.register(Registry.ITEM, "skillworks:" + name, item);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, name), item);
         return item;
     }
 

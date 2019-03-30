@@ -43,7 +43,10 @@ public abstract class MixinThiefCommon extends LivingEntity {
 			if (ClassManager.hasLevel((PlayerEntity)(Object)this, Skillworks.THIEF, 3)
 					&& canCatchArrow()) {
 				DiceResult roll = Dice.roll("1d20+"+ClassManager.getLevel((PlayerEntity)(Object)this, Skillworks.THIEF));
-				//TODO: add gamerule for sending dice rolls to chat
+				if (Skillworks.config.showDiceRolls) {
+					if (roll.isCritFail()) ((PlayerEntity)(Object)this).addChatMessage(new TranslatableTextComponent("msg.skillworks.roll.fail", roll.getFormattedNaturals()), false);
+					else ((PlayerEntity)(Object)this).addChatMessage(new TranslatableTextComponent("msg.skillworks.roll.result", roll.getTotal(), roll.getFormattedNaturals()), false);
+				}
 				if (roll.getTotal() >= Skillworks.config.arrowCatchRoll) {
 					ArrowEntity arrow = (ArrowEntity) source.getSource();
 					if (!((ArrowEffects) arrow).getEffects().isEmpty()) {

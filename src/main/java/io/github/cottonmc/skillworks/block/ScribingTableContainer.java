@@ -1,7 +1,6 @@
 package io.github.cottonmc.skillworks.block;
 
 import io.github.cottonmc.skillworks.traits.ClassManager;
-import net.minecraft.block.BlockState;
 import net.minecraft.container.BlockContext;
 import net.minecraft.container.Container;
 import net.minecraft.container.Slot;
@@ -11,7 +10,6 @@ import net.minecraft.inventory.BasicInventory;
 import net.minecraft.inventory.CraftingResultInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Identifier;
 
 public class ScribingTableContainer extends Container {

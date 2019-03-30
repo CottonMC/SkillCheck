@@ -10,7 +10,7 @@ import net.minecraft.util.Identifier;
 public class ClassManager {
 
 	public static CompoundTag getClasses(PlayerEntity player) {
-		CompoundTag data =  PlayerData.get(player);
+		CompoundTag data =  PlayerData.get(player, Skillworks.MOD_ID);
 		if (!data.containsKey("Classes")) {
 			data.put("Classes", new CompoundTag());
 			PlayerData.markDirty(player);

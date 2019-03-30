@@ -9,6 +9,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.TranslatableTextComponent;
 import net.minecraft.util.ActionResult;
 
 public class PlayerStealEvent {
@@ -25,7 +26,10 @@ public class PlayerStealEvent {
 		for (ItemStack stack : mob.getItemsArmor()) {
 			if (stack.isEmpty()) continue;
 			DiceResult roll = Dice.roll("1d20+"+ClassManager.getLevel(player, Skillworks.THIEF));
-			//TODO: add gamerule for sending dice rolls to chat
+			if (Skillworks.config.showDiceRolls) {
+				if (roll.isCritFail()) player.addChatMessage(new TranslatableTextComponent("msg.skillworks.roll.fail", roll.getFormattedNaturals()), false);
+				else player.addChatMessage(new TranslatableTextComponent("msg.skillworks.roll.result", roll.getTotal(), roll.getFormattedNaturals()), false);
+			}
 			if (roll.isCritFail()) {
 				mob.addPotionEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 2000));
 				mob.attack(player);

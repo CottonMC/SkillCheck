@@ -25,7 +25,7 @@ targetCompatibility = 1.8
 
 archivesBaseName = "skillworks"
 group = "io.github.cottonmc"
-version = "0.1.1+19w12b"
+version = "0.1.1+19w13b"
 
 minecraft {
 	refmapName = 'mixins.skillworks.refmap.json'
@@ -42,11 +42,11 @@ repositories {
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:19w12b"
-	mappings "net.fabricmc:yarn:19w12b.5"
+	minecraft "com.mojang:minecraft:19w13b"
+	mappings "net.fabricmc:yarn:19w13b.1"
 	modCompile "net.fabricmc:fabric-loader:0.3.7.109"
-	modCompile "net.fabricmc:fabric:0.2.5.114"
+	modCompile "net.fabricmc:fabric:0.2.6.117"
 
-	modCompile "io.github.cottonmc:cotton:0.0.6+19w12b-SNAPSHOT"
-	modCompile 'com.github.raphydaphy:Crochet:e9694da597'
+	modCompile "io.github.cottonmc:cotton:0.0.9+19w13b-SNAPSHOT"
+	modCompile 'com.github.raphydaphy:Crochet:89a2f0a'
 }
