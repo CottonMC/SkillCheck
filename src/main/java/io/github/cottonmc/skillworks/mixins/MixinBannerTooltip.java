@@ -1,7 +1,7 @@
 package io.github.cottonmc.skillworks.mixins;
 
+import net.minecraft.item.BannerItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.block.BannerItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.text.TextComponent;

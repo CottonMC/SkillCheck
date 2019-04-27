@@ -22,7 +22,7 @@ public class TraitPrestigeItem extends Item {
 
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-		PlayerData.get(player).remove("Classes");
+		PlayerData.get(player, Skillworks.MOD_ID).remove("Classes");
 		PlayerData.markDirty(player);
 		player.addChatMessage(new TranslatableTextComponent("msg.skillworks.prestige"), true);
 		return new TypedActionResult<>(ActionResult.SUCCESS, player.getStackInHand(hand));

@@ -1,6 +1,6 @@
 package io.github.cottonmc.skillworks;
 
-import io.github.cottonmc.skillworks.traits.ClassManager;
+import io.github.cottonmc.skillworks.api.traits.ClassManager;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;

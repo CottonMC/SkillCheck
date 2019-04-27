@@ -1,9 +1,9 @@
 package io.github.cottonmc.skillworks.events;
 
 import io.github.cottonmc.skillworks.Skillworks;
-import io.github.cottonmc.skillworks.traits.ClassManager;
-import io.github.cottonmc.skillworks.util.Dice;
-import io.github.cottonmc.skillworks.util.DiceResult;
+import io.github.cottonmc.skillworks.api.traits.ClassManager;
+import io.github.cottonmc.skillworks.api.dice.Dice;
+import io.github.cottonmc.skillworks.api.dice.DiceResult;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -23,7 +23,7 @@ public class PlayerStealEvent {
 				|| !player.isSneaking()) return ActionResult.PASS;
 		MobEntity mob = (MobEntity) entity;
 		//TODO: try to figure out a good way to require you to sneak around to pickpocket?
-		for (ItemStack stack : mob.getItemsArmor()) {
+		for (ItemStack stack : mob.getArmorItems()) {
 			if (stack.isEmpty()) continue;
 			DiceResult roll = Dice.roll("1d20+"+ClassManager.getLevel(player, Skillworks.THIEF));
 			if (Skillworks.config.showDiceRolls) {
@@ -32,7 +32,7 @@ public class PlayerStealEvent {
 			}
 			if (roll.isCritFail()) {
 				mob.addPotionEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 2000));
-				mob.attack(player);
+				mob.tryAttack(player);
 				if (!player.isCreative()) mob.setTarget(player);
 				player.swingHand(hand);
 				return ActionResult.SUCCESS;

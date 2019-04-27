@@ -1,5 +1,5 @@
 {
-  "item.skillworks.weaver_scroll": "Weaver Scroll",
+  "item.skillworks.artisan_scroll": "Artisan Scroll",
   "item.skillworks.thief_scroll": "Thief Scroll",
   "item.skillworks.brawler_scroll": "Brawler Scroll",
   "item.skillworks.class_prestige": "Scroll of Prestige",
@@ -9,7 +9,7 @@
 
   "tooltip.skillworks.banner": "+ %s more...",
 
-  "trait.skillworks.weaver": "Weaver",
+  "trait.skillworks.artisan": "Artisan",
   "trait.skillworks.thief": "Thief",
   "trait.skillworks.brawler": "Brawler",
 

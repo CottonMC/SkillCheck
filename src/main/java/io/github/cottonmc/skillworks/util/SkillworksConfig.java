@@ -10,7 +10,7 @@ public class SkillworksConfig {
 			"This will not apply to skills like Brawler's damage-boost, which scale according to level.")
 	public boolean disableClasses = false;
 
-	@Comment("If true, the \"skillworks:slippery\" tag will act as a whitelist instead.")
+	@Comment("If true, the \"skillworks:slippery\" tag will act as a whitelist of wall-cligable blocks instead.")
 	public boolean invertSlipperyTag = false;
 
 	@Comment("Send a player's dice rolls to their chat.")

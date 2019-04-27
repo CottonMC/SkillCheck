@@ -1,6 +1,6 @@
 package io.github.cottonmc.skillworks.block;
 
-import io.github.cottonmc.skillworks.traits.ClassManager;
+import io.github.cottonmc.skillworks.api.traits.ClassManager;
 import net.minecraft.container.BlockContext;
 import net.minecraft.container.Container;
 import net.minecraft.container.Slot;

@@ -1,4 +1,4 @@
-package io.github.cottonmc.skillworks.util;
+package io.github.cottonmc.skillworks.api.dice;
 
 import java.util.Random;
 import java.util.regex.Matcher;

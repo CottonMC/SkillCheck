@@ -3,14 +3,15 @@ package io.github.cottonmc.skillworks.mixins;
 import io.github.cottonmc.repackage.blue.endless.jankson.annotation.Nullable;
 import io.github.cottonmc.skillworks.util.ArrowEffects;
 import io.github.cottonmc.skillworks.Skillworks;
-import io.github.cottonmc.skillworks.traits.ClassManager;
-import io.github.cottonmc.skillworks.util.Dice;
-import io.github.cottonmc.skillworks.util.DiceResult;
+import io.github.cottonmc.skillworks.api.traits.ClassManager;
+import io.github.cottonmc.skillworks.api.dice.Dice;
+import io.github.cottonmc.skillworks.api.dice.DiceResult;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.item.ItemStack;
@@ -33,6 +34,8 @@ public abstract class MixinThiefCommon extends LivingEntity {
 
 	@Shadow public abstract void addChatMessage(TextComponent textComponent_1, boolean boolean_1);
 
+	@Shadow public abstract boolean damage(DamageSource damageSource_1, float float_1);
+
 	protected MixinThiefCommon(EntityType<? extends LivingEntity> type, World world) {
 		super(type, world);
 	}
@@ -47,7 +50,9 @@ public abstract class MixinThiefCommon extends LivingEntity {
 					if (roll.isCritFail()) ((PlayerEntity)(Object)this).addChatMessage(new TranslatableTextComponent("msg.skillworks.roll.fail", roll.getFormattedNaturals()), false);
 					else ((PlayerEntity)(Object)this).addChatMessage(new TranslatableTextComponent("msg.skillworks.roll.result", roll.getTotal(), roll.getFormattedNaturals()), false);
 				}
-				if (roll.getTotal() >= Skillworks.config.arrowCatchRoll) {
+				if (roll.isCritFail()) {
+					this.addPotionEffect(new StatusEffectInstance(StatusEffects.INSTANT_DAMAGE, 2, 1));
+				} else if (roll.getTotal() >= Skillworks.config.arrowCatchRoll) {
 					ArrowEntity arrow = (ArrowEntity) source.getSource();
 					if (!((ArrowEffects) arrow).getEffects().isEmpty()) {
 						for (StatusEffectInstance effect : (((ArrowEffects) arrow).getEffects())) {

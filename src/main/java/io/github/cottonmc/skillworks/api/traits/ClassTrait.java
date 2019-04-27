@@ -1,4 +1,4 @@
-package io.github.cottonmc.skillworks.traits;
+package io.github.cottonmc.skillworks.api.traits;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;

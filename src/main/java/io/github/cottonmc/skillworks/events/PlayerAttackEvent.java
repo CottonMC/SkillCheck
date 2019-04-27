@@ -1,9 +1,9 @@
 package io.github.cottonmc.skillworks.events;
 
 import io.github.cottonmc.skillworks.Skillworks;
-import io.github.cottonmc.skillworks.traits.ClassManager;
-import io.github.cottonmc.skillworks.util.Dice;
-import io.github.cottonmc.skillworks.util.DiceResult;
+import io.github.cottonmc.skillworks.api.traits.ClassManager;
+import io.github.cottonmc.skillworks.api.dice.Dice;
+import io.github.cottonmc.skillworks.api.dice.DiceResult;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -20,7 +20,7 @@ public class PlayerAttackEvent {
 	public static AttackEntityCallback onPlayerAttack = (player, world, hand, entity, hitResult) -> {
 		if (player.getStackInHand(hand).isEmpty()) {
 			if (ClassManager.hasClass(player, Skillworks.BRAWLER)) {
-				for (ItemStack stack : entity.getItemsArmor()) {
+				for (ItemStack stack : entity.getArmorItems()) {
 					if (stack.getItem() instanceof ArmorItem) return ActionResult.PASS;
 				}
 				if (entity instanceof LivingEntity) {
@@ -48,8 +48,8 @@ public class PlayerAttackEvent {
 	};
 
 	private static boolean hasWeakness(LivingEntity entity) {
-		if (entity.getPotionEffects().isEmpty()) return false;
-		for (StatusEffectInstance status : entity.getPotionEffects()) {
+		if (entity.getStatusEffects().isEmpty()) return false;
+		for (StatusEffectInstance status : entity.getStatusEffects()) {
 			if (status.getEffectType() == StatusEffects.WEAKNESS) return true;
 		}
 		return false;

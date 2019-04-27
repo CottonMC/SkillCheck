@@ -2,10 +2,11 @@ package io.github.cottonmc.skillworks;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import io.github.cottonmc.cotton.config.ConfigManager;
+import io.github.cottonmc.skillworks.api.traits.ClassManager;
 import io.github.cottonmc.skillworks.events.PlayerAttackEvent;
 import io.github.cottonmc.skillworks.events.PlayerStealEvent;
-import io.github.cottonmc.skillworks.util.Dice;
-import io.github.cottonmc.skillworks.util.DiceResult;
+import io.github.cottonmc.skillworks.api.dice.Dice;
+import io.github.cottonmc.skillworks.api.dice.DiceResult;
 import io.github.cottonmc.skillworks.util.SkillworksConfig;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
@@ -17,7 +18,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.command.ServerCommandManager;
+import net.minecraft.server.command.CommandManager;
 import net.minecraft.tag.Tag;
 import net.minecraft.text.StringTextComponent;
 import net.minecraft.text.TranslatableTextComponent;
@@ -34,12 +35,12 @@ public class Skillworks implements ModInitializer {
 
     public static final Tag<Block> SLIPPERY_BLOCKS = TagRegistry.block(new Identifier(MOD_ID, "slippery"));
 
-    public static Identifier BRAWLER = new Identifier(MOD_ID, "brawler");
-    public static Identifier WEAVER = new Identifier(MOD_ID, "weaver");
-    public static Identifier THIEF = new Identifier(MOD_ID, "thief");
+    public static Identifier BRAWLER = ClassManager.registerClass(new Identifier(MOD_ID, "brawler"), 10);
+    public static Identifier ARTISAN = ClassManager.registerClass(new Identifier(MOD_ID, "artisan"), 1);
+    public static Identifier THIEF = ClassManager.registerClass(new Identifier(MOD_ID, "thief"), 5);
 
     public static Item BRAWLER_SCROLL = register("brawler_scroll", new ClassScrollItem(BRAWLER));
-    public static Item WEAVER_SCROLL = register("weaver_scroll", new ClassScrollItem(WEAVER));
+    public static Item WEAVER_SCROLL = register("artisan_scroll", new ClassScrollItem(ARTISAN));
     public static Item THIEF_SCROLL = register("thief_scroll", new ClassScrollItem(THIEF));
     public static Item PRESTIGE = register("class_prestige", new TraitPrestigeItem());
 
@@ -58,8 +59,8 @@ public class Skillworks implements ModInitializer {
 
         //register a /roll command
         CommandRegistry.INSTANCE.register(false, dispatcher -> dispatcher.register((
-                ServerCommandManager.literal("roll")
-                        .then(ServerCommandManager.argument("formula", StringArgumentType.word())
+                CommandManager.literal("roll")
+                        .then(CommandManager.argument("formula", StringArgumentType.word())
                         .executes(context -> {
                             String formula = context.getArgument("formula", String.class);
                             DiceResult result;

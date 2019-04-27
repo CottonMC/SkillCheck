@@ -2,7 +2,7 @@ package io.github.cottonmc.skillworks.mixins;
 
 import com.mojang.authlib.GameProfile;
 import io.github.cottonmc.skillworks.Skillworks;
-import io.github.cottonmc.skillworks.traits.ClassManager;
+import io.github.cottonmc.skillworks.api.traits.ClassManager;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.input.Input;
@@ -16,8 +16,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.BlockStateParticleParameters;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.tag.ItemTags;
 import net.minecraft.util.math.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -65,7 +63,7 @@ public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 		super(world, profile);
 	}
 
-	@Inject(method = "updateMovement", at = @At("TAIL"))
+	@Inject(method = "updateState", at = @At("TAIL"))
 	public void gymnistMovement(CallbackInfo ci) {
 
 		// wall-cling/wall-jump code from Wall-Jump
@@ -96,7 +94,7 @@ public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 			if (keyTimer == 0 || this.onGround || !nearWall(this, 0.2)) {
 
 				clingTime = 0;
-				if ((this.movementInputForward != 0 || this.movementInputSideways != 0) && this.getHungerManager().getFoodLevel() > 6 && nearWall(this, 0.5)) {
+				if ((this.forwardSpeed != 0 || this.sidewaysSpeed != 0) && this.getHungerManager().getFoodLevel() > 6 && nearWall(this, 0.5)) {
 
 					lastDirection = clingDirection;
 					lastDirection2 = clingDirection2;
@@ -104,7 +102,7 @@ public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 
 					playBreakSound(this, wall);
 					spawnWallParticle(this, wall);
-					wallJump(this, wallJumpHeight, this.movementInputSideways, this.movementInputForward);
+					wallJump(this, wallJumpHeight, this.sidewaysSpeed, this.forwardSpeed);
 				}
 
 			} else {
@@ -241,7 +239,7 @@ public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 
 	private static BlockPos getWallPos(Entity entity) {
 		BlockPos pos = new BlockPos(entity).offset(clingDirection.getOpposite());
-		return entity.world.getBlockState(pos).getMaterial().suffocates()? pos : pos.offset(UP);
+		return entity.world.getBlockState(pos).getMaterial().isSolid()? pos : pos.offset(UP);
 	}
 
 	private static void wallJump(PlayerEntity player, float up, float strafe, float forward) {
@@ -256,7 +254,7 @@ public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 		float f2 = MathHelper.cos(player.yaw * 0.017453292F) / 5;
 
 		int jumpBoostLevel = 0;
-		StatusEffectInstance jumpBoostEffect = player.getPotionEffect(StatusEffects.JUMP_BOOST);
+		StatusEffectInstance jumpBoostEffect = player.getStatusEffect(StatusEffects.JUMP_BOOST);
 		if (jumpBoostEffect != null) jumpBoostLevel = jumpBoostEffect.getAmplifier() + 1;
 
 		player.setVelocity(player.getVelocity().x + (strafe * f2 - forward * f1), up + (jumpBoostLevel * .075), player.getVelocity().z + (forward * f2 + strafe * f1));

@@ -1,7 +1,7 @@
 package io.github.cottonmc.skillworks.mixins;
 
 import io.github.cottonmc.skillworks.Skillworks;
-import io.github.cottonmc.skillworks.traits.ClassManager;
+import io.github.cottonmc.skillworks.api.traits.ClassManager;
 import net.minecraft.client.gui.container.LoomScreen;
 import net.minecraft.container.LoomContainer;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,7 +25,7 @@ public abstract class MixinWeaverScreen {
 
 	@ModifyConstant(method = "onInventoryChanged", constant = @Constant(intValue = 6))
 	private int changeBannerPatternLimit(int orig) {
-		if (ClassManager.hasClass(player, Skillworks.WEAVER)) return 16;
+		if (ClassManager.hasClass(player, Skillworks.ARTISAN)) return 16;
 		else return orig;
 	}
 }
