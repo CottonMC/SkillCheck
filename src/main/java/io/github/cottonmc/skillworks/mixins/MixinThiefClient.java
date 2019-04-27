@@ -246,7 +246,7 @@ public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 
 		float f = 1.0F / MathHelper.sqrt(strafe * strafe + up * up + forward * forward);
 
-		up = up * f;
+		up = up * (f * .7f);
 		strafe = strafe * f;
 		forward = forward * f;
 
