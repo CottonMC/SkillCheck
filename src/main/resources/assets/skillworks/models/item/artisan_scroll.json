@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "skillworks:item/weaver_scroll"
+    "layer0": "skillworks:item/artisan_scroll"
   }
 }

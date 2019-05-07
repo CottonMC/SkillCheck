@@ -1,17 +1,35 @@
 {
+  "schemaVersion": 1,
   "id": "skillworks",
+  "version": "$version",
+
   "name": "Skillworks",
-  "version": "1.0.0",
-  "side": "universal",
-  "initializers": [
-    "io.github.cottonmc.skillworks.Skillworks"
+  "icon": "assets/skillworks/icon.png",
+  "description": "RPG-style classes and abilities",
+  "licence": "LGPL v3",
+  "contact": {
+    "sources": "https://github.com/CottonMC/skillworks"
+  },
+
+  "evironment": "*",
+  "entrypoints": {
+    "main": [
+      "io.github.cottonmc.skillworks.Skillworks"
     ],
-    "mixins": {
-        "common": "skillworks.common.json"
-    },
-    "requires": {
-        "fabric": "*",
-        "cotton": "*",
-        "crochet": "*"
-    }
+    "client": [
+      "io.github.cottonmc.skillworks.SkillworksClient"
+    ],
+    "modmenu": [
+      "io.github.cottonmc.epicurean.EpicureanClient"
+    ]
+  },
+  "mixins": [
+    "skillworks.common.json"
+  ],
+  "requires": {
+    "fabricloader": ">=0.4.0",
+    "fabric": "*",
+    "cotton": "*",
+    "crochet": "*"
+  }
 }

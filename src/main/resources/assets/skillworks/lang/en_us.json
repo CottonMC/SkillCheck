@@ -9,9 +9,9 @@
 
   "tooltip.skillworks.banner": "+ %s more...",
 
-  "trait.skillworks.artisan": "Artisan",
-  "trait.skillworks.thief": "Thief",
-  "trait.skillworks.brawler": "Brawler",
+  "class.skillworks.artisan": "Artisan",
+  "class.skillworks.thief": "Thief",
+  "class.skillworks.brawler": "Brawler",
 
   "tooltip.skillworks.scroll.flavor_0": "A scroll penned by a wandering %s",
   "tooltip.skillworks.scroll.flavor_1": "An ancient text on the ways of the %s",

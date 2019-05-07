@@ -14,7 +14,7 @@ public class ScribingTableContainer extends Container {
 	private Identifier currentSkill;
 	public List<Identifier> classes;
 
-	public ScribingTableContainer(int syncId, PlayerEntity player) {
+	public ScribingTableContainer(int syncId, PlayerEntity player, BlockContext ctx) {
 		super(null, syncId);
 		this.player = player;
 		this.classes = new ArrayList<>(ClassManager.getClasses());

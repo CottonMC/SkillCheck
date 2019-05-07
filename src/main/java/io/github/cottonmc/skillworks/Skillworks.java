@@ -3,6 +3,8 @@ package io.github.cottonmc.skillworks;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import io.github.cottonmc.cotton.config.ConfigManager;
 import io.github.cottonmc.skillworks.api.traits.ClassManager;
+import io.github.cottonmc.skillworks.block.ScribingTable;
+import io.github.cottonmc.skillworks.block.ScribingTableContainer;
 import io.github.cottonmc.skillworks.events.PlayerAttackEvent;
 import io.github.cottonmc.skillworks.events.PlayerStealEvent;
 import io.github.cottonmc.skillworks.api.dice.Dice;
@@ -10,11 +12,14 @@ import io.github.cottonmc.skillworks.api.dice.DiceResult;
 import io.github.cottonmc.skillworks.util.SkillworksConfig;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.registry.CommandRegistry;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.container.BlockContext;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -44,9 +49,20 @@ public class Skillworks implements ModInitializer {
     public static Item THIEF_SCROLL = register("thief_scroll", new ClassScrollItem(THIEF));
     public static Item PRESTIGE = register("class_prestige", new TraitPrestigeItem());
 
+    public static Block SCRIBING_TABLE = register("scribing_container", new ScribingTable());
+
+    public static final Identifier SCRIBING_CONTAINER = new Identifier(MOD_ID, "scribing_table");
+
     public static Item register(String name, Item item) {
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, name), item);
         return item;
+    }
+
+    public static Block register(String name, Block block) {
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, name), block);
+        BlockItem item = new BlockItem(block, new Item.Settings().itemGroup(SKILLWORKS_GROUP));
+        register(name, item);
+        return block;
     }
 
     @Override
@@ -56,6 +72,8 @@ public class Skillworks implements ModInitializer {
         config = ConfigManager.loadConfig(SkillworksConfig.class);
         AttackEntityCallback.EVENT.register(PlayerAttackEvent.onPlayerAttack);
         UseEntityCallback.EVENT.register(PlayerStealEvent.onPlayerInteract);
+
+        ContainerProviderRegistry.INSTANCE.registerFactory(SCRIBING_CONTAINER, (syncId, id, player, buf) -> new ScribingTableContainer(syncId, player, BlockContext.create(player.world, buf.readBlockPos())));
 
         //register a /roll command
         CommandRegistry.INSTANCE.register(false, dispatcher -> dispatcher.register((

@@ -50,3 +50,14 @@ dependencies {
 	modCompile "io.github.cottonmc:cotton:0.6.1+1.14-SNAPSHOT"
 	modCompile 'com.github.raphydaphy:crochet:a203643485'
 }
+
+processResources {
+	inputs.property "version", project.version
+	from(sourceSets.main.resources.srcDirs) {
+		include "fabric.mod.json"
+		expand version: project.version
+	}
+	from(sourceSets.main.resources.srcDirs) {
+		exclude "fabric.mod.json"
+	}
+}

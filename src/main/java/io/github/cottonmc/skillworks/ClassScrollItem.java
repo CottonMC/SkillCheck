@@ -53,6 +53,6 @@ public class ClassScrollItem extends Item {
 	}
 
 	String getTraitName() {
-		return new TranslatableTextComponent("trait."+trait.getNamespace()+"."+trait.getPath()).getText();
+		return new TranslatableTextComponent("class."+trait.getNamespace()+"."+trait.getPath()).getText();
 	}
 }

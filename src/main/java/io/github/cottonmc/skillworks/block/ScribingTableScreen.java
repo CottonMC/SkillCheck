@@ -1,28 +1,30 @@
 package io.github.cottonmc.skillworks.block;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import io.github.cottonmc.skillworks.Skillworks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.ContainerScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.TextComponent;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.TranslatableTextComponent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.List;
 
 public class ScribingTableScreen extends ContainerScreen<ScribingTableContainer> {
-	private static final Identifier TEXTURE = new Identifier("textures/gui/container/villager2.png");
+	private static final Identifier TEXTURE = new Identifier(Skillworks.MOD_ID, "textures/gui/container/scribing.png");
 	private int index;
 	private final ButtonPageWidget[] visibleButtons = new ButtonPageWidget[7];
 	private int scroll;
 	private boolean needsScroll;
 	private ConfirmButtonWidget confirm;
 
-	public ScribingTableScreen(ScribingTableContainer container, PlayerInventory inv, TextComponent name) {
-		super(container, inv, name);
+	public ScribingTableScreen(int syncId, PlayerEntity player) {
+		super(new ScribingTableContainer(syncId, player, null), player.inventory, new TranslatableTextComponent("container.skillworks.scribing_table"));
 		this.containerWidth = 276;
+		this.index = -1;
 	}
 
 	private void syncClassIndex() {
@@ -39,9 +41,7 @@ public class ScribingTableScreen extends ContainerScreen<ScribingTableContainer>
 		int left = (this.width - this.containerWidth) / 2;
 		int top = (this.height - this.containerHeight) / 2;
 		int listHeight = top + 18;
-		confirm = this.addButton(new ConfirmButtonWidget(left + 190, top + 100, (widget) -> {
-			this.syncLevelUp();
-		}));
+		confirm = this.addButton(new ConfirmButtonWidget(left + 140, top + 130, (widget) -> this.syncLevelUp()));
 		for (int i = 0; i < 7; i++) {
 			this.visibleButtons[i] = this.addButton(new ButtonPageWidget(left + 5, listHeight, i, (widget) -> {
 				if (widget instanceof ButtonPageWidget) {
@@ -69,7 +69,33 @@ public class ScribingTableScreen extends ContainerScreen<ScribingTableContainer>
 		confirm.active = container.canLevelUp();
 		List<Identifier> classes = this.container.classes;
 		if (!classes.isEmpty()) {
+			int left = (this.width - this.containerWidth) / 2;
+			int top = (this.height - this.containerHeight) / 2;
+			int drawHeight = (top + 17);
+			int listLeft = left + 10;
+			int scrollOffset = 0;
+			GlStateManager.enableLighting();
+			for (Identifier id : classes) {
+				String key = "class." + id.getNamespace() + "." + id.getPath();
+				if (shouldScroll(classes.size()) && (scrollOffset < this.scroll || scrollOffset >= 7 + this.scroll)) {
+					scrollOffset++;
+				} else {
+					int renderHeight = drawHeight + 6;
+					this.minecraft.textRenderer.draw(new TranslatableTextComponent(key).getText(), listLeft, renderHeight, 4210752);
+//					this.font.draw(id.toString(), 6.0F, (float)renderHeight + containerHeight, 4210752);
+					drawHeight += 20;
+					scrollOffset++;
+				}
+			}
+			GlStateManager.disableLighting();
 
+			for (ButtonPageWidget button : this.visibleButtons) {
+				if (button.isHovered()) {
+					button.renderToolTip(x, y);
+				}
+				button.visible = button.index < this.container.classes.size();
+				button.active = button.index != this.index;
+			}
 		}
 	}
 
