@@ -3,7 +3,7 @@
   "item.skillworks.thief_scroll": "Thief Scroll",
   "item.skillworks.brawler_scroll": "Brawler Scroll",
   "item.skillworks.class_prestige": "Scroll of Prestige",
-  "item.skillworks.base_scroll": "Base Scroll",
+  "item.skillworks.character_sheet": "Character Sheet",
 
   "itemGroup.skillworks.skillworks_group": "Skillworks",
 
@@ -25,5 +25,19 @@
   "msg.skillworks.prestige": "All classes reset.",
   "msg.skillworks.levelup": "You feel your prowess as a %s grow.",
   "msg.skillworks.roll.result": "Roll result: %s (%s)",
-  "msg.skillworks.roll.fail": "Critical failure! (%s)"
+  "msg.skillworks.roll.fail": "Critical failure! (%s)",
+
+  "desc.class.skillworks.artisan.0": "Lv1+: Put up to 16 patterns on a single banner.",
+  "desc.class.skillworks.thief.0": "Per lv: +1 to entity theft chance.",
+  "desc.class.skillworks.thief.1": "Sneak+right-click on an enemy to try to steal armor.",
+  "desc.class.skillworks.thief.2": "Lv1+: Cling to and jump off walls.",
+  "desc.class.skillworks.thief.3": "Lv2+: Jump again in midair.",
+  "desc.class.skillworks.thief.4": "Lv3+: Catch arrows out of the air.",
+  "desc.class.skillworks.brawler.0": "Per lv: +1 damage per attack with an empty hand.",
+  "desc.class.skillworks.brawler.1": "Lv2+: Chance to weaken an un-armored enemy on an empty-hand attack.",
+  "desc.class.skillworks.brawler.2": "Per lv 2+: +1 to enemy weaken chance.",
+
+  "text.skillworks.level": "Lv%s",
+  "text.skillworks.cost": "Next level: %s experience",
+  "btn.skillworks.levelup": "Level up"
 }

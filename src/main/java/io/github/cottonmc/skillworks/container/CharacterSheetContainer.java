@@ -1,7 +1,6 @@
-package io.github.cottonmc.skillworks.block;
+package io.github.cottonmc.skillworks.container;
 
 import io.github.cottonmc.skillworks.api.traits.ClassManager;
-import net.minecraft.container.BlockContext;
 import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
@@ -9,12 +8,12 @@ import net.minecraft.util.Identifier;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScribingTableContainer extends Container {
+public class CharacterSheetContainer extends Container {
 	private final PlayerEntity player;
 	private Identifier currentSkill;
 	public List<Identifier> classes;
 
-	public ScribingTableContainer(int syncId, PlayerEntity player, BlockContext ctx) {
+	public CharacterSheetContainer(int syncId, PlayerEntity player) {
 		super(null, syncId);
 		this.player = player;
 		this.classes = new ArrayList<>(ClassManager.getClasses());
@@ -25,10 +24,11 @@ public class ScribingTableContainer extends Container {
 		return true;
 	}
 
-	private int getLevelCost() {
+	public int getLevelCost() {
 		if (currentSkill == null) return 0;
 		int level = ClassManager.getLevel(player, currentSkill);
 		if (level > 3) return 30;
+		if (level == 0) return 5;
 		return 10*level;
 	}
 
@@ -43,6 +43,6 @@ public class ScribingTableContainer extends Container {
 	public boolean canLevelUp() {
 		if (currentSkill == null) return false;
 		if (ClassManager.getLevel(player, currentSkill) >= ClassManager.getClassMaxLevel(currentSkill)) return false;
-		return player.experience >= getLevelCost();
+		return player.experience >= getLevelCost() || player.isCreative();
 	}
 }

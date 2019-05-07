@@ -1,19 +1,27 @@
-package io.github.cottonmc.skillworks.block;
+package io.github.cottonmc.skillworks.container;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.cottonmc.skillworks.Skillworks;
+import io.github.cottonmc.skillworks.api.traits.ClassManager;
+import io.github.cottonmc.skillworks.util.SkillworksNetworking;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.ContainerScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.render.GuiLighting;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.TranslatableTextComponent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ScribingTableScreen extends ContainerScreen<ScribingTableContainer> {
+public class CharacterSheetScreen extends ContainerScreen<CharacterSheetContainer> {
 	private static final Identifier TEXTURE = new Identifier(Skillworks.MOD_ID, "textures/gui/container/scribing.png");
 	private int index;
 	private final ButtonPageWidget[] visibleButtons = new ButtonPageWidget[7];
@@ -21,18 +29,19 @@ public class ScribingTableScreen extends ContainerScreen<ScribingTableContainer>
 	private boolean needsScroll;
 	private ConfirmButtonWidget confirm;
 
-	public ScribingTableScreen(int syncId, PlayerEntity player) {
-		super(new ScribingTableContainer(syncId, player, null), player.inventory, new TranslatableTextComponent("container.skillworks.scribing_table"));
+	public CharacterSheetScreen(int syncId, PlayerEntity player) {
+		super(new CharacterSheetContainer(syncId, player), player.inventory, new TranslatableTextComponent("container.skillworks.scribing_table"));
 		this.containerWidth = 276;
 		this.index = -1;
 	}
 
 	private void syncClassIndex() {
 		this.container.setCurrentSkill(index);
+		SkillworksNetworking.syncSelection(index);
 	}
 
 	private void syncLevelUp() {
-
+		SkillworksNetworking.syncLevelup(container.classes.get(index));
 	}
 
 	@Override
@@ -41,7 +50,10 @@ public class ScribingTableScreen extends ContainerScreen<ScribingTableContainer>
 		int left = (this.width - this.containerWidth) / 2;
 		int top = (this.height - this.containerHeight) / 2;
 		int listHeight = top + 18;
-		confirm = this.addButton(new ConfirmButtonWidget(left + 140, top + 130, (widget) -> this.syncLevelUp()));
+		confirm = this.addButton(new ConfirmButtonWidget(left + 143, top + 140, new TranslatableTextComponent("btn.skillworks.levelup"), (widget) -> {
+			this.playerInventory.player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1.0f, 1.0f);
+			this.syncLevelUp();
+		}));
 		for (int i = 0; i < 7; i++) {
 			this.visibleButtons[i] = this.addButton(new ButtonPageWidget(left + 5, listHeight, i, (widget) -> {
 				if (widget instanceof ButtonPageWidget) {
@@ -68,26 +80,48 @@ public class ScribingTableScreen extends ContainerScreen<ScribingTableContainer>
 		super.render(x, y, partialTicks);
 		confirm.active = container.canLevelUp();
 		List<Identifier> classes = this.container.classes;
+		TextRenderer textRenderer = this.minecraft.textRenderer;
 		if (!classes.isEmpty()) {
 			int left = (this.width - this.containerWidth) / 2;
 			int top = (this.height - this.containerHeight) / 2;
-			int drawHeight = (top + 17);
+			int drawHeight = top + 17;
 			int listLeft = left + 10;
 			int scrollOffset = 0;
-			GlStateManager.enableLighting();
+			int rightPanelCenter = left + 187;
+			GlStateManager.disableLighting();
+			GlStateManager.disableBlend();
 			for (Identifier id : classes) {
-				String key = "class." + id.getNamespace() + "." + id.getPath();
+				TranslatableTextComponent className = new TranslatableTextComponent("class." + id.getNamespace() + "." + id.getPath());
+				String level = className.getText() + ": " + new TranslatableTextComponent("text.skillworks.level", ClassManager.getLevel(playerInventory.player, id)).getText();
 				if (shouldScroll(classes.size()) && (scrollOffset < this.scroll || scrollOffset >= 7 + this.scroll)) {
 					scrollOffset++;
 				} else {
 					int renderHeight = drawHeight + 6;
-					this.minecraft.textRenderer.draw(new TranslatableTextComponent(key).getText(), listLeft, renderHeight, 4210752);
-//					this.font.draw(id.toString(), 6.0F, (float)renderHeight + containerHeight, 4210752);
+					this.drawString(textRenderer, level, listLeft, renderHeight, 0xffffff);
 					drawHeight += 20;
 					scrollOffset++;
 				}
 			}
-			GlStateManager.disableLighting();
+			if (index >= 0) {
+				Identifier id = classes.get(index);
+				int descLineHeight = top + 20;
+				List<String> lines = new ArrayList<>();
+				for (int i = 0; i < 10; i++) {
+					String key = "desc.class." + id.getNamespace() + "." + id.getPath() + "." + i;
+					if (!I18n.hasTranslation(key)) break;
+					String textToDraw = new TranslatableTextComponent(key).getText();
+					List<String> toAdd = textRenderer.wrapStringToWidthAsList(textToDraw, 161);
+					lines.addAll(toAdd);
+				}
+				for (String line : lines) {
+					this.drawCenteredString(textRenderer, line, rightPanelCenter, descLineHeight, 0xffffff);
+					descLineHeight += 10;
+				}
+				String cost = new TranslatableTextComponent("text.skillworks.cost", this.container.getLevelCost()).getText();
+				this.drawCenteredString(textRenderer, cost, rightPanelCenter, descLineHeight, 0x55ff55);
+			}
+			GlStateManager.enableLighting();
+			GlStateManager.enableBlend();
 
 			for (ButtonPageWidget button : this.visibleButtons) {
 				if (button.isHovered()) {
@@ -96,6 +130,7 @@ public class ScribingTableScreen extends ContainerScreen<ScribingTableContainer>
 				button.visible = button.index < this.container.classes.size();
 				button.active = button.index != this.index;
 			}
+			GuiLighting.disable();
 		}
 	}
 
@@ -160,8 +195,8 @@ public class ScribingTableScreen extends ContainerScreen<ScribingTableContainer>
 
 	@Environment(EnvType.CLIENT)
 	class ConfirmButtonWidget extends ButtonWidget {
-		public ConfirmButtonWidget(int x, int y, PressAction action) {
-			super(x, y, 89, 20, "", action);
+		public ConfirmButtonWidget(int x, int y, TranslatableTextComponent name, PressAction action) {
+			super(x, y, 89, 20, name.getText(), action);
 		}
 	}
 }

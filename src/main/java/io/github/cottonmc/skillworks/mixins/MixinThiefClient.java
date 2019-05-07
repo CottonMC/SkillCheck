@@ -149,7 +149,7 @@ public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 				clingX = this.getPos().getX();
 				clingZ = this.getPos().getZ();
 				switch(clingDirection) {
-					// all these are player's direction from block view
+					// all these are player's direction from container view
 					case NORTH:
 						clingX += 0.5;
 						break;

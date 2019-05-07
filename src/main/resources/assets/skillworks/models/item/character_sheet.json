@@ -1,7 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "skillworks:item/base_scroll"
+    "layer0": "skillworks:item/character_sheet"
   }
 }
 
