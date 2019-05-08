@@ -1,0 +1,43 @@
+{
+  "item.skillcheck.artisan_scroll": "Artisan Scroll",
+  "item.skillcheck.thief_scroll": "Thief Scroll",
+  "item.skillcheck.brawler_scroll": "Brawler Scroll",
+  "item.skillcheck.class_prestige": "Scroll of Prestige",
+  "item.skillcheck.character_sheet": "Character Sheet",
+
+  "itemGroup.skillcheck.skillcheck_group": "Skillworks",
+
+  "tooltip.skillcheck.banner": "+ %s more...",
+
+  "class.skillcheck.artisan": "Artisan",
+  "class.skillcheck.thief": "Thief",
+  "class.skillcheck.brawler": "Brawler",
+
+  "tooltip.skillcheck.scroll.flavor_0": "A scroll penned by a wandering %s",
+  "tooltip.skillcheck.scroll.flavor_1": "An ancient text on the ways of the %s",
+  "tooltip.skillcheck.scroll.flavor_2": "A YouTube tutorial on how to be a %s",
+  "tooltip.skillcheck.scroll.flavor_3": "A beginner's guide for the aspiring %s",
+  "tooltip.skillcheck.scroll.flavor_4": "Lost knowledge on the secrets of being a %s",
+  "tooltip.skillcheck.scroll.flavor_5": "A page from the diary of an apprentice %s",
+  "tooltip.skillcheck.prestige.0": "Debug item.",
+  "tooltip.skillcheck.prestige.1": "Resets progress in all classes.",
+
+  "msg.skillcheck.prestige": "All classes reset.",
+  "msg.skillcheck.levelup": "You feel your prowess as a %s grow.",
+  "msg.skillcheck.roll.result": "Roll result: %s (%s)",
+  "msg.skillcheck.roll.fail": "Critical failure! (%s)",
+
+  "desc.class.skillcheck.artisan.0": "Lv1+: Put up to 16 patterns on a single banner.",
+  "desc.class.skillcheck.thief.0": "Per lv: +1 to entity theft chance.",
+  "desc.class.skillcheck.thief.1": "Sneak+right-click on an enemy to try to steal armor.",
+  "desc.class.skillcheck.thief.2": "Lv1+: Cling to and jump off walls.",
+  "desc.class.skillcheck.thief.3": "Lv2+: Jump again in midair.",
+  "desc.class.skillcheck.thief.4": "Lv3+: Catch arrows out of the air.",
+  "desc.class.skillcheck.brawler.0": "Per lv: +1 damage per attack with an empty hand.",
+  "desc.class.skillcheck.brawler.1": "Lv2+: Chance to weaken an un-armored enemy on an empty-hand attack.",
+  "desc.class.skillcheck.brawler.2": "Per lv 2+: +1 to enemy weaken chance.",
+
+  "text.skillcheck.level": "Lv%s",
+  "text.skillcheck.cost": "Next level: %s experience",
+  "btn.skillcheck.levelup": "Level up"
+}

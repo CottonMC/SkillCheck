@@ -1,30 +1,30 @@
 {
   "schemaVersion": 1,
-  "id": "skillworks",
+  "id": "skillcheck",
   "version": "$version",
 
-  "name": "Skillworks",
-  "icon": "assets/skillworks/icon.png",
+  "name": "SkillCheck",
+  "icon": "assets/skillcheck/icon.png",
   "description": "RPG-style classes and abilities",
   "licence": "LGPL v3",
   "contact": {
-    "sources": "https://github.com/CottonMC/skillworks"
+    "sources": "https://github.com/CottonMC/skillcheck"
   },
 
   "evironment": "*",
   "entrypoints": {
     "main": [
-      "io.github.cottonmc.skillworks.Skillworks"
+      "io.github.cottonmc.skillcheck.SkillCheck"
     ],
     "client": [
-      "io.github.cottonmc.skillworks.SkillworksClient"
+      "io.github.cottonmc.skillcheck.SkillCheckClient"
     ],
     "modmenu": [
-      "io.github.cottonmc.epicurean.EpicureanClient"
+      "io.github.cottonmc.skillcheck.SkillCheckClient"
     ]
   },
   "mixins": [
-    "skillworks.common.json"
+    "skillcheck.common.json"
   ],
   "requires": {
     "fabricloader": ">=0.4.0",

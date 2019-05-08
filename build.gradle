@@ -23,12 +23,12 @@ apply plugin: net.fabricmc.loom.LoomGradlePlugin
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-archivesBaseName = "skillworks"
+archivesBaseName = "skillcheck"
 group = "io.github.cottonmc"
 version = "0.1.1+1.14"
 
 minecraft {
-	refmapName = 'mixins.skillworks.refmap.json'
+	refmapName = 'mixins.skillcheck.refmap.json'
 }
 
 repositories {
@@ -39,6 +39,9 @@ repositories {
 	maven {
 		url 'http://server.bbkr.space:8081/artifactory/libs-snapshot'
 	}
+	maven { 
+		url = "https://minecraft.curseforge.com/api/maven" 
+	}
 }
 
 dependencies {
@@ -47,8 +50,13 @@ dependencies {
 	modCompile "net.fabricmc:fabric-loader:0.4.4+build.138"
 	modCompile "net.fabricmc:fabric:0.2.7+build.127"
 
+	modCompile "io.github.prospector.modmenu:ModMenu:1.5.1-81"
 	modCompile "io.github.cottonmc:cotton:0.6.1+1.14-SNAPSHOT"
-	modCompile 'com.github.raphydaphy:crochet:a203643485'
+	include "io.github.cottonmc:cotton:0.6.1+1.14-SNAPSHOT"
+	modCompile "com.github.raphydaphy:crochet:a203643485"
+	include "com.github.raphydaphy:crochet:a203643485"
+	modCompile "cloth-config:ClothConfig:0.2.1.14"
+	include "cloth-config:ClothConfig:0.2.1.14"
 }
 
 processResources {

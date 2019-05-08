@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "io.github.cottonmc.skillcheck.mixins",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "mixins.skillcheck.refmap.json",
+  "mixins": [
+    "MixinArrow",
+    "MixinWeaverContainer",
+    "MixinWeaverScreen",
+    "MixinBannerTooltip",
+    "MixinThiefClient",
+    "MixinThiefCommon"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
