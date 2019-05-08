@@ -25,17 +25,13 @@ targetCompatibility = 1.8
 
 archivesBaseName = "skillcheck"
 group = "io.github.cottonmc"
-version = "1.0.0+1.14"
+version = "1.0.1+1.14"
 
 minecraft {
 	refmapName = 'mixins.skillcheck.refmap.json'
 }
 
 repositories {
-	mavenLocal()
-	maven {
-		url 'https://www.jitpack.io'
-	}
 	maven {
 		url 'http://server.bbkr.space:8081/artifactory/libs-snapshot'
 	}
@@ -53,8 +49,8 @@ dependencies {
 	modCompile "io.github.prospector.modmenu:ModMenu:1.5.1-81"
 	modCompile "io.github.cottonmc:cotton:0.6.1+1.14-SNAPSHOT"
 	include "io.github.cottonmc:cotton:0.6.1+1.14-SNAPSHOT"
-	modCompile "com.github.raphydaphy:crochet:a203643485"
-	include "com.github.raphydaphy:crochet:a203643485"
+	modCompile "crochet:Crochet:1.0.2"
+	include "crochet:Crochet:1.0.2"
 	modCompile "cloth-config:ClothConfig:0.2.1.14"
 	include "cloth-config:ClothConfig:0.2.1.14"
 }

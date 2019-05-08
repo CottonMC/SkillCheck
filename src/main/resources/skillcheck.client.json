@@ -3,10 +3,10 @@
   "package": "io.github.cottonmc.skillcheck.mixins",
   "compatibilityLevel": "JAVA_8",
   "refmap": "mixins.skillcheck.refmap.json",
-  "mixins": [
-    "MixinArrow",
-    "MixinLoomContainer",
-    "MixinThiefCommon"
+  "cliet": [
+    "MixinBannerTooltip",
+    "MixinThiefClient",
+    "MixinLoomScreen"
   ],
   "injectors": {
     "defaultRequire": 1

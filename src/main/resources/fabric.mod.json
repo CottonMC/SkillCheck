@@ -24,7 +24,11 @@
     ]
   },
   "mixins": [
-    "skillcheck.common.json"
+    "skillcheck.common.json",
+    {
+      "config": "skillcheck.client.json",
+      "environment": "client"
+    }
   ],
   "requires": {
     "fabricloader": ">=0.4.0",
