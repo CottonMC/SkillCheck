@@ -25,7 +25,7 @@ targetCompatibility = 1.8
 
 archivesBaseName = "skillcheck"
 group = "io.github.cottonmc"
-version = "0.1.1+1.14"
+version = "1.0.0+1.14"
 
 minecraft {
 	refmapName = 'mixins.skillcheck.refmap.json'
