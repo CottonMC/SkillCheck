@@ -37,8 +37,6 @@ public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 
 	@Shadow public Input input;
 
-	@Shadow public abstract boolean isSneaking();
-
 	//Wall-Jump config default values
 	private static float wallJumpHeight = 0.8f;
 	private static int wallSlideDelay = 15;

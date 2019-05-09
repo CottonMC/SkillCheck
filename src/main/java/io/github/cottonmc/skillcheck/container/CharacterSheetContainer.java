@@ -32,7 +32,8 @@ public class CharacterSheetContainer extends Container {
 		return 10*level;
 	}
 
-	public void close(PlayerEntity player) {
+	@Override
+  public void close(PlayerEntity player) {
 		super.close(player);
 	}
 
