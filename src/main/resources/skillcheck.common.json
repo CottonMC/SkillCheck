@@ -4,7 +4,7 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "mixins.skillcheck.refmap.json",
   "mixins": [
-    "ArrowEffects",
+    "MixinArrow",
     "MixinLoomContainer",
     "MixinThiefCommon"
   ],
