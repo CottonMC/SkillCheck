@@ -31,10 +31,11 @@ public class ClassScrollItem extends Item {
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
 		ClassManager.levelUp(player, trait);
-		if (!player.isCreative()) player.getStackInHand(hand).subtractAmount(1);
+		ItemStack held = player.getStackInHand(hand);
+		if (!player.abilities.creativeMode) held.subtractAmount(1);
 		player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
 		player.addChatMessage(new TranslatableComponent("msg.skillcheck.levelup", getTraitName()), true);
-		return new TypedActionResult<>(ActionResult.SUCCESS, player.getStackInHand(hand));
+		return new TypedActionResult<>(ActionResult.SUCCESS, held);
 	}
 
 	@Override
