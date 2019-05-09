@@ -2,7 +2,6 @@ package io.github.cottonmc.skillcheck.mixins;
 
 import io.github.cottonmc.repackage.blue.endless.jankson.annotation.Nullable;
 import io.github.cottonmc.skillcheck.SkillCheck;
-import io.github.cottonmc.skillcheck.util.ArrowEffects;
 import io.github.cottonmc.skillcheck.api.traits.ClassManager;
 import io.github.cottonmc.skillcheck.api.dice.Dice;
 import io.github.cottonmc.skillcheck.api.dice.RollResult;
