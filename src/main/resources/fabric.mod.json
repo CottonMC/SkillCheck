@@ -11,7 +11,7 @@
     "sources": "https://github.com/CottonMC/skillcheck"
   },
 
-  "evironment": "*",
+  "environment": "*",
   "entrypoints": {
     "main": [
       "io.github.cottonmc.skillcheck.SkillCheck"
