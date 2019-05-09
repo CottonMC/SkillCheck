@@ -6,7 +6,7 @@ import net.minecraft.client.gui.container.LoomScreen;
 import net.minecraft.container.LoomContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.TextComponent;
+import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
@@ -19,7 +19,7 @@ public abstract class MixinLoomScreen {
 	private PlayerEntity player;
 
 	@Inject(method = "<init>", at = @At("RETURN"))
-	public void construct(LoomContainer container, PlayerInventory inv, TextComponent name, CallbackInfo ci) {
+	public void construct(LoomContainer container, PlayerInventory inv, Component name, CallbackInfo ci) {
 		player = inv.player;
 	}
 

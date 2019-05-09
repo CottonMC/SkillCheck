@@ -13,7 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particle.BlockStateParticleParameters;
+import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.math.*;
@@ -63,7 +63,7 @@ public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 		super(world, profile);
 	}
 
-	@Inject(method = "updateState", at = @At("TAIL"))
+	@Inject(method = "tick", at = @At("TAIL"))
 	public void gymnistMovement(CallbackInfo ci) {
 
 		// wall-cling/wall-jump code from Wall-Jump
@@ -281,7 +281,7 @@ public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 
 		BlockState state = entity.world.getBlockState(pos);
 		if (state.getRenderType() != BlockRenderType.INVISIBLE) {
-			entity.world.addParticle(new BlockStateParticleParameters(ParticleTypes.BLOCK, state), entity.x, entity.y, entity.z, 0.0D, 0.0D, 0.0D);
+			entity.world.addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, state), entity.x, entity.y, entity.z, 0.0D, 0.0D, 0.0D);
 		}
 
 	}

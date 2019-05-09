@@ -43,6 +43,6 @@ public class CharacterSheetContainer extends Container {
 	public boolean canLevelUp() {
 		if (currentSkill == null) return false;
 		if (ClassManager.getLevel(player, currentSkill) >= ClassManager.getClassMaxLevel(currentSkill)) return false;
-		return player.experience >= getLevelCost() || player.isCreative();
+		return player.experienceLevel >= getLevelCost() || player.isCreative();
 	}
 }

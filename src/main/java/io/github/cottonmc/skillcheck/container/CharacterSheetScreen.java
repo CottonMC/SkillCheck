@@ -12,9 +12,9 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GuiLighting;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.TranslatableTextComponent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
@@ -30,7 +30,7 @@ public class CharacterSheetScreen extends ContainerScreen<CharacterSheetContaine
 	private ConfirmButtonWidget confirm;
 
 	public CharacterSheetScreen(int syncId, PlayerEntity player) {
-		super(new CharacterSheetContainer(syncId, player), player.inventory, new TranslatableTextComponent("container.skillcheck.scribing_table"));
+		super(new CharacterSheetContainer(syncId, player), player.inventory, new TranslatableComponent("container.skillcheck.scribing_table"));
 		this.containerWidth = 276;
 		this.index = -1;
 	}
@@ -41,6 +41,7 @@ public class CharacterSheetScreen extends ContainerScreen<CharacterSheetContaine
 	}
 
 	private void syncLevelUp() {
+		if (!playerInventory.player.isCreative()) playerInventory.player.experienceLevel -= container.getLevelCost();
 		SkillCheckNetworking.syncLevelup(container.classes.get(index));
 	}
 
@@ -50,7 +51,7 @@ public class CharacterSheetScreen extends ContainerScreen<CharacterSheetContaine
 		int left = (this.width - this.containerWidth) / 2;
 		int top = (this.height - this.containerHeight) / 2;
 		int listHeight = top + 18;
-		confirm = this.addButton(new ConfirmButtonWidget(left + 143, top + 140, new TranslatableTextComponent("btn.skillcheck.levelup"), (widget) -> {
+		confirm = this.addButton(new ConfirmButtonWidget(left + 143, top + 140, new TranslatableComponent("btn.skillcheck.levelup"), (widget) -> {
 			this.playerInventory.player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1.0f, 1.0f);
 			this.syncLevelUp();
 		}));
@@ -91,8 +92,8 @@ public class CharacterSheetScreen extends ContainerScreen<CharacterSheetContaine
 			GlStateManager.disableLighting();
 			GlStateManager.disableBlend();
 			for (Identifier id : classes) {
-				TranslatableTextComponent className = new TranslatableTextComponent("class." + id.getNamespace() + "." + id.getPath());
-				String level = className.getText() + ": " + new TranslatableTextComponent("text.skillcheck.level", ClassManager.getLevel(playerInventory.player, id)).getText();
+				TranslatableComponent className = new TranslatableComponent("class." + id.getNamespace() + "." + id.getPath());
+				String level = className.getText() + ": " + new TranslatableComponent("text.skillcheck.level", ClassManager.getLevel(playerInventory.player, id)).getText();
 				if (shouldScroll(classes.size()) && (scrollOffset < this.scroll || scrollOffset >= 7 + this.scroll)) {
 					scrollOffset++;
 				} else {
@@ -109,7 +110,7 @@ public class CharacterSheetScreen extends ContainerScreen<CharacterSheetContaine
 				for (int i = 0; i < 10; i++) {
 					String key = "desc.class." + id.getNamespace() + "." + id.getPath() + "." + i;
 					if (!I18n.hasTranslation(key)) break;
-					String textToDraw = new TranslatableTextComponent(key).getText();
+					String textToDraw = new TranslatableComponent(key).getText();
 					List<String> toAdd = textRenderer.wrapStringToWidthAsList(textToDraw, 161);
 					lines.addAll(toAdd);
 				}
@@ -117,7 +118,7 @@ public class CharacterSheetScreen extends ContainerScreen<CharacterSheetContaine
 					this.drawCenteredString(textRenderer, line, rightPanelCenter, descLineHeight, 0xffffff);
 					descLineHeight += 10;
 				}
-				String cost = new TranslatableTextComponent("text.skillcheck.cost", this.container.getLevelCost()).getText();
+				String cost = new TranslatableComponent("text.skillcheck.cost", this.container.getLevelCost()).getText();
 				this.drawCenteredString(textRenderer, cost, rightPanelCenter, descLineHeight, 0x55ff55);
 			}
 			GlStateManager.enableLighting();
@@ -195,7 +196,7 @@ public class CharacterSheetScreen extends ContainerScreen<CharacterSheetContaine
 
 	@Environment(EnvType.CLIENT)
 	class ConfirmButtonWidget extends ButtonWidget {
-		public ConfirmButtonWidget(int x, int y, TranslatableTextComponent name, PressAction action) {
+		public ConfirmButtonWidget(int x, int y, TranslatableComponent name, PressAction action) {
 			super(x, y, 89, 20, name.getText(), action);
 		}
 	}

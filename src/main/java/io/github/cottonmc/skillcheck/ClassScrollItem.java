@@ -1,15 +1,15 @@
 package io.github.cottonmc.skillcheck;
 
 import io.github.cottonmc.skillcheck.api.traits.ClassManager;
+import net.minecraft.ChatFormat;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.TextComponent;
-import net.minecraft.text.TextFormat;
-import net.minecraft.text.TranslatableTextComponent;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -33,12 +33,12 @@ public class ClassScrollItem extends Item {
 		ClassManager.levelUp(player, trait);
 		if (!player.isCreative()) player.getStackInHand(hand).subtractAmount(1);
 		player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
-		player.addChatMessage(new TranslatableTextComponent("msg.skillcheck.levelup", getTraitName()), true);
+		player.addChatMessage(new TranslatableComponent("msg.skillcheck.levelup", getTraitName()), true);
 		return new TypedActionResult<>(ActionResult.SUCCESS, player.getStackInHand(hand));
 	}
 
 	@Override
-	public void buildTooltip(ItemStack stack, World world, List<TextComponent> tooltips, TooltipContext ctx) {
+	public void buildTooltip(ItemStack stack, World world, List<Component> tooltips, TooltipContext ctx) {
 		int flavor = 0;
 		if (!stack.hasTag()) {
 			CompoundTag tag = new CompoundTag();
@@ -49,10 +49,10 @@ public class ClassScrollItem extends Item {
 		} else {
 			flavor = stack.getTag().getInt("FlavorText");
 		}
-		tooltips.add(new TranslatableTextComponent("tooltip.skillcheck.scroll.flavor_"+flavor, getTraitName()).applyFormat(TextFormat.GRAY, TextFormat.ITALIC));
+		tooltips.add(new TranslatableComponent("tooltip.skillcheck.scroll.flavor_"+flavor, getTraitName()).applyFormat(ChatFormat.GRAY, ChatFormat.ITALIC));
 	}
 
 	String getTraitName() {
-		return new TranslatableTextComponent("class."+trait.getNamespace()+"."+trait.getPath()).getText();
+		return new TranslatableComponent("class."+trait.getNamespace()+"."+trait.getPath()).getText();
 	}
 }
