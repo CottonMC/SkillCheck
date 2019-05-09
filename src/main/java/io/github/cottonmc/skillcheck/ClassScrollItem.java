@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Random;
 
 public class ClassScrollItem extends Item {
-  static final String FLAVOR_TEXT = "FlavorText";
+	static final String FLAVOR_TEXT = "FlavorText";
 
 	Identifier trait;
 
@@ -42,16 +42,16 @@ public class ClassScrollItem extends Item {
 
 	@Override
 	public void buildTooltip(ItemStack stack, World world, List<Component> tooltips, TooltipContext ctx) {
-    int flavor;
-    CompoundTag tag = stack.getOrCreateTag();
-    if (tag.containsKey(FLAVOR_TEXT, NbtType.INT)) {
-      flavor = tag.getInt(FLAVOR_TEXT);
-    } else {
-      flavor = new Random().nextInt(6);
-      tag.putInt(FLAVOR_TEXT, flavor);
-    }
-    tooltips.add(new TranslatableComponent("tooltip.skillcheck.scroll.flavor_" + flavor, getTraitName()).applyFormat(ChatFormat.GRAY, ChatFormat.ITALIC));
-  }
+		int flavor;
+		CompoundTag tag = stack.getOrCreateTag();
+		if (tag.containsKey(FLAVOR_TEXT, NbtType.INT)) {
+			flavor = tag.getInt(FLAVOR_TEXT);
+		} else {
+			flavor = new Random().nextInt(6);
+			tag.putInt(FLAVOR_TEXT, flavor);
+		}
+		tooltips.add(new TranslatableComponent("tooltip.skillcheck.scroll.flavor_" + flavor, getTraitName()).applyFormat(ChatFormat.GRAY, ChatFormat.ITALIC));
+	}
 
 	String getTraitName() {
 		return new TranslatableComponent("class."+trait.getNamespace()+"."+trait.getPath()).getText();
