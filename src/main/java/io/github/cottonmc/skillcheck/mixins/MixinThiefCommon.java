@@ -33,8 +33,6 @@ public abstract class MixinThiefCommon extends LivingEntity {
 
 	@Shadow public abstract void addChatMessage(Component textComponent_1, boolean boolean_1);
 
-	@Shadow public abstract boolean damage(DamageSource damageSource_1, float float_1);
-
 	protected MixinThiefCommon(EntityType<? extends LivingEntity> type, World world) {
 		super(type, world);
 	}

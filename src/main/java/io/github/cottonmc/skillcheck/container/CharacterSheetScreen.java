@@ -139,6 +139,7 @@ public class CharacterSheetScreen extends ContainerScreen<CharacterSheetContaine
 		return size > 7;
 	}
 
+	@Override
 	public boolean mouseScrolled(double double_1, double double_2, double double_3) {
 		int amount = this.container.classes.size();
 		if (shouldScroll(amount)) {
@@ -149,6 +150,7 @@ public class CharacterSheetScreen extends ContainerScreen<CharacterSheetContaine
 		return true;
 	}
 
+	@Override
 	public boolean mouseDragged(double double_1, double double_2, int int_1, double double_3, double double_4) {
 		int amount = container.classes.size();
 		if (this.needsScroll) {
@@ -164,6 +166,7 @@ public class CharacterSheetScreen extends ContainerScreen<CharacterSheetContaine
 		}
 	}
 
+	@Override
 	public boolean mouseClicked(double double_1, double double_2, int int_1) {
 		this.needsScroll = false;
 		int int_2 = (this.width - this.containerWidth) / 2;
@@ -189,6 +192,7 @@ public class CharacterSheetScreen extends ContainerScreen<CharacterSheetContaine
 			return this.index;
 		}
 
+		@Override
 		public void renderToolTip(int int_1, int int_2) {
 
 		}
