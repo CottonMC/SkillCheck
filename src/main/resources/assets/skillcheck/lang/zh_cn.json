@@ -1,0 +1,43 @@
+{
+  "item.skillcheck.artisan_scroll": "工匠卷轴",
+  "item.skillcheck.thief_scroll": "神偷卷轴",
+  "item.skillcheck.brawler_scroll": "斗者卷轴",
+  "item.skillcheck.class_prestige": "声望卷轴",
+  "item.skillcheck.character_sheet": "角色表",
+
+  "itemGroup.skillcheck.skillcheck_group": "Skillworks",
+
+  "tooltip.skillcheck.banner": "+ %s 更多...",
+
+  "class.skillcheck.artisan": "工匠",
+  "class.skillcheck.thief": "神偷",
+  "class.skillcheck.brawler": "斗者",
+
+  "tooltip.skillcheck.scroll.flavor_0": "由流浪的%s所写的卷轴",
+  "tooltip.skillcheck.scroll.flavor_1": "关于%s之路的古文献",
+  "tooltip.skillcheck.scroll.flavor_2": "有关如何成为%s的YouTube教程",
+  "tooltip.skillcheck.scroll.flavor_3": "立志成为%s的初学者指南",
+  "tooltip.skillcheck.scroll.flavor_4": "失去了关于成为%s秘密的知识",
+  "tooltip.skillcheck.scroll.flavor_5": "来自学徒%s日记的页面",
+  "tooltip.skillcheck.prestige.0": "调试物品.",
+  "tooltip.skillcheck.prestige.1": "重置所有课程的进度.",
+
+  "msg.skillcheck.prestige": "所有课程重置.",
+  "msg.skillcheck.levelup": "你感觉到了你作为%s长大的实力.",
+  "msg.skillcheck.roll.result": "投掷结果: %s (%s)",
+  "msg.skillcheck.roll.fail": "严重失败! (%s)",
+
+  "desc.class.skillcheck.artisan.0": "Lv1+: 在一个横幅上放置最多16个图案.",
+  "desc.class.skillcheck.thief.0": "每一等级: +1 偷窃实体成功率.",
+  "desc.class.skillcheck.thief.1": "对着敌人潜行+右键尝试窃取护甲.",
+  "desc.class.skillcheck.thief.2": "Lv1+: 紧紧抓住，墙上跳下来.",
+  "desc.class.skillcheck.thief.3": "Lv2+: 在空中再次跳跃.",
+  "desc.class.skillcheck.thief.4": "Lv3+: 从空中捉住箭头.",
+  "desc.class.skillcheck.brawler.0": "每一等级: 每次空手攻击 伤害+1 .",
+  "desc.class.skillcheck.brawler.1": "Lv2+: 空手攻击一个没有装甲的敌人时候有几率削弱它.",
+  "desc.class.skillcheck.brawler.2": "每两等级 lv 2+: +1 削弱敌人几率.",
+
+  "text.skillcheck.level": "Lv%s",
+  "text.skillcheck.cost": "下一等级: %s 经验值",
+  "btn.skillcheck.levelup": "等级提升"
+}
