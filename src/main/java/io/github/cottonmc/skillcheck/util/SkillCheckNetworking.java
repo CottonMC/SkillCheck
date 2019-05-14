@@ -29,6 +29,8 @@ public class SkillCheckNetworking {
 		}));
 		ServerSidePacketRegistry.INSTANCE.register(SYNC_LEVELUP, (((packetContext, packetByteBuf) -> {
 			Identifier id = packetByteBuf.readIdentifier();
+			int xpCost = packetByteBuf.readInt();
+			if (!packetContext.getPlayer().isCreative()) packetContext.getPlayer().experienceLevel -= xpCost;
 			ClassManager.levelUp(packetContext.getPlayer(), id);
 		})));
 	}
@@ -40,9 +42,10 @@ public class SkillCheckNetworking {
 		MinecraftClient.getInstance().getNetworkHandler().getClientConnection().send(new CustomPayloadC2SPacket(SYNC_SELECTION, buf));
 	}
 
-	public static void syncLevelup(Identifier id) {
+	public static void syncLevelup(Identifier id, int xpCost) {
 		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 		buf.writeIdentifier(id);
+		buf.writeInt(xpCost);
 		MinecraftClient.getInstance().getNetworkHandler().getClientConnection().send(new CustomPayloadC2SPacket(SYNC_LEVELUP, buf));
 	}
 }

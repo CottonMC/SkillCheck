@@ -41,8 +41,7 @@ public class CharacterSheetScreen extends ContainerScreen<CharacterSheetContaine
 	}
 
 	private void syncLevelUp() {
-		if (!playerInventory.player.isCreative()) playerInventory.player.experienceLevel -= container.getLevelCost();
-		SkillCheckNetworking.syncLevelup(container.classes.get(index));
+		SkillCheckNetworking.syncLevelup(container.classes.get(index), container.getLevelCost());
 	}
 
 	@Override
