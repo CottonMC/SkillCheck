@@ -34,7 +34,7 @@ if(rootProject.file('private.gradle').exists()) { //Publishing details
 
 archivesBaseName = "skillcheck"
 group = "io.github.cottonmc"
-version = "1.0.4+1.14.1"
+version = "1.0.5+1.14.1"
 
 minecraft {
 	refmapName = 'mixins.skillcheck.refmap.json'
@@ -58,8 +58,8 @@ dependencies {
 	modCompile "io.github.prospector.modmenu:ModMenu:1.5.3-84"
 	modCompile "io.github.cottonmc:cotton:0.6.6+1.14.1-SNAPSHOT"
 	include "io.github.cottonmc:cotton:0.6.6+1.14.1-SNAPSHOT"
-	modCompile "crochet:Crochet:1.0.2"
-	include "crochet:Crochet:1.0.2"
+	modCompile "crochet:Crochet:1.0.3:1"
+	include "crochet:Crochet:1.0.3:1"
 	modCompile "cloth-config:ClothConfig:0.2.1.14"
 	include "cloth-config:ClothConfig:0.2.1.14"
 
