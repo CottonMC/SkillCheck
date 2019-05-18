@@ -8,6 +8,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.packet.CustomPayloadS2CPacket;
 import net.minecraft.container.Container;
@@ -23,6 +24,17 @@ public class SkillCheckNetworking {
 	public static final Identifier SYNC_PLAYER_LEVEL = new Identifier(SkillCheck.MOD_ID, "sync_player_level");
 
 	public static void init() {
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) initClient();
+		else initServer();
+	}
+
+	public static void initClient() {
+		ClientSidePacketRegistry.INSTANCE.register(SYNC_PLAYER_LEVEL, (packetContext, packetByteBuf) -> {
+			packetContext.getPlayer().experienceLevel = packetByteBuf.readInt();
+		});
+	}
+
+	public static void initServer() {
 		ServerSidePacketRegistry.INSTANCE.register(SYNC_SELECTION, (packetContext, packetByteBuf) -> {
 			Container container = packetContext.getPlayer().container;
 			if (container instanceof CharacterSheetContainer) {
@@ -39,9 +51,6 @@ public class SkillCheckNetworking {
 				setSyncPlayerLevel(packetContext.getPlayer().experienceLevel, (ServerPlayerEntity)packetContext.getPlayer());
 			}
 			ClassManager.levelUp(packetContext.getPlayer(), id);
-		});
-		ClientSidePacketRegistry.INSTANCE.register(SYNC_PLAYER_LEVEL, (packetContext, packetByteBuf) -> {
-			packetContext.getPlayer().experienceLevel = packetByteBuf.readInt();
 		});
 	}
 
