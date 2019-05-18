@@ -58,7 +58,7 @@ dependencies {
 	modCompile "io.github.prospector.modmenu:ModMenu:1.5.3-84"
 	modCompile "io.github.cottonmc:cotton:0.6.6+1.14.1-SNAPSHOT"
 	include "io.github.cottonmc:cotton:0.6.6+1.14.1-SNAPSHOT"
-	modCompile "crochet:Crochet:1.0.4:1"
+	modCompile ("crochet:Crochet:1.0.4:1") { transitive = false }
 	include "crochet:Crochet:1.0.4:1"
 	modCompile "cloth-config:ClothConfig:0.2.1.14"
 	include "cloth-config:ClothConfig:0.2.1.14"
