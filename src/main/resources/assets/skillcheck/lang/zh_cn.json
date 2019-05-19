@@ -5,7 +5,7 @@
   "item.skillcheck.class_prestige": "声望卷轴",
   "item.skillcheck.character_sheet": "角色表",
 
-  "itemGroup.skillcheck.skillcheck_group": "Skillworks",
+  "itemGroup.skillcheck.skillcheck_group": "SkillCheck",
 
   "tooltip.skillcheck.banner": "+ %s 更多...",
 
