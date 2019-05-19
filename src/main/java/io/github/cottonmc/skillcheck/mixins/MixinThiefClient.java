@@ -5,6 +5,7 @@ import io.github.cottonmc.skillcheck.SkillCheck;
 import io.github.cottonmc.skillcheck.api.traits.ClassManager;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.FluidBlock;
 import net.minecraft.client.input.Input;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -36,6 +37,8 @@ import static net.minecraft.util.math.Direction.*;
 public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 
 	@Shadow public Input input;
+
+	@Shadow public abstract boolean isInWater();
 
 	//Wall-Jump config default values
 	private static float wallJumpHeight = 0.8f;
@@ -223,7 +226,9 @@ public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 
 		if (walls.size() == 0) return false;
 
-		if (SkillCheck.SLIPPERY_BLOCKS.contains(player.world.getBlockState(getWallPos(player)).getBlock()) ^ SkillCheck.config.invertSlipperyTag) return false;
+		if (SkillCheck.SLIPPERY_BLOCKS.contains(player.world.getBlockState(getWallPos(player)).getBlock()) ^ SkillCheck.config.invertSlipperyTag
+				|| player.world.getBlockState(getWallPos(player)).getBlock() instanceof FluidBlock) return false;
+
 
 		if (ClassManager.hasClass(player, SkillCheck.THIEF) || player.getPos().getY() < lastJumpY) return true; //TODO: change to use levels later?
 
@@ -285,7 +290,7 @@ public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 	}
 
 	private void handleDoubleJump() {
-		if (this.onGround) {
+		if (this.onGround || !world.getFluidState(this.getBlockPos()).isEmpty()) {
 
 			airTime = 0;
 			jumpCount = 1;

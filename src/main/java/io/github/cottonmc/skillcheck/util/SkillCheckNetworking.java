@@ -29,9 +29,8 @@ public class SkillCheckNetworking {
 	}
 
 	public static void initClient() {
-		ClientSidePacketRegistry.INSTANCE.register(SYNC_PLAYER_LEVEL, (packetContext, packetByteBuf) -> {
-			packetContext.getPlayer().experienceLevel = packetByteBuf.readInt();
-		});
+		ClientSidePacketRegistry.INSTANCE.register(SYNC_PLAYER_LEVEL, (packetContext, packetByteBuf) ->
+				packetContext.getPlayer().experienceLevel = packetByteBuf.readInt());
 	}
 
 	public static void initServer() {
@@ -44,13 +43,15 @@ public class SkillCheckNetworking {
 			}
 		});
 		ServerSidePacketRegistry.INSTANCE.register(SYNC_LEVELUP, (packetContext, packetByteBuf) -> {
-			Identifier id = packetByteBuf.readIdentifier();
-			int xpCost = packetByteBuf.readInt();
-			if (!packetContext.getPlayer().isCreative()) {
-				packetContext.getPlayer().experienceLevel -= xpCost;
-				setSyncPlayerLevel(packetContext.getPlayer().experienceLevel, (ServerPlayerEntity)packetContext.getPlayer());
+			if (((CharacterSheetContainer)packetContext.getPlayer().container).canLevelUp()) {
+				Identifier id = packetByteBuf.readIdentifier();
+				int xpCost = packetByteBuf.readInt();
+				if (!packetContext.getPlayer().isCreative()) {
+					packetContext.getPlayer().experienceLevel -= xpCost;
+					syncPlayerLevel(packetContext.getPlayer().experienceLevel, (ServerPlayerEntity) packetContext.getPlayer());
+				}
+				ClassManager.levelUp(packetContext.getPlayer(), id);
 			}
-			ClassManager.levelUp(packetContext.getPlayer(), id);
 		});
 	}
 
@@ -70,7 +71,7 @@ public class SkillCheckNetworking {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static void setSyncPlayerLevel(int level, ServerPlayerEntity player) {
+	public static void syncPlayerLevel(int level, ServerPlayerEntity player) {
 		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 		buf.writeInt(level);
 		player.networkHandler.sendPacket(new CustomPayloadS2CPacket(SYNC_PLAYER_LEVEL, buf));

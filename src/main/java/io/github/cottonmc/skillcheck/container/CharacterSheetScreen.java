@@ -156,9 +156,9 @@ public class CharacterSheetScreen extends ContainerScreen<CharacterSheetContaine
 			int listTop = this.top + 18;
 			int listBottom = listTop + 139;
 			int offscreen = amount - 7;
-			float float_1 = ((float)double_2 - (float)listTop - 13.5F) / ((float)(listBottom - listTop) - 27.0F);
-			float_1 = float_1 * (float)offscreen + 0.5F;
-			this.scroll = MathHelper.clamp((int)float_1, 0, offscreen);
+			float scrollAmount = ((float)double_2 - (float)listTop - 13.5F) / ((float)(listBottom - listTop) - 27.0F);
+			scrollAmount = scrollAmount * (float)offscreen + 0.5F;
+			this.scroll = MathHelper.clamp((int)scrollAmount, 0, offscreen);
 			return true;
 		} else {
 			return super.mouseDragged(double_1, double_2, int_1, double_3, double_4);
