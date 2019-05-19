@@ -25,7 +25,7 @@ public class SkillCheckNetworking {
 
 	public static void init() {
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) initClient();
-		else initServer();
+		initServer();
 	}
 
 	public static void initClient() {

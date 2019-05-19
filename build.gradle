@@ -3,8 +3,8 @@ buildscript {
 		mavenCentral()
 		jcenter()
 		maven {
-			name = 'Fabric'
-			url = 'http://maven.modmuss50.me/'
+			name = "Fabric"
+			url = "http://maven.modmuss50.me/"
 		}
 		maven {
 			url "https://plugins.gradle.org/m2/"
@@ -13,12 +13,12 @@ buildscript {
 	}
 	dependencies {
 		classpath "com.github.jengelman.gradle.plugins:shadow:2.0.0"
-		classpath "net.fabricmc:fabric-loom:0.2.2-SNAPSHOT"
+		classpath "net.fabricmc:fabric-loom:0.2.3-SNAPSHOT"
 	}
 }
 
 plugins {
-	id 'maven-publish'
+	id "maven-publish"
 	id "com.jfrog.artifactory" version "4.9.0"
 }
 
@@ -28,24 +28,24 @@ apply plugin: net.fabricmc.loom.LoomGradlePlugin
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-if(rootProject.file('private.gradle').exists()) { //Publishing details
-	apply from: 'private.gradle'
+if(rootProject.file("private.gradle").exists()) { //Publishing details
+	apply from: "private.gradle"
 }
 
 archivesBaseName = "skillcheck"
 group = "io.github.cottonmc"
-version = "1.0.7+1.14.1"
+version = "1.0.8+1.14.1"
 
 minecraft {
-	refmapName = 'mixins.skillcheck.refmap.json'
+	refmapName = "mixins.skillcheck.refmap.json"
 }
 
 repositories {
 	maven {
-		url 'http://server.bbkr.space:8081/artifactory/libs-snapshot'
+		url "http://server.bbkr.space:8081/artifactory/libs-snapshot"
 	}
 	maven { 
-		url = "https://minecraft.curseforge.com/api/maven" 
+		url "https://minecraft.curseforge.com/api/maven"
 	}
 }
 
@@ -56,10 +56,10 @@ dependencies {
 	modCompile "net.fabricmc.fabric-api:fabric-api:0.3.0-pre+build.156"
 
 	modCompile "io.github.prospector.modmenu:ModMenu:1.5.3-84"
-	modCompile "io.github.cottonmc:cotton:0.6.6+1.14.1-SNAPSHOT"
-	include "io.github.cottonmc:cotton:0.6.6+1.14.1-SNAPSHOT"
-	modCompile "crochet:Crochet:1.0.4:1"
-	include "crochet:Crochet:1.0.4:1"
+	modCompile "io.github.cottonmc:cotton:0.6.7+1.14.1-SNAPSHOT"
+	include "io.github.cottonmc:cotton:0.6.7+1.14.1-SNAPSHOT"
+	modCompile "crochet:Crochet:1.0.4"
+	include "crochet:Crochet:1.0.4"
 	modCompile "cloth-config:ClothConfig:0.2.1.14"
 	include "cloth-config:ClothConfig:0.2.1.14"
 
@@ -136,7 +136,7 @@ publishing {
 
 artifactory {
 	if (project.hasProperty("artifactoryUsername")) {
-		contextUrl = 'http://server.bbkr.space:8081/artifactory/'
+		contextUrl = "http://server.bbkr.space:8081/artifactory/"
 		publish {
 			repository {
 				if (version.contains("SNAPSHOT")) {
@@ -149,7 +149,7 @@ artifactory {
 				password = artifactoryPassword
 			}
 			defaults {
-				publications('maven')
+				publications("maven")
 
 				publishArtifacts = true
 				publishPom = true
