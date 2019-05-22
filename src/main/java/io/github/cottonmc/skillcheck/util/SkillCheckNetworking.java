@@ -55,25 +55,23 @@ public class SkillCheckNetworking {
 		});
 	}
 
-	@Environment(EnvType.CLIENT)
+
+	public static void syncPlayerLevel(int level, ServerPlayerEntity player) {
+		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+		buf.writeInt(level);
+		player.networkHandler.sendPacket(new CustomPayloadS2CPacket(SYNC_PLAYER_LEVEL, buf));
+	}
+
 	public static void syncSelection(int index) {
 		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 		buf.writeInt(index);
 		MinecraftClient.getInstance().getNetworkHandler().getClientConnection().send(new CustomPayloadC2SPacket(SYNC_SELECTION, buf));
 	}
 
-	@Environment(EnvType.CLIENT)
 	public static void syncLevelup(Identifier id, int xpCost) {
 		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 		buf.writeIdentifier(id);
 		buf.writeInt(xpCost);
 		MinecraftClient.getInstance().getNetworkHandler().getClientConnection().send(new CustomPayloadC2SPacket(SYNC_LEVELUP, buf));
-	}
-
-	@Environment(EnvType.CLIENT)
-	public static void syncPlayerLevel(int level, ServerPlayerEntity player) {
-		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-		buf.writeInt(level);
-		player.networkHandler.sendPacket(new CustomPayloadS2CPacket(SYNC_PLAYER_LEVEL, buf));
 	}
 }

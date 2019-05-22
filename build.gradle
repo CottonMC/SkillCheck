@@ -34,7 +34,7 @@ if(rootProject.file("private.gradle").exists()) { //Publishing details
 
 archivesBaseName = "skillcheck"
 group = "io.github.cottonmc"
-version = "1.0.8+1.14.1"
+version = "1.0.9+1.14.1"
 
 minecraft {
 	refmapName = "mixins.skillcheck.refmap.json"
