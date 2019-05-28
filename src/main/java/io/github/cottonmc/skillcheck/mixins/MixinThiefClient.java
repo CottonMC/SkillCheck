@@ -201,7 +201,7 @@ public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 
 		if (clingTime > -5 /*|| player.canClimb()*/ || player.getHungerManager().getFoodLevel() < 1) return false;
 
-		if (player.world.getBlockState(new BlockPos(player.getPos().getX(), player.getPos().getY() - 0.8, player.getPos().getZ())).isFullBoundsCubeForCulling()) return false;
+		if (player.world.getBlockState(new BlockPos(player.getPos().getX(), player.getPos().getY() - 0.8, player.getPos().getZ())).isOpaque()) return false;
 
 		double dist = 0.4;
 		BoundingBox box = player.getBoundingBox().shrink(0.2, 0, 0.2);

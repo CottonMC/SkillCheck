@@ -7,7 +7,7 @@ import io.github.cottonmc.skillcheck.util.SkillCheckNetworking;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.ContainerScreen;
+import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GuiLighting;
 import net.minecraft.client.resource.language.I18n;
@@ -21,7 +21,7 @@ import net.minecraft.util.math.MathHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CharacterSheetScreen extends ContainerScreen<CharacterSheetContainer> {
+public class CharacterSheetScreen extends AbstractContainerScreen<CharacterSheetContainer> {
 	private static final Identifier TEXTURE = new Identifier(SkillCheck.MOD_ID, "textures/gui/container/scribing.png");
 	private int index;
 	private final ButtonPageWidget[] visibleButtons = new ButtonPageWidget[7];
