@@ -20,7 +20,7 @@
       "io.github.cottonmc.skillcheck.SkillCheckClient"
     ],
     "modmenu": [
-      "io.github.cottonmc.skillcheck.SkillCheckClient"
+      "io.github.cottonmc.skillcheck.util.SkillCheckConfMenu"
     ]
   },
   "mixins": [
