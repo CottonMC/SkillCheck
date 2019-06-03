@@ -29,9 +29,9 @@ import java.util.Set;
 
 import static net.minecraft.util.math.Direction.*;
 
-/*
-	Much code in this class is taken from Wall-Jump, and modified for Yarn, 1.14, and the Gymnast skill.
-	The original repository can be found here: https://github.com/genandnic/Wall-Jump
+/**
+ * NOTICE: Much code in this class is taken from Wall-Jump by Genandnic, and modified for Yarn, 1.14, and the Gymnast skill.
+ * The original repository can be found here: https://github.com/genandnic/Wall-Jump
  */
 @Mixin(ClientPlayerEntity.class)
 public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
