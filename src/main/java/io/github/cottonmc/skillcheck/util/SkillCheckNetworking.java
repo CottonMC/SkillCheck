@@ -5,13 +5,13 @@ import io.github.cottonmc.skillcheck.api.traits.ClassManager;
 import io.github.cottonmc.skillcheck.container.CharacterSheetContainer;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.packet.CustomPayloadS2CPacket;
 import net.minecraft.container.Container;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.packet.CustomPayloadC2SPacket;
 import net.minecraft.util.Identifier;
@@ -22,6 +22,8 @@ public class SkillCheckNetworking {
 	public static final Identifier SYNC_SELECTION = new Identifier(SkillCheck.MOD_ID, "sync_selection");
 	public static final Identifier SYNC_LEVELUP = new Identifier(SkillCheck.MOD_ID, "sync_levelup");
 	public static final Identifier SYNC_PLAYER_LEVEL = new Identifier(SkillCheck.MOD_ID, "sync_player_level");
+
+	public static final Identifier CLEAR_FALL = new Identifier(SkillCheck.MOD_ID, "clear_fall");
 
 	public static void init() {
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) initClient();
@@ -53,6 +55,10 @@ public class SkillCheckNetworking {
 				ClassManager.levelUp(packetContext.getPlayer(), id);
 			}
 		});
+		ServerSidePacketRegistry.INSTANCE.register(CLEAR_FALL, ((packetContext, packetByteBuf) -> {
+			PlayerEntity player = packetContext.getPlayer();
+			player.fallDistance = 0;
+		}));
 	}
 
 
@@ -73,5 +79,10 @@ public class SkillCheckNetworking {
 		buf.writeIdentifier(id);
 		buf.writeInt(xpCost);
 		MinecraftClient.getInstance().getNetworkHandler().getClientConnection().send(new CustomPayloadC2SPacket(SYNC_LEVELUP, buf));
+	}
+
+	public static void clearFall() {
+		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+		MinecraftClient.getInstance().getNetworkHandler().getClientConnection().send(new CustomPayloadC2SPacket(CLEAR_FALL, buf));
 	}
 }

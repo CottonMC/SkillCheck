@@ -1,12 +1,12 @@
 package io.github.cottonmc.skillcheck.api.traits;
 
 import com.raphydaphy.crochet.data.PlayerData;
-import io.github.cottonmc.repackage.blue.endless.jankson.annotation.Nullable;
 import io.github.cottonmc.skillcheck.SkillCheck;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

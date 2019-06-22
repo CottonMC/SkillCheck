@@ -1,7 +1,7 @@
 package io.github.cottonmc.skillcheck.util;
 
 import io.github.cottonmc.cotton.config.annotations.ConfigFile;
-import io.github.cottonmc.repackage.blue.endless.jankson.Comment;
+import blue.endless.jankson.Comment;
 
 @ConfigFile(name = "SkillCheck")
 public class SkillCheckConfig {

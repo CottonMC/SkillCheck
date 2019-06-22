@@ -1,6 +1,5 @@
 package io.github.cottonmc.skillcheck.mixins;
 
-import io.github.cottonmc.repackage.blue.endless.jankson.annotation.Nullable;
 import io.github.cottonmc.skillcheck.SkillCheck;
 import io.github.cottonmc.skillcheck.util.ArrowEffects;
 import io.github.cottonmc.skillcheck.api.traits.ClassManager;
@@ -25,6 +24,8 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import javax.annotation.Nullable;
 
 @Mixin(PlayerEntity.class)
 public abstract class MixinThiefCommon extends LivingEntity {

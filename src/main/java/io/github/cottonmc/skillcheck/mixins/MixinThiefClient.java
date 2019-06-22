@@ -3,6 +3,7 @@ package io.github.cottonmc.skillcheck.mixins;
 import com.mojang.authlib.GameProfile;
 import io.github.cottonmc.skillcheck.SkillCheck;
 import io.github.cottonmc.skillcheck.api.traits.ClassManager;
+import io.github.cottonmc.skillcheck.util.SkillCheckNetworking;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidBlock;
@@ -110,7 +111,7 @@ public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 
 				this.setPosition(clingX, this.getPos().getY(), clingZ);
 				Vec3d previousVelocity = this.getVelocity();
-				this.fallDistance = 0.0F;
+				SkillCheckNetworking.clearFall();
 				double velY = previousVelocity.y;
 
 				if (previousVelocity.y < -0.5) {
@@ -260,6 +261,7 @@ public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 		StatusEffectInstance jumpBoostEffect = player.getStatusEffect(StatusEffects.JUMP_BOOST);
 		if (jumpBoostEffect != null) jumpBoostLevel = jumpBoostEffect.getAmplifier() + 1;
 
+		SkillCheckNetworking.clearFall();
 		player.setVelocity(player.getVelocity().x + (strafe * f2 - forward * f1), up + (jumpBoostLevel * .075), player.getVelocity().z + (forward * f2 + strafe * f1));
 
 	}
@@ -302,7 +304,7 @@ public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 				this.jump();
 				jumpCount++;
 
-				this.fallDistance = 0.0F;
+				SkillCheckNetworking.clearFall();
 
 			}
 
