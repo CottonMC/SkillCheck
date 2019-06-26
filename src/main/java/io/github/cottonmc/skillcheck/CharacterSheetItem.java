@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 public class CharacterSheetItem extends Item {
 
 	public CharacterSheetItem() {
-		super(new Item.Settings().itemGroup(SkillCheck.SKILLCHECK_GROUP).stackSize(1));
+		super(new Item.Settings().group(SkillCheck.SKILLCHECK_GROUP).maxCount(1));
 	}
 
 	@Override

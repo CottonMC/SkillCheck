@@ -15,8 +15,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -33,7 +33,7 @@ public abstract class MixinThiefCommon extends LivingEntity {
 	@Shadow @Nullable
 	public abstract ItemEntity dropItem(ItemStack stack, boolean fromSelf);
 
-	@Shadow public abstract void addChatMessage(Component textComponent_1, boolean boolean_1);
+	@Shadow public abstract void addChatMessage(Text text, boolean statusBar);
 
 	protected MixinThiefCommon(EntityType<? extends LivingEntity> type, World world) {
 		super(type, world);
@@ -46,8 +46,8 @@ public abstract class MixinThiefCommon extends LivingEntity {
 					&& canCatchArrow()) {
 				RollResult roll = Dice.roll("1d20+"+ClassManager.getLevel((PlayerEntity)(Object)this, SkillCheck.THIEF));
 				if (SkillCheck.config.showDiceRolls) {
-					if (roll.isCritFail()) ((PlayerEntity)(Object)this).addChatMessage(new TranslatableComponent("msg.skillcheck.roll.fail", roll.getFormattedNaturals()), false);
-					else ((PlayerEntity)(Object)this).addChatMessage(new TranslatableComponent("msg.skillcheck.roll.result", roll.getTotal(), roll.getFormattedNaturals()), false);
+					if (roll.isCritFail()) ((PlayerEntity)(Object)this).addChatMessage(new TranslatableText("msg.skillcheck.roll.fail", roll.getFormattedNaturals()), false);
+					else ((PlayerEntity)(Object)this).addChatMessage(new TranslatableText("msg.skillcheck.roll.result", roll.getTotal(), roll.getFormattedNaturals()), false);
 				}
 				if (roll.isCritFail()) {
 					this.addPotionEffect(new StatusEffectInstance(StatusEffects.INSTANT_DAMAGE, 2, 1));
@@ -64,14 +64,14 @@ public abstract class MixinThiefCommon extends LivingEntity {
 					if (main.isEmpty()) {
 						this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.ARROW));
 						this.swingHand(Hand.MAIN_HAND);
-					} else if (main.getItem() == Items.ARROW && main.getAmount() < Items.ARROW.getMaxAmount()) {
-						main.addAmount(1);
+					} else if (main.getItem() == Items.ARROW && main.getCount() < Items.ARROW.getMaxCount()) {
+						main.increment(1);
 						this.swingHand(Hand.MAIN_HAND);
 					} else if (off.isEmpty()) {
 						this.setStackInHand(Hand.OFF_HAND, new ItemStack(Items.ARROW));
 						this.swingHand(Hand.OFF_HAND);
-					} else if (off.getItem() == Items.ARROW && off.getAmount() < Items.ARROW.getMaxAmount()) {
-						off.addAmount(1);
+					} else if (off.getItem() == Items.ARROW && off.getCount() < Items.ARROW.getMaxCount()) {
+						off.increment(1);
 						this.swingHand(Hand.OFF_HAND);
 					} else this.dropItem(new ItemStack(Items.ARROW), false);
 
@@ -83,8 +83,8 @@ public abstract class MixinThiefCommon extends LivingEntity {
 
 	private boolean canCatchArrow() {
 		return this.getMainHandStack().isEmpty() || this.getOffHandStack().isEmpty()
-				|| (this.getMainHandStack().getItem() == Items.ARROW && this.getMainHandStack().getAmount() < Items.ARROW.getMaxAmount())
-				|| (this.getOffHandStack().getItem() == Items.ARROW && this.getOffHandStack().getAmount() < Items.ARROW.getMaxAmount());
+				|| (this.getMainHandStack().getItem() == Items.ARROW && this.getMainHandStack().getCount() < Items.ARROW.getMaxCount())
+				|| (this.getOffHandStack().getItem() == Items.ARROW && this.getOffHandStack().getCount() < Items.ARROW.getMaxCount());
 	}
 
 }

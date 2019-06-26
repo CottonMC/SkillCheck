@@ -11,7 +11,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 
@@ -28,8 +28,8 @@ public class PlayerAttackEvent {
 					if (ClassManager.hasLevel(player, SkillCheck.BRAWLER, 2) && !hasWeakness(mob)) {
 						RollResult roll = Dice.roll("1d20+"+ClassManager.getLevel(player, SkillCheck.BRAWLER));
 						if (SkillCheck.config.showDiceRolls) {
-							if (roll.isCritFail()) player.addChatMessage(new TranslatableComponent("msg.skillcheck.roll.fail", roll.getFormattedNaturals()), false);
-							else player.addChatMessage(new TranslatableComponent("msg.skillcheck.roll.result", roll.getTotal(), roll.getFormattedNaturals()), false);
+							if (roll.isCritFail()) player.addChatMessage(new TranslatableText("msg.skillcheck.roll.fail", roll.getFormattedNaturals()), false);
+							else player.addChatMessage(new TranslatableText("msg.skillcheck.roll.result", roll.getTotal(), roll.getFormattedNaturals()), false);
 						}
 						if (roll.isCritFail()) {
 							player.addPotionEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 200));

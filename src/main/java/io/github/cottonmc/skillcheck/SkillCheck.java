@@ -21,10 +21,10 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.tag.Tag;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -74,11 +74,11 @@ public class SkillCheck implements ModInitializer {
                             try {
                                 result = Dice.roll(formula);
                             } catch (IllegalArgumentException e) {
-                                context.getSource().sendError(new TextComponent(e.getMessage()));
+                                context.getSource().sendError(new LiteralText(e.getMessage()));
                                 return -1;
                             }
-                            if (result.isCritFail()) context.getSource().sendFeedback(new TranslatableComponent("msg.skillcheck.roll.fail", result.getFormattedNaturals()), false);
-                            else context.getSource().sendFeedback(new TranslatableComponent("msg.skillcheck.roll.result", result.getTotal(), result.getFormattedNaturals()), false);
+                            if (result.isCritFail()) context.getSource().sendFeedback(new TranslatableText("msg.skillcheck.roll.fail", result.getFormattedNaturals()), false);
+                            else context.getSource().sendFeedback(new TranslatableText("msg.skillcheck.roll.result", result.getTotal(), result.getFormattedNaturals()), false);
                             return 1;
                         })))));
     }

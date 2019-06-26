@@ -9,7 +9,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 
 public class PlayerStealEvent {
@@ -27,8 +27,8 @@ public class PlayerStealEvent {
 			if (stack.isEmpty()) continue;
 			RollResult roll = Dice.roll("1d20+"+ClassManager.getLevel(player, SkillCheck.THIEF));
 			if (SkillCheck.config.showDiceRolls) {
-				if (roll.isCritFail()) player.addChatMessage(new TranslatableComponent("msg.skillcheck.roll.fail", roll.getFormattedNaturals()), false);
-				else player.addChatMessage(new TranslatableComponent("msg.skillcheck.roll.result", roll.getTotal(), roll.getFormattedNaturals()), false);
+				if (roll.isCritFail()) player.addChatMessage(new TranslatableText("msg.skillcheck.roll.fail", roll.getFormattedNaturals()), false);
+				else player.addChatMessage(new TranslatableText("msg.skillcheck.roll.result", roll.getTotal(), roll.getFormattedNaturals()), false);
 			}
 			if (roll.isCritFail()) {
 				mob.addPotionEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 2000));
@@ -39,7 +39,7 @@ public class PlayerStealEvent {
 			}
 			if (roll.getTotal() >= SkillCheck.config.stealArmorRoll) {
 				ItemStack give = stack.copy();
-				stack.subtractAmount(1);
+				stack.decrement(1);
 				player.setStackInHand(hand, give);
 				if (roll.getTotal() < SkillCheck.config.silentStealArmorRoll) {
 					player.attack(mob);

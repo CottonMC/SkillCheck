@@ -12,9 +12,9 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GuiLighting;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
@@ -30,7 +30,7 @@ public class CharacterSheetScreen extends AbstractContainerScreen<CharacterSheet
 	private ConfirmButtonWidget confirm;
 
 	public CharacterSheetScreen(int syncId, PlayerEntity player) {
-		super(new CharacterSheetContainer(syncId, player), player.inventory, new TranslatableComponent("container.skillcheck.scribing_table"));
+		super(new CharacterSheetContainer(syncId, player), player.inventory, new TranslatableText("container.skillcheck.scribing_table"));
 		this.containerWidth = 276;
 		this.index = -1;
 	}
@@ -50,7 +50,7 @@ public class CharacterSheetScreen extends AbstractContainerScreen<CharacterSheet
 		int left = (this.width - this.containerWidth) / 2;
 		int top = (this.height - this.containerHeight) / 2;
 		int listHeight = top + 18;
-		confirm = this.addButton(new ConfirmButtonWidget(left + 143, top + 140, new TranslatableComponent("btn.skillcheck.levelup"), (widget) -> {
+		confirm = this.addButton(new ConfirmButtonWidget(left + 143, top + 140, new TranslatableText("btn.skillcheck.levelup"), (widget) -> {
 			this.playerInventory.player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1.0f, 1.0f);
 			this.syncLevelUp();
 		}));
@@ -91,8 +91,8 @@ public class CharacterSheetScreen extends AbstractContainerScreen<CharacterSheet
 			GlStateManager.disableLighting();
 			GlStateManager.disableBlend();
 			for (Identifier id : classes) {
-				TranslatableComponent className = new TranslatableComponent("class." + id.getNamespace() + "." + id.getPath());
-				String level = className.getText() + ": " + new TranslatableComponent("text.skillcheck.level", ClassManager.getLevel(playerInventory.player, id)).getText();
+				TranslatableText className = new TranslatableText("class." + id.getNamespace() + "." + id.getPath());
+				String level = className.asString() + ": " + new TranslatableText("text.skillcheck.level", ClassManager.getLevel(playerInventory.player, id)).asString();
 				if (shouldScroll(classes.size()) && (scrollOffset < this.scroll || scrollOffset >= 7 + this.scroll)) {
 					scrollOffset++;
 				} else {
@@ -109,7 +109,7 @@ public class CharacterSheetScreen extends AbstractContainerScreen<CharacterSheet
 				for (int i = 0; i < 10; i++) {
 					String key = "desc.class." + id.getNamespace() + "." + id.getPath() + "." + i;
 					if (!I18n.hasTranslation(key)) break;
-					String textToDraw = new TranslatableComponent(key).getText();
+					String textToDraw = new TranslatableText(key).asString();
 					List<String> toAdd = textRenderer.wrapStringToWidthAsList(textToDraw, 161);
 					lines.addAll(toAdd);
 				}
@@ -117,7 +117,7 @@ public class CharacterSheetScreen extends AbstractContainerScreen<CharacterSheet
 					this.drawCenteredString(textRenderer, line, rightPanelCenter, descLineHeight, 0xffffff);
 					descLineHeight += 10;
 				}
-				String cost = new TranslatableComponent("text.skillcheck.cost", this.container.getLevelCost()).getText();
+				String cost = new TranslatableText("text.skillcheck.cost", this.container.getLevelCost()).asString();
 				this.drawCenteredString(textRenderer, cost, rightPanelCenter, descLineHeight, 0x55ff55);
 			}
 			GlStateManager.enableLighting();
@@ -199,8 +199,8 @@ public class CharacterSheetScreen extends AbstractContainerScreen<CharacterSheet
 
 	@Environment(EnvType.CLIENT)
 	class ConfirmButtonWidget extends ButtonWidget {
-		public ConfirmButtonWidget(int x, int y, TranslatableComponent name, PressAction action) {
-			super(x, y, 89, 20, name.getText(), action);
+		public ConfirmButtonWidget(int x, int y, TranslatableText name, PressAction action) {
+			super(x, y, 89, 20, name.asString(), action);
 		}
 	}
 }

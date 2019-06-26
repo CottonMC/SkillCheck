@@ -205,8 +205,8 @@ public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 		if (player.world.getBlockState(new BlockPos(player.getPos().getX(), player.getPos().getY() - 0.8, player.getPos().getZ())).isOpaque()) return false;
 
 		double dist = 0.4;
-		BoundingBox box = player.getBoundingBox().shrink(0.2, 0, 0.2);
-		BoundingBox[] axes = { box.stretch(0, 0, -dist), box.stretch(dist, 0, 0), box.stretch(0, 0, dist), box.stretch(-dist, 0, 0) };
+		Box box = player.getBoundingBox().shrink(0.2, 0, 0.2);
+		Box[] axes = { box.stretch(0, 0, -dist), box.stretch(dist, 0, 0), box.stretch(0, 0, dist), box.stretch(-dist, 0, 0) };
 
 		Set<Direction> walls = new HashSet<>();
 		clingDirection = UP;
@@ -214,7 +214,7 @@ public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 		Direction direction;
 
 		int i = 0;
-		for (BoundingBox axis : axes) {
+		for (Box axis : axes) {
 			direction = fromHorizontal(i++);
 			if (player.world.isAreaNotEmpty(axis)) {
 
