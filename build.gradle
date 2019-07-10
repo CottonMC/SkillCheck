@@ -13,7 +13,7 @@ buildscript {
 	}
 	dependencies {
 		classpath "com.github.jengelman.gradle.plugins:shadow:2.0.0"
-		classpath "net.fabricmc:fabric-loom:0.2.3-SNAPSHOT"
+		classpath "net.fabricmc:fabric-loom:0.2.4-SNAPSHOT"
 	}
 }
 
@@ -34,7 +34,7 @@ if(rootProject.file("private.gradle").exists()) { //Publishing details
 
 archivesBaseName = "skillcheck"
 group = "io.github.cottonmc"
-version = "1.1.0+1.14.2"
+version = "1.1.1+1.14.3"
 
 minecraft {
 	refmapName = "mixins.skillcheck.refmap.json"
@@ -52,18 +52,18 @@ repositories {
 dependencies {
 	minecraft "com.mojang:minecraft:1.14.3"
 	mappings "net.fabricmc:yarn:1.14.3+build.1"
-	modCompile "net.fabricmc:fabric-loader:0.4.8+build.155"
-	modCompile "net.fabricmc.fabric-api:fabric-api:0.3.0+build.187"
+	modApi "net.fabricmc:fabric-loader:0.4.8+build.155"
+	modApi "net.fabricmc.fabric-api:fabric-api:0.3.0+build.187"
 
-	modCompile "io.github.prospector.modmenu:ModMenu:1.6.2-92"
-	modCompile "io.github.cottonmc:cotton:0.8.3-pre+1.14.3"
-	include "io.github.cottonmc:cotton:0.8.3-pre+1.14.3"
-	modCompile "crochet:Crochet:1.0.4"
+	modApi "io.github.prospector.modmenu:ModMenu:1.6.2-92"
+	modApi "io.github.cottonmc.cotton:cotton:1.0.0-rc.1"
+	modApi "io.github.cottonmc.cotton:cotton-config:1.0.0-rc.1"
+	modApi "crochet:Crochet:1.0.4"
 	include "crochet:Crochet:1.0.4"
-	modCompile "cloth-config:ClothConfig:0.2.1.14"
+	modApi "cloth-config:ClothConfig:0.2.1.14"
 	include "cloth-config:ClothConfig:0.2.1.14"
 
-	implementation "blue.endless:jankson:1.1.2"
+	modApi "io.github.cottonmc:Jankson:1.0.0+j1.1.2"
 	compileOnly ("com.google.code.findbugs:jsr305:3.0.2") { transitive = false }
 }
 
