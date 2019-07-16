@@ -141,7 +141,6 @@ public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 
 			clingTime--;
 			if (keyTimer > 0 && (keyTimer < 5 || clingTime < -15) && canWallCling(this)) {
-
 				Vec3d previousVelocity = this.getVelocity();
 				double velY = previousVelocity.y;
 				if (velY > -0.75) velY = 0.0;
@@ -151,34 +150,34 @@ public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 				clingX = this.getPos().getX();
 				clingZ = this.getPos().getZ();
 				switch(clingDirection) {
-					// all these are player's direction from container view
+					// all these are player's direction from container view (opposite of player look when looking at wall)
 					case NORTH:
-						clingX += 0.5;
+						clingZ -= 0.1;
 						break;
 					case SOUTH:
-						clingX += 0.5;
+						clingZ += 0.1;
 						break;
 					case EAST:
-						clingZ += 0.5;
+						clingX += 0.1;
 						break;
 					case WEST:
-						clingZ += 0.5;
+						clingX -= 0.1;
 						break;
 					default:
 						break;
 				}
 				switch(clingDirection2) {
 					case NORTH:
-						clingZ += 0.7;
+						clingZ -= 0.1;
 						break;
 					case SOUTH:
-						clingZ += 0.3;
+						clingZ += 0.1;
 						break;
 					case EAST:
-						clingX += 0.3;
+						clingX += 0.1;
 						break;
 					case WEST:
-						clingX += 0.7;
+						clingX -= 0.1;
 						break;
 					default:
 						break;
@@ -200,9 +199,11 @@ public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 
 	private static boolean canWallCling(PlayerEntity player) {
 
-		if (clingTime > -5 /*|| player.canClimb()*/ || player.getHungerManager().getFoodLevel() < 1) return false;
+		if (clingTime > -5 || player.getHungerManager().getFoodLevel() < 1) return false;
 
 		if (player.world.getBlockState(new BlockPos(player.getPos().getX(), player.getPos().getY() - 0.8, player.getPos().getZ())).isOpaque()) return false;
+
+		if (!player.world.getFluidState(player.getBlockPos()).isEmpty() || !player.world.getFluidState(player.getBlockPos().up()).isEmpty()) return false;
 
 		double dist = 0.4;
 		Box box = player.getBoundingBox().shrink(0.2, 0, 0.2);
@@ -230,8 +231,8 @@ public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 		if (SkillCheck.SLIPPERY_BLOCKS.contains(player.world.getBlockState(getWallPos(player)).getBlock()) ^ SkillCheck.config.invertSlipperyTag
 				|| player.world.getBlockState(getWallPos(player)).getBlock() instanceof FluidBlock) return false;
 
-
-		if (ClassManager.hasClass(player, SkillCheck.THIEF) || player.getPos().getY() < lastJumpY) return true; //TODO: change to use levels later?
+		//TODO maybe have a higher thief level where you can spam up a wall?
+		if (player.getPos().getY() < lastJumpY) return true;
 
 		if (walls.size() == 1) {
 
