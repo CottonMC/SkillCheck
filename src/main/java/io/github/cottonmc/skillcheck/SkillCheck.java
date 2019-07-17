@@ -2,7 +2,9 @@ package io.github.cottonmc.skillcheck;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import io.github.cottonmc.cotton.config.ConfigManager;
-import io.github.cottonmc.skillcheck.api.traits.ClassManager;
+import io.github.cottonmc.skillcheck.api.classes.ClassManager;
+import io.github.cottonmc.skillcheck.api.classes.PlayerClassType;
+import io.github.cottonmc.skillcheck.classes.SimpleClassType;
 import io.github.cottonmc.skillcheck.container.CharacterSheetContainer;
 import io.github.cottonmc.skillcheck.events.PlayerAttackEvent;
 import io.github.cottonmc.skillcheck.events.PlayerStealEvent;
@@ -27,6 +29,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.SimpleRegistry;
 
 public class SkillCheck implements ModInitializer {
     public static SkillCheckConfig config;
@@ -37,9 +40,11 @@ public class SkillCheck implements ModInitializer {
 
     public static final Tag<Block> SLIPPERY_BLOCKS = TagRegistry.block(new Identifier(MOD_ID, "slippery"));
 
-    public static Identifier BRAWLER = ClassManager.registerClass(new Identifier(MOD_ID, "brawler"), 10);
-    public static Identifier ARTISAN = ClassManager.registerClass(new Identifier(MOD_ID, "artisan"), 5);
-    public static Identifier THIEF = ClassManager.registerClass(new Identifier(MOD_ID, "thief"), 5);
+    public static final Registry<PlayerClassType> PLAYER_CLASS_TYPES = new SimpleRegistry<>();
+
+    public static PlayerClassType BRAWLER = Registry.register(PLAYER_CLASS_TYPES, new Identifier(MOD_ID, "brawler"), new SimpleClassType(10));
+    public static PlayerClassType ARTISAN = Registry.register(PLAYER_CLASS_TYPES, new Identifier(MOD_ID, "artisan"), new SimpleClassType(5));
+    public static PlayerClassType THIEF = Registry.register(PLAYER_CLASS_TYPES, new Identifier(MOD_ID, "thief"), new SimpleClassType(5));
 
     public static Item BRAWLER_SCROLL = register("brawler_scroll", new ClassScrollItem(BRAWLER));
     public static Item WEAVER_SCROLL = register("artisan_scroll", new ClassScrollItem(ARTISAN));

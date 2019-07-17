@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.List;
 
 @Mixin(BannerItem.class)
-public abstract class MixinBannerTooltip {
+public abstract class MixinBannerItem {
 
 	@Inject(method = "appendBannerTooltip",
 			at = @At("TAIL"),

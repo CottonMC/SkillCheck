@@ -1,7 +1,7 @@
 package io.github.cottonmc.skillcheck.events;
 
 import io.github.cottonmc.skillcheck.SkillCheck;
-import io.github.cottonmc.skillcheck.api.traits.ClassManager;
+import io.github.cottonmc.skillcheck.api.classes.ClassManager;
 import io.github.cottonmc.skillcheck.api.dice.Dice;
 import io.github.cottonmc.skillcheck.api.dice.RollResult;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;

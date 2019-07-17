@@ -2,7 +2,7 @@ package io.github.cottonmc.skillcheck.mixins;
 
 import com.mojang.authlib.GameProfile;
 import io.github.cottonmc.skillcheck.SkillCheck;
-import io.github.cottonmc.skillcheck.api.traits.ClassManager;
+import io.github.cottonmc.skillcheck.api.classes.ClassManager;
 import io.github.cottonmc.skillcheck.util.SkillCheckNetworking;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -35,7 +35,7 @@ import static net.minecraft.util.math.Direction.*;
  * The original repository can be found here: https://github.com/genandnic/Wall-Jump
  */
 @Mixin(ClientPlayerEntity.class)
-public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
+public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
 
 	@Shadow public Input input;
 
@@ -61,7 +61,7 @@ public abstract class MixinThiefClient extends AbstractClientPlayerEntity {
 	private static int jumpCount = 0;
 	private static boolean jumpKey = false;
 
-	public MixinThiefClient(ClientWorld world, GameProfile profile) {
+	public MixinClientPlayerEntity(ClientWorld world, GameProfile profile) {
 		super(world, profile);
 	}
 

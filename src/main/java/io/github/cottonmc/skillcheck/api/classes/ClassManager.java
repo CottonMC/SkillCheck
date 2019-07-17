@@ -1,4 +1,4 @@
-package io.github.cottonmc.skillcheck.api.traits;
+package io.github.cottonmc.skillcheck.api.classes;
 
 import com.raphydaphy.crochet.data.PlayerData;
 import io.github.cottonmc.skillcheck.SkillCheck;
@@ -7,41 +7,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
-
+//TODO: deprecate and replace with Cardinal 2 once it's ready
+//TODO: but also keep around for updating previous worlds
 public class ClassManager {
-
-	private static Map<Identifier, Integer> CLASSES = new HashMap<>();
-
-	/**
-	 * Add a class to the SkillCheck registry.
-	 * @param id the ID of the class to add
-	 * @param maxLevel the max level the class can have
-	 * @return the registered identifier
-	 */
-	public static Identifier registerClass(Identifier id, int maxLevel) {
-		if (!CLASSES.containsKey(id)) CLASSES.put(id, maxLevel);
-		return id;
-	}
-
-	/**
-	 * Query the max level of a class.
-	 * @param id the class to check
-	 * @return the max level of the class, or 0 if the class doesn't exist
-	 */
-	public static int getClassMaxLevel(Identifier id) {
-		return CLASSES.getOrDefault(id, 0);
-	}
-
-	/**
-	 * @return a set of all class identifiers
-	 */
-	public static Set<Identifier> getClasses() {
-		return CLASSES.keySet();
-	}
 
 	/**
 	 * Query the classes a player has data for.
@@ -64,12 +33,16 @@ public class ClassManager {
 	 * @return the player's class, or null
 	 */
 	@Nullable
-	public static ClassTrait getPlayerClass(PlayerEntity player, Identifier id) {
+	public static PlayerClass getPlayerClass(PlayerEntity player, Identifier id) {
 		CompoundTag classes = getPlayerClasses(player);
 		if (!classes.containsKey(id.toString())) return null;
-		ClassTrait trait = new ClassTrait(id);
+		PlayerClass trait = new PlayerClass(id);
 		trait.fromNBT(classes.getCompound(id.toString()));
 		return trait;
+	}
+
+	public static boolean hasClass(PlayerEntity player, PlayerClassType type) {
+		return hasClass(player, SkillCheck.PLAYER_CLASS_TYPES.getId(type));
 	}
 
 	/**
@@ -89,7 +62,7 @@ public class ClassManager {
 	 * @param id the ID of the class to add
 	 */
 	public static void addPlayerClass(PlayerEntity player, Identifier id) {
-		putPlayerClass(player, id, new ClassTrait(id));
+		putPlayerClass(player, id, new PlayerClass(id));
 	}
 
 	/**
@@ -98,11 +71,15 @@ public class ClassManager {
 	 * @param id the ID of the class to set
 	 * @param trait the values for the class
 	 */
-	public static void putPlayerClass(PlayerEntity player, Identifier id, ClassTrait trait) {
+	public static void putPlayerClass(PlayerEntity player, Identifier id, PlayerClass trait) {
 		CompoundTag classes = getPlayerClasses(player);
 		if (classes.containsKey(id.toString())) classes.remove(id.toString());
 		classes.put(id.toString(), trait.toNBT());
 		PlayerData.markDirty(player);
+	}
+
+	public static boolean hasLevel(PlayerEntity player, PlayerClassType type, int level) {
+		return hasLevel(player, SkillCheck.PLAYER_CLASS_TYPES.getId(type), level);
 	}
 
 	/**
@@ -114,9 +91,13 @@ public class ClassManager {
 	 */
 	public static boolean hasLevel(PlayerEntity player, Identifier id, int level) {
 		if (SkillCheck.config.disableClasses) return true;
-		ClassTrait trait = getPlayerClass(player, id);
+		PlayerClass trait = getPlayerClass(player, id);
 		if (trait == null) return false;
 		return trait.getLevel() >= level;
+	}
+
+	public static int getLevel(PlayerEntity player, PlayerClassType type) {
+		return getLevel(player, SkillCheck.PLAYER_CLASS_TYPES.getId(type));
 	}
 
 	/**
@@ -128,7 +109,7 @@ public class ClassManager {
 	public static int getLevel(PlayerEntity player, Identifier id) {
 		if (SkillCheck.config.disableClasses) return 0;
 		if (!hasClass(player, id)) return 0;
-		ClassTrait trait = getPlayerClass(player, id);
+		PlayerClass trait = getPlayerClass(player, id);
 		return trait.getLevel();
 	}
 
@@ -153,10 +134,10 @@ public class ClassManager {
 		if (SkillCheck.config.disableClasses) return false;
 
 		if (!hasClass(player, id)) addPlayerClass(player, id);
-		ClassTrait trait = getPlayerClass(player, id);
+		PlayerClass trait = getPlayerClass(player, id);
 		int levelTo = trait.getLevel() + amount;
-		if (levelTo > CLASSES.get(id)) {
-			trait.setLevel(CLASSES.get(id));
+		if (levelTo > SkillCheck.PLAYER_CLASS_TYPES.get(id).getMaxLevel()) {
+			trait.setLevel(SkillCheck.PLAYER_CLASS_TYPES.get(id).getMaxLevel());
 			putPlayerClass(player, id, trait);
 			return false;
 		}

@@ -2,7 +2,8 @@ package io.github.cottonmc.skillcheck.container;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.cottonmc.skillcheck.SkillCheck;
-import io.github.cottonmc.skillcheck.api.traits.ClassManager;
+import io.github.cottonmc.skillcheck.api.classes.ClassManager;
+import io.github.cottonmc.skillcheck.api.classes.PlayerClassType;
 import io.github.cottonmc.skillcheck.util.SkillCheckNetworking;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -10,10 +11,10 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GuiLighting;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -104,12 +105,11 @@ public class CharacterSheetScreen extends AbstractContainerScreen<CharacterSheet
 			}
 			if (index >= 0) {
 				Identifier id = classes.get(index);
+				PlayerClassType pClass = SkillCheck.PLAYER_CLASS_TYPES.get(id);
 				int descLineHeight = top + 20;
 				List<String> lines = new ArrayList<>();
-				for (int i = 0; i < 10; i++) {
-					String key = "desc.class." + id.getNamespace() + "." + id.getPath() + "." + i;
-					if (!I18n.hasTranslation(key)) break;
-					String textToDraw = new TranslatableText(key).asString();
+				for (Text line : pClass.getClassDescription()) {
+					String textToDraw = line.asString();
 					List<String> toAdd = textRenderer.wrapStringToWidthAsList(textToDraw, 161);
 					lines.addAll(toAdd);
 				}

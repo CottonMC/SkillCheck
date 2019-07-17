@@ -1,7 +1,7 @@
 package io.github.cottonmc.skillcheck.util;
 
 import io.github.cottonmc.skillcheck.SkillCheck;
-import io.github.cottonmc.skillcheck.api.traits.ClassManager;
+import io.github.cottonmc.skillcheck.api.classes.ClassManager;
 import io.github.cottonmc.skillcheck.container.CharacterSheetContainer;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;

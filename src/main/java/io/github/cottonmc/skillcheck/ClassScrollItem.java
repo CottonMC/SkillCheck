@@ -1,6 +1,7 @@
 package io.github.cottonmc.skillcheck;
 
-import io.github.cottonmc.skillcheck.api.traits.ClassManager;
+import io.github.cottonmc.skillcheck.api.classes.ClassManager;
+import io.github.cottonmc.skillcheck.api.classes.PlayerClassType;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,6 +21,10 @@ public class ClassScrollItem extends Item {
 	static final String FLAVOR_TEXT = "FlavorText";
 
 	Identifier trait;
+
+	public ClassScrollItem(PlayerClassType type) {
+		this(SkillCheck.PLAYER_CLASS_TYPES.getId(type));
+	}
 
 	public ClassScrollItem(Identifier trait) {
 		super(new Item.Settings().group(SkillCheck.SKILLCHECK_GROUP).maxCount(1));

@@ -1,7 +1,7 @@
 package io.github.cottonmc.skillcheck.mixins;
 
 import io.github.cottonmc.skillcheck.SkillCheck;
-import io.github.cottonmc.skillcheck.api.traits.ClassManager;
+import io.github.cottonmc.skillcheck.api.classes.ClassManager;
 import net.minecraft.container.BlockContext;
 import net.minecraft.container.LoomContainer;
 import net.minecraft.entity.player.PlayerEntity;

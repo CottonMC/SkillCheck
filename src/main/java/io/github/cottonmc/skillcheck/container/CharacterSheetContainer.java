@@ -1,11 +1,14 @@
 package io.github.cottonmc.skillcheck.container;
 
-import io.github.cottonmc.skillcheck.api.traits.ClassManager;
+import io.github.cottonmc.skillcheck.SkillCheck;
+import io.github.cottonmc.skillcheck.api.classes.ClassManager;
+import io.github.cottonmc.skillcheck.api.classes.PlayerClassType;
 import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class CharacterSheetContainer extends Container {
@@ -16,7 +19,8 @@ public class CharacterSheetContainer extends Container {
 	public CharacterSheetContainer(int syncId, PlayerEntity player) {
 		super(null, syncId);
 		this.player = player;
-		this.classes = new ArrayList<>(ClassManager.getClasses());
+		this.classes = new ArrayList<>(SkillCheck.PLAYER_CLASS_TYPES.getIds());
+		this.classes.sort(Comparator.comparing(Identifier::getPath));
 	}
 
 	@Override
@@ -27,9 +31,8 @@ public class CharacterSheetContainer extends Container {
 	public int getLevelCost() {
 		if (currentSkill == null) return 0;
 		int level = ClassManager.getLevel(player, currentSkill);
-		if (level > 3) return 30;
-		if (level == 0) return 5;
-		return 10*level;
+		PlayerClassType pClass = SkillCheck.PLAYER_CLASS_TYPES.get(currentSkill);
+		return pClass.getNextLevelCost(level, player);
 	}
 
 	@Override
@@ -43,7 +46,7 @@ public class CharacterSheetContainer extends Container {
 
 	public boolean canLevelUp() {
 		if (currentSkill == null) return false;
-		if (ClassManager.getLevel(player, currentSkill) >= ClassManager.getClassMaxLevel(currentSkill)) return false;
+		if (ClassManager.getLevel(player, currentSkill) >= SkillCheck.PLAYER_CLASS_TYPES.get(currentSkill).getMaxLevel()) return false;
 		return player.experienceLevel >= getLevelCost() || player.isCreative();
 	}
 }

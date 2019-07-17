@@ -4,8 +4,8 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "mixins.skillcheck.refmap.json",
   "client": [
-    "MixinBannerTooltip",
-    "MixinThiefClient",
+    "MixinBannerItem",
+    "MixinClientPlayerEntity",
     "MixinLoomScreen"
   ],
   "injectors": {

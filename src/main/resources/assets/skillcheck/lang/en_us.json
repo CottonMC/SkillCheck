@@ -28,6 +28,7 @@
   "msg.skillcheck.roll.fail": "Critical failure! (%s)",
 
   "desc.class.skillcheck.artisan.0": "Lv1+: Put up to 16 patterns on a single banner.",
+  "desc.class.skillcheck.artisan.1": "Per lv 1+: Villagers will buy goods for higher prices.",
   "desc.class.skillcheck.thief.0": "Per lv: +1 to entity theft chance.",
   "desc.class.skillcheck.thief.1": "Sneak+right-click on an enemy to try to steal armor.",
   "desc.class.skillcheck.thief.2": "Lv1+: Cling to and jump off walls.",

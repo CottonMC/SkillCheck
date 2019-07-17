@@ -2,7 +2,7 @@ package io.github.cottonmc.skillcheck.mixins;
 
 import io.github.cottonmc.skillcheck.SkillCheck;
 import io.github.cottonmc.skillcheck.util.ArrowEffects;
-import io.github.cottonmc.skillcheck.api.traits.ClassManager;
+import io.github.cottonmc.skillcheck.api.classes.ClassManager;
 import io.github.cottonmc.skillcheck.api.dice.Dice;
 import io.github.cottonmc.skillcheck.api.dice.RollResult;
 import net.minecraft.entity.EntityType;
@@ -28,14 +28,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import javax.annotation.Nullable;
 
 @Mixin(PlayerEntity.class)
-public abstract class MixinThiefCommon extends LivingEntity {
+public abstract class MixinPlayerEntity extends LivingEntity {
 
 	@Shadow @Nullable
 	public abstract ItemEntity dropItem(ItemStack stack, boolean fromSelf);
 
 	@Shadow public abstract void addChatMessage(Text text, boolean statusBar);
 
-	protected MixinThiefCommon(EntityType<? extends LivingEntity> type, World world) {
+	protected MixinPlayerEntity(EntityType<? extends LivingEntity> type, World world) {
 		super(type, world);
 	}
 

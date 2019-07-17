@@ -6,7 +6,8 @@
   "mixins": [
     "MixinArrow",
     "MixinLoomContainer",
-    "MixinThiefCommon"
+    "MixinPlayerEntity",
+    "MixinVillagerEntity"
   ],
   "injectors": {
     "defaultRequire": 1
