@@ -27,17 +27,18 @@
   "msg.skillcheck.roll.result": "投掷结果: %s (%s)",
   "msg.skillcheck.roll.fail": "严重失败! (%s)",
 
-  "desc.class.skillcheck.artisan.0": "Lv1+: 在一个横幅上放置最多16个图案.",
-  "desc.class.skillcheck.thief.0": "每一等级: +1 偷窃实体成功率.",
+  "desc.class.skillcheck.artisan.0": "Lv1+: 在一个旗帜上放置最多16个图案.",
+  "desc.class.skillcheck.artisan.1": "每一等级: 村民们会以更高的价格收购商品.",
+  "desc.class.skillcheck.thief.0": "每一等级: +1 对实体偷窃成功率.",
   "desc.class.skillcheck.thief.1": "对着敌人潜行+右键尝试窃取护甲.",
-  "desc.class.skillcheck.thief.2": "Lv1+: 紧紧抓住，墙上跳下来.",
+  "desc.class.skillcheck.thief.2": "Lv1+: 按住潜行可以抓着墙壁下滑，松开时可以从墙上跳下",
   "desc.class.skillcheck.thief.3": "Lv2+: 在空中再次跳跃.",
   "desc.class.skillcheck.thief.4": "Lv3+: 从空中捉住箭头.",
   "desc.class.skillcheck.brawler.0": "每一等级: 每次空手攻击 伤害+1 .",
   "desc.class.skillcheck.brawler.1": "Lv2+: 空手攻击一个没有装甲的敌人时候有几率削弱它.",
-  "desc.class.skillcheck.brawler.2": "每两等级 lv 2+: +1 削弱敌人几率.",
+  "desc.class.skillcheck.brawler.2": "每两等级 +1 削弱敌人几率.",
 
   "text.skillcheck.level": "Lv%s",
-  "text.skillcheck.cost": "下一等级: %s 经验值",
+  "text.skillcheck.cost": "下一等级需要: %s 级的经验值",
   "btn.skillcheck.levelup": "等级提升"
 }
