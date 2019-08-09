@@ -30,9 +30,9 @@ public abstract class MixinVillagerEntity extends AbstractTraderEntity {
 			int level = classes.get(SkillCheck.ARTISAN_ID).getLevel();
 			for (TradeOffer offer : this.getOffers()) {
 				//villagers only ever buy items for 1 emerald,
-				if (offer.getSellItem().getItem() == Items.EMERALD && offer.getSellItem().getCount() == 1) {
+				if (offer.getSellItem().getItem() == Items.EMERALD) {
 					int newLevel = level;
-					if (level >= 5) {
+					if (level >= 5 && offer.getSellItem().getCount() == 1) {
 						offer.getMutableSellItem().increment(1);
 						newLevel -= 3;
 					}

@@ -202,7 +202,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 
 	private static boolean canWallCling(PlayerEntity player) {
 
-		if (clingTime > -5 || player.getHungerManager().getFoodLevel() < 1) return false;
+		if (clingTime > -5 || player.getHungerManager().getFoodLevel() < 1 || player.isClimbing()) return false;
 
 		if (player.world.getBlockState(new BlockPos(player.getPos().getX(), player.getPos().getY() - 0.8, player.getPos().getZ())).isOpaque()) return false;
 
