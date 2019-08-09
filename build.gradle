@@ -63,6 +63,9 @@ dependencies {
 	modApi "cloth-config:ClothConfig:0.2.1.14"
 	include "cloth-config:ClothConfig:0.2.1.14"
 
+	modApi "io.github.cottonmc:CottonRPG:0.1.0"
+	include "io.github.cottonmc:CottonRPG:0.1.0"
+
 	modApi "io.github.cottonmc:Jankson:1.0.0+j1.1.2"
 	compileOnly ("com.google.code.findbugs:jsr305:3.0.2") { transitive = false }
 }

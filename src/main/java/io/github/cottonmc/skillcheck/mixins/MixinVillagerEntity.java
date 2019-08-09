@@ -1,7 +1,7 @@
 package io.github.cottonmc.skillcheck.mixins;
 
 import io.github.cottonmc.skillcheck.SkillCheck;
-import io.github.cottonmc.skillcheck.api.classes.ClassManager;
+import io.github.cottonmc.skillcheck.api.classes.LegacyClassManager;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.AbstractTraderEntity;
 import net.minecraft.entity.passive.VillagerEntity;
@@ -24,8 +24,8 @@ public abstract class MixinVillagerEntity extends AbstractTraderEntity {
 
 	@Inject(method = "prepareRecipesFor", at = @At(value = "TAIL"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
 	public void improveArtisanPrice(PlayerEntity player, CallbackInfo ci) {
-		if (ClassManager.hasClass(player, SkillCheck.ARTISAN)) {
-			int level = ClassManager.getLevel(player, SkillCheck.ARTISAN);
+		if (LegacyClassManager.hasClass(player, SkillCheck.OLD_ARTISAN)) {
+			int level = LegacyClassManager.getLevel(player, SkillCheck.OLD_ARTISAN);
 			for (TradeOffer offer : this.getOffers()) {
 				//villagers only ever buy items for 1 emerald,
 				if (offer.getSellItem().getItem() == Items.EMERALD && offer.getSellItem().getCount() == 1) {

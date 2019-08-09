@@ -2,7 +2,7 @@ package io.github.cottonmc.skillcheck.mixins;
 
 import com.mojang.authlib.GameProfile;
 import io.github.cottonmc.skillcheck.SkillCheck;
-import io.github.cottonmc.skillcheck.api.classes.ClassManager;
+import io.github.cottonmc.skillcheck.api.classes.LegacyClassManager;
 import io.github.cottonmc.skillcheck.util.SkillCheckNetworking;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -69,10 +69,10 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 	public void gymnistMovement(CallbackInfo ci) {
 
 		// wall-cling/wall-jump code from Wall-Jump
-		if (ClassManager.hasClass(this, SkillCheck.THIEF)) this.handleWallJump();
+		if (LegacyClassManager.hasClass(this, SkillCheck.OLD_THIEF)) this.handleWallJump();
 
 		// double-jump code from Wall-Jump
-		if (ClassManager.hasLevel(this, SkillCheck.THIEF, 2)) this.handleDoubleJump();
+		if (LegacyClassManager.hasLevel(this, SkillCheck.OLD_THIEF, 2)) this.handleDoubleJump();
 
 	}
 

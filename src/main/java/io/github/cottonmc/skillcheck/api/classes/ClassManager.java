@@ -1,31 +1,24 @@
 package io.github.cottonmc.skillcheck.api.classes;
 
-import com.raphydaphy.crochet.data.PlayerData;
+import io.github.cottonmc.cottonrpg.CottonRPG;
+import io.github.cottonmc.cottonrpg.data.CharacterClass;
+import io.github.cottonmc.cottonrpg.data.CharacterClassEntry;
+import io.github.cottonmc.cottonrpg.data.CharacterClasses;
+import io.github.cottonmc.cottonrpg.data.CharacterData;
 import io.github.cottonmc.skillcheck.SkillCheck;
+import io.github.cottonmc.skillcheck.util.SkillCheckNetworking;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 
 import javax.annotation.Nullable;
 
-//TODO: deprecate and replace with Cardinal 2 once it's ready
-//TODO: but also keep around for updating previous worlds
+/**
+ * NOTE: This only exists to preserve levels for players.
+ * Will be removed in SkillCheck 2.2.
+ */
 public class ClassManager {
-
-	/**
-	 * Query the classes a player has data for.
-	 * @param player the player to query
-	 * @return the compound tag of all class data
-	 */
-	public static CompoundTag getPlayerClasses(PlayerEntity player) {
-		CompoundTag data =  PlayerData.get(player, SkillCheck.MOD_ID);
-		if (!data.containsKey("Classes")) {
-			data.put("Classes", new CompoundTag());
-			PlayerData.markDirty(player);
-		}
-		return data.getCompound("Classes");
-	}
-
 	/**
 	 * Get an object representing a player's progress with a class.
 	 * @param player the player to query
@@ -33,16 +26,12 @@ public class ClassManager {
 	 * @return the player's class, or null
 	 */
 	@Nullable
-	public static PlayerClass getPlayerClass(PlayerEntity player, Identifier id) {
-		CompoundTag classes = getPlayerClasses(player);
-		if (!classes.containsKey(id.toString())) return null;
-		PlayerClass trait = new PlayerClass(id);
-		trait.fromNBT(classes.getCompound(id.toString()));
-		return trait;
+	public static CharacterClassEntry getPlayerClass(PlayerEntity player, Identifier id) {
+		return CharacterData.get(player).getClasses().get(id);
 	}
 
-	public static boolean hasClass(PlayerEntity player, PlayerClassType type) {
-		return hasClass(player, SkillCheck.PLAYER_CLASS_TYPES.getId(type));
+	public static boolean hasClass(PlayerEntity player, CharacterClass type) {
+		return hasClass(player, CottonRPG.CLASSES.getId(type));
 	}
 
 	/**
@@ -53,7 +42,8 @@ public class ClassManager {
 	 */
 	public static boolean hasClass(PlayerEntity player, Identifier id) {
 		if (SkillCheck.config.disableClasses) return true;
-		return (getPlayerClasses(player).containsKey(id.toString()));
+		if (CharacterData.get(player).getClasses().has(id)) return true;
+		else return LegacyClassManager.hasClass(player, id);
 	}
 
 	/**
@@ -62,24 +52,11 @@ public class ClassManager {
 	 * @param id the ID of the class to add
 	 */
 	public static void addPlayerClass(PlayerEntity player, Identifier id) {
-		putPlayerClass(player, id, new PlayerClass(id));
+		CharacterData.get(player).getClasses().giveIfAbsent(new CharacterClassEntry(id));
 	}
 
-	/**
-	 * Set a player's class info to a specific value.
-	 * @param player the player to set on
-	 * @param id the ID of the class to set
-	 * @param trait the values for the class
-	 */
-	public static void putPlayerClass(PlayerEntity player, Identifier id, PlayerClass trait) {
-		CompoundTag classes = getPlayerClasses(player);
-		if (classes.containsKey(id.toString())) classes.remove(id.toString());
-		classes.put(id.toString(), trait.toNBT());
-		PlayerData.markDirty(player);
-	}
-
-	public static boolean hasLevel(PlayerEntity player, PlayerClassType type, int level) {
-		return hasLevel(player, SkillCheck.PLAYER_CLASS_TYPES.getId(type), level);
+	public static boolean hasLevel(PlayerEntity player, CharacterClass type, int level) {
+		return hasLevel(player, CottonRPG.CLASSES.getId(type), level);
 	}
 
 	/**
@@ -91,13 +68,15 @@ public class ClassManager {
 	 */
 	public static boolean hasLevel(PlayerEntity player, Identifier id, int level) {
 		if (SkillCheck.config.disableClasses) return true;
-		PlayerClass trait = getPlayerClass(player, id);
-		if (trait == null) return false;
-		return trait.getLevel() >= level;
+		CharacterClassEntry entry = getPlayerClass(player, id);
+		if (entry == null) {
+			return LegacyClassManager.hasLevel(player, id, level);
+		}
+		return entry.getLevel() >= level;
 	}
 
-	public static int getLevel(PlayerEntity player, PlayerClassType type) {
-		return getLevel(player, SkillCheck.PLAYER_CLASS_TYPES.getId(type));
+	public static int getLevel(PlayerEntity player, CharacterClass type) {
+		return getLevel(player, CottonRPG.CLASSES.getId(type));
 	}
 
 	/**
@@ -108,8 +87,7 @@ public class ClassManager {
 	 */
 	public static int getLevel(PlayerEntity player, Identifier id) {
 		if (SkillCheck.config.disableClasses) return 0;
-		if (!hasClass(player, id)) return 0;
-		PlayerClass trait = getPlayerClass(player, id);
+		CharacterClassEntry trait = getPlayerClass(player, id);
 		return trait.getLevel();
 	}
 
@@ -132,17 +110,29 @@ public class ClassManager {
 	 */
 	public static boolean levelUp(PlayerEntity player, Identifier id, int amount) {
 		if (SkillCheck.config.disableClasses) return false;
-
-		if (!hasClass(player, id)) addPlayerClass(player, id);
-		PlayerClass trait = getPlayerClass(player, id);
-		int levelTo = trait.getLevel() + amount;
-		if (levelTo > SkillCheck.PLAYER_CLASS_TYPES.get(id).getMaxLevel()) {
-			trait.setLevel(SkillCheck.PLAYER_CLASS_TYPES.get(id).getMaxLevel());
-			putPlayerClass(player, id, trait);
-			return false;
-		}
-		trait.setLevel(trait.getLevel() + amount);
-		putPlayerClass(player, id, trait);
+		CharacterClasses classes = CharacterData.get(player).getClasses();
+		int current = classes.get(id).getLevel();
+		int upTo = current + amount;
+		CharacterClass clazz = CottonRPG.CLASSES.get(id);
+		if (clazz.getMaxLevel() < upTo) return false;
+		classes.get(id).setLevel(current + amount);
 		return true;
+	}
+
+	public static void tryPortClasses(PlayerEntity player) {
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+			SkillCheckNetworking.requestClassPort();
+		} else {
+			CharacterClasses classes = CharacterData.get(player).getClasses();
+			for (Identifier id : SkillCheck.getCharSheetClasses()) {
+				if (LegacyClassManager.hasClass(player, id) && !classes.has(id)) {
+					PlayerClass old = LegacyClassManager.getPlayerClass(player, id);
+					CharacterClassEntry entry = new CharacterClassEntry(id);
+					entry.setLevel(old.getLevel());
+					entry.setExperience(old.getExperience());
+					classes.giveIfAbsent(entry);
+				}
+			}
+		}
 	}
 }

@@ -2,7 +2,7 @@ package io.github.cottonmc.skillcheck.container;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.cottonmc.skillcheck.SkillCheck;
-import io.github.cottonmc.skillcheck.api.classes.ClassManager;
+import io.github.cottonmc.skillcheck.api.classes.LegacyClassManager;
 import io.github.cottonmc.skillcheck.api.classes.PlayerClassType;
 import io.github.cottonmc.skillcheck.util.SkillCheckNetworking;
 import net.fabricmc.api.EnvType;
@@ -93,7 +93,7 @@ public class CharacterSheetScreen extends AbstractContainerScreen<CharacterSheet
 			GlStateManager.disableBlend();
 			for (Identifier id : classes) {
 				TranslatableText className = new TranslatableText("class." + id.getNamespace() + "." + id.getPath());
-				String level = className.asString() + ": " + new TranslatableText("text.skillcheck.level", ClassManager.getLevel(playerInventory.player, id)).asString();
+				String level = className.asString() + ": " + new TranslatableText("text.skillcheck.level", LegacyClassManager.getLevel(playerInventory.player, id)).asString();
 				if (shouldScroll(classes.size()) && (scrollOffset < this.scroll || scrollOffset >= 7 + this.scroll)) {
 					scrollOffset++;
 				} else {

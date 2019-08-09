@@ -2,7 +2,8 @@ package io.github.cottonmc.skillcheck;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import io.github.cottonmc.cotton.config.ConfigManager;
-import io.github.cottonmc.skillcheck.api.classes.ClassManager;
+import io.github.cottonmc.cottonrpg.CottonRPG;
+import io.github.cottonmc.cottonrpg.data.CharacterClass;
 import io.github.cottonmc.skillcheck.api.classes.PlayerClassType;
 import io.github.cottonmc.skillcheck.classes.SimpleClassType;
 import io.github.cottonmc.skillcheck.container.CharacterSheetContainer;
@@ -10,6 +11,7 @@ import io.github.cottonmc.skillcheck.events.PlayerAttackEvent;
 import io.github.cottonmc.skillcheck.events.PlayerStealEvent;
 import io.github.cottonmc.skillcheck.api.dice.Dice;
 import io.github.cottonmc.skillcheck.api.dice.RollResult;
+import io.github.cottonmc.skillcheck.util.CharacterSheetCapable;
 import io.github.cottonmc.skillcheck.util.SkillCheckConfig;
 import io.github.cottonmc.skillcheck.util.SkillCheckNetworking;
 import net.fabricmc.api.ModInitializer;
@@ -31,6 +33,11 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.SimpleRegistry;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+
 public class SkillCheck implements ModInitializer {
     public static SkillCheckConfig config;
     public static final String MOD_ID = "skillcheck";
@@ -40,11 +47,16 @@ public class SkillCheck implements ModInitializer {
 
     public static final Tag<Block> SLIPPERY_BLOCKS = TagRegistry.block(new Identifier(MOD_ID, "slippery"));
 
+    @Deprecated
     public static final Registry<PlayerClassType> PLAYER_CLASS_TYPES = new SimpleRegistry<>();
 
-    public static PlayerClassType BRAWLER = Registry.register(PLAYER_CLASS_TYPES, new Identifier(MOD_ID, "brawler"), new SimpleClassType(10));
-    public static PlayerClassType ARTISAN = Registry.register(PLAYER_CLASS_TYPES, new Identifier(MOD_ID, "artisan"), new SimpleClassType(5));
-    public static PlayerClassType THIEF = Registry.register(PLAYER_CLASS_TYPES, new Identifier(MOD_ID, "thief"), new SimpleClassType(5));
+    public static PlayerClassType OLD_BRAWLER = Registry.register(PLAYER_CLASS_TYPES, new Identifier(MOD_ID, "brawler"), new SimpleClassType(10));
+    public static PlayerClassType OLD_ARTISAN = Registry.register(PLAYER_CLASS_TYPES, new Identifier(MOD_ID, "artisan"), new SimpleClassType(5));
+    public static PlayerClassType OLD_THIEF = Registry.register(PLAYER_CLASS_TYPES, new Identifier(MOD_ID, "thief"), new SimpleClassType(5));
+
+    public static CharacterClass ARTISAN = Registry.register(CottonRPG.CLASSES, new Identifier(MOD_ID, "artisan"), new SkillCheckCharClass(5));
+    public static CharacterClass BRAWLER = Registry.register(CottonRPG.CLASSES, new Identifier(MOD_ID, "brawler"), new SkillCheckCharClass(10));
+    public static CharacterClass THIEF = Registry.register(CottonRPG.CLASSES, new Identifier(MOD_ID, "thief"), new SkillCheckCharClass(5));
 
     public static Item BRAWLER_SCROLL = register("brawler_scroll", new ClassScrollItem(BRAWLER));
     public static Item WEAVER_SCROLL = register("artisan_scroll", new ClassScrollItem(ARTISAN));
@@ -87,5 +99,15 @@ public class SkillCheck implements ModInitializer {
                             return 1;
                         })))));
     }
+
+    public static List<Identifier> getCharSheetClasses() {
+	  Set<Identifier> allIds = CottonRPG.CLASSES.getIds();
+	  List<Identifier> ret = new ArrayList<>();
+	  for (Identifier id : allIds) {
+	    if (CottonRPG.CLASSES.get(id) instanceof CharacterSheetCapable) ret.add(id);
+	  }
+	  ret.sort(Comparator.comparing(Identifier::getPath));
+	  return ret;
+	}
 
 }

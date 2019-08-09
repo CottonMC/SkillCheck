@@ -1,7 +1,7 @@
 package io.github.cottonmc.skillcheck.mixins;
 
 import io.github.cottonmc.skillcheck.SkillCheck;
-import io.github.cottonmc.skillcheck.api.classes.ClassManager;
+import io.github.cottonmc.skillcheck.api.classes.LegacyClassManager;
 import net.minecraft.container.BlockContext;
 import net.minecraft.container.LoomContainer;
 import net.minecraft.entity.player.PlayerEntity;
@@ -24,7 +24,7 @@ public abstract class MixinLoomContainer {
 
 	@ModifyConstant(method = "onContentChanged", constant = @Constant(intValue = 6))
 	private int changeBannerPatternLimit(int orig) {
-		if (ClassManager.hasClass(player, SkillCheck.ARTISAN)) return 16;
+		if (LegacyClassManager.hasClass(player, SkillCheck.OLD_ARTISAN)) return 16;
 		else return orig;
 	}
 

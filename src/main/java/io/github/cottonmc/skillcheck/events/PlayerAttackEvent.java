@@ -1,7 +1,7 @@
 package io.github.cottonmc.skillcheck.events;
 
 import io.github.cottonmc.skillcheck.SkillCheck;
-import io.github.cottonmc.skillcheck.api.classes.ClassManager;
+import io.github.cottonmc.skillcheck.api.classes.LegacyClassManager;
 import io.github.cottonmc.skillcheck.api.dice.Dice;
 import io.github.cottonmc.skillcheck.api.dice.RollResult;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
@@ -19,14 +19,14 @@ public class PlayerAttackEvent {
 
 	public static AttackEntityCallback onPlayerAttack = (player, world, hand, entity, hitResult) -> {
 		if (player.getStackInHand(hand).isEmpty()) {
-			if (ClassManager.hasClass(player, SkillCheck.BRAWLER)) {
+			if (LegacyClassManager.hasClass(player, SkillCheck.OLD_BRAWLER)) {
 				for (ItemStack stack : entity.getArmorItems()) {
 					if (stack.getItem() instanceof ArmorItem) return ActionResult.PASS;
 				}
 				if (entity instanceof LivingEntity) {
 					LivingEntity mob = (LivingEntity) entity;
-					if (ClassManager.hasLevel(player, SkillCheck.BRAWLER, 2) && !hasWeakness(mob)) {
-						RollResult roll = Dice.roll("1d20+"+ClassManager.getLevel(player, SkillCheck.BRAWLER));
+					if (LegacyClassManager.hasLevel(player, SkillCheck.OLD_BRAWLER, 2) && !hasWeakness(mob)) {
+						RollResult roll = Dice.roll("1d20+"+ LegacyClassManager.getLevel(player, SkillCheck.OLD_BRAWLER));
 						if (SkillCheck.config.showDiceRolls) {
 							if (roll.isCritFail()) player.addChatMessage(new TranslatableText("msg.skillcheck.roll.fail", roll.getFormattedNaturals()), false);
 							else player.addChatMessage(new TranslatableText("msg.skillcheck.roll.result", roll.getTotal(), roll.getFormattedNaturals()), false);
@@ -40,7 +40,7 @@ public class PlayerAttackEvent {
 						}
 					}
 				}
-				entity.damage(DamageSource.player(player), ClassManager.getLevel(player, SkillCheck.BRAWLER)*2);
+				entity.damage(DamageSource.player(player), LegacyClassManager.getLevel(player, SkillCheck.OLD_BRAWLER)*2);
 				return ActionResult.SUCCESS;
 			}
 		}

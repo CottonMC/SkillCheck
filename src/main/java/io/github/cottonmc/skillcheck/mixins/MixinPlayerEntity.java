@@ -2,7 +2,7 @@ package io.github.cottonmc.skillcheck.mixins;
 
 import io.github.cottonmc.skillcheck.SkillCheck;
 import io.github.cottonmc.skillcheck.util.ArrowEffects;
-import io.github.cottonmc.skillcheck.api.classes.ClassManager;
+import io.github.cottonmc.skillcheck.api.classes.LegacyClassManager;
 import io.github.cottonmc.skillcheck.api.dice.Dice;
 import io.github.cottonmc.skillcheck.api.dice.RollResult;
 import net.minecraft.entity.EntityType;
@@ -42,9 +42,9 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 	@Inject(method = "damage", at = @At("HEAD"), cancellable = true)
 	public void catchArrow(DamageSource source, float amount, CallbackInfoReturnable ci) {
 		if (source.isProjectile() && source.getSource() instanceof ArrowEntity) {
-			if (ClassManager.hasLevel((PlayerEntity)(Object)this, SkillCheck.THIEF, 3)
+			if (LegacyClassManager.hasLevel((PlayerEntity)(Object)this, SkillCheck.OLD_THIEF, 3)
 					&& canCatchArrow()) {
-				RollResult roll = Dice.roll("1d20+"+ClassManager.getLevel((PlayerEntity)(Object)this, SkillCheck.THIEF));
+				RollResult roll = Dice.roll("1d20+"+ LegacyClassManager.getLevel((PlayerEntity)(Object)this, SkillCheck.OLD_THIEF));
 				if (SkillCheck.config.showDiceRolls) {
 					if (roll.isCritFail()) ((PlayerEntity)(Object)this).addChatMessage(new TranslatableText("msg.skillcheck.roll.fail", roll.getFormattedNaturals()), false);
 					else ((PlayerEntity)(Object)this).addChatMessage(new TranslatableText("msg.skillcheck.roll.result", roll.getTotal(), roll.getFormattedNaturals()), false);

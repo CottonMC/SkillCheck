@@ -2,13 +2,13 @@ package io.github.cottonmc.skillcheck.util;
 
 import io.github.cottonmc.skillcheck.SkillCheck;
 import io.github.cottonmc.skillcheck.api.classes.ClassManager;
+import io.github.cottonmc.skillcheck.api.classes.LegacyClassManager;
 import io.github.cottonmc.skillcheck.container.CharacterSheetContainer;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.packet.CustomPayloadS2CPacket;
 import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerEntity;
@@ -24,6 +24,8 @@ public class SkillCheckNetworking {
 	public static final Identifier SYNC_PLAYER_LEVEL = new Identifier(SkillCheck.MOD_ID, "sync_player_level");
 
 	public static final Identifier CLEAR_FALL = new Identifier(SkillCheck.MOD_ID, "clear_fall");
+
+	public static final Identifier REQUEST_PORT = new Identifier(SkillCheck.MOD_ID, "request_port");
 
 	public static void init() {
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) initClient();
@@ -55,34 +57,41 @@ public class SkillCheckNetworking {
 				ClassManager.levelUp(packetContext.getPlayer(), id);
 			}
 		});
-		ServerSidePacketRegistry.INSTANCE.register(CLEAR_FALL, ((packetContext, packetByteBuf) -> {
+		ServerSidePacketRegistry.INSTANCE.register(CLEAR_FALL, (packetContext, packetByteBuf) -> {
 			PlayerEntity player = packetContext.getPlayer();
 			player.fallDistance = 0;
-		}));
+		});
+		ServerSidePacketRegistry.INSTANCE.register(REQUEST_PORT, (packetContext, packetByteBuf) -> {
+		  ClassManager.tryPortClasses(packetContext.getPlayer());
+		});
 	}
-
 
 	public static void syncPlayerLevel(int level, ServerPlayerEntity player) {
 		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 		buf.writeInt(level);
-		player.networkHandler.sendPacket(new CustomPayloadS2CPacket(SYNC_PLAYER_LEVEL, buf));
+		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, new CustomPayloadS2CPacket(SYNC_PLAYER_LEVEL, buf));
 	}
 
 	public static void syncSelection(int index) {
 		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 		buf.writeInt(index);
-		MinecraftClient.getInstance().getNetworkHandler().getClientConnection().send(new CustomPayloadC2SPacket(SYNC_SELECTION, buf));
+		ClientSidePacketRegistry.INSTANCE.sendToServer(new CustomPayloadC2SPacket(SYNC_SELECTION, buf));
 	}
 
 	public static void syncLevelup(Identifier id, int xpCost) {
 		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 		buf.writeIdentifier(id);
 		buf.writeInt(xpCost);
-		MinecraftClient.getInstance().getNetworkHandler().getClientConnection().send(new CustomPayloadC2SPacket(SYNC_LEVELUP, buf));
+		ClientSidePacketRegistry.INSTANCE.sendToServer(new CustomPayloadC2SPacket(SYNC_LEVELUP, buf));
 	}
 
 	public static void clearFall() {
 		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-		MinecraftClient.getInstance().getNetworkHandler().getClientConnection().send(new CustomPayloadC2SPacket(CLEAR_FALL, buf));
+		ClientSidePacketRegistry.INSTANCE.sendToServer(new CustomPayloadC2SPacket(CLEAR_FALL, buf));
+	}
+
+	public static void requestClassPort() {
+	  PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+	  ClientSidePacketRegistry.INSTANCE.sendToServer(new CustomPayloadC2SPacket(REQUEST_PORT, buf));
 	}
 }

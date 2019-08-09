@@ -1,7 +1,7 @@
 package io.github.cottonmc.skillcheck.events;
 
 import io.github.cottonmc.skillcheck.SkillCheck;
-import io.github.cottonmc.skillcheck.api.classes.ClassManager;
+import io.github.cottonmc.skillcheck.api.classes.LegacyClassManager;
 import io.github.cottonmc.skillcheck.api.dice.Dice;
 import io.github.cottonmc.skillcheck.api.dice.RollResult;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
@@ -17,7 +17,7 @@ public class PlayerStealEvent {
 	public static UseEntityCallback onPlayerInteract = (player, world, hand, entity, HitResult) -> {
 		if (player.isSpectator()
 				|| !player.getStackInHand(hand).isEmpty()
-				|| !ClassManager.hasClass(player, SkillCheck.THIEF)
+				|| !LegacyClassManager.hasClass(player, SkillCheck.OLD_THIEF)
 				|| !(entity instanceof MobEntity)
 				|| world.isClient
 				|| !player.isSneaking()) return ActionResult.PASS;
@@ -25,7 +25,7 @@ public class PlayerStealEvent {
 		//TODO: try to figure out a good way to require you to sneak around to pickpocket?
 		for (ItemStack stack : mob.getArmorItems()) {
 			if (stack.isEmpty()) continue;
-			RollResult roll = Dice.roll("1d20+"+ClassManager.getLevel(player, SkillCheck.THIEF));
+			RollResult roll = Dice.roll("1d20+"+ LegacyClassManager.getLevel(player, SkillCheck.OLD_THIEF));
 			if (SkillCheck.config.showDiceRolls) {
 				if (roll.isCritFail()) player.addChatMessage(new TranslatableText("msg.skillcheck.roll.fail", roll.getFormattedNaturals()), false);
 				else player.addChatMessage(new TranslatableText("msg.skillcheck.roll.result", roll.getTotal(), roll.getFormattedNaturals()), false);
