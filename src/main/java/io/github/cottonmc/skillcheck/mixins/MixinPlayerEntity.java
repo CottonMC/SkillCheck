@@ -1,10 +1,12 @@
 package io.github.cottonmc.skillcheck.mixins;
 
+import io.github.cottonmc.cottonrpg.data.CharacterClasses;
+import io.github.cottonmc.cottonrpg.data.CharacterData;
 import io.github.cottonmc.skillcheck.SkillCheck;
 import io.github.cottonmc.skillcheck.util.ArrowEffects;
-import io.github.cottonmc.skillcheck.api.classes.LegacyClassManager;
 import io.github.cottonmc.skillcheck.api.dice.Dice;
 import io.github.cottonmc.skillcheck.api.dice.RollResult;
+import io.github.cottonmc.skillcheck.util.ClassUtils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
@@ -15,7 +17,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
@@ -33,8 +34,6 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 	@Shadow @Nullable
 	public abstract ItemEntity dropItem(ItemStack stack, boolean fromSelf);
 
-	@Shadow public abstract void addChatMessage(Text text, boolean statusBar);
-
 	protected MixinPlayerEntity(EntityType<? extends LivingEntity> type, World world) {
 		super(type, world);
 	}
@@ -42,9 +41,10 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 	@Inject(method = "damage", at = @At("HEAD"), cancellable = true)
 	public void catchArrow(DamageSource source, float amount, CallbackInfoReturnable ci) {
 		if (source.isProjectile() && source.getSource() instanceof ArrowEntity) {
-			if (LegacyClassManager.hasLevel((PlayerEntity)(Object)this, SkillCheck.OLD_THIEF, 3)
+			CharacterClasses classes = CharacterData.get((PlayerEntity)(Object)this).getClasses();
+			if (ClassUtils.hasLevel(classes, SkillCheck.THIEF_ID, 3)
 					&& canCatchArrow()) {
-				RollResult roll = Dice.roll("1d20+"+ LegacyClassManager.getLevel((PlayerEntity)(Object)this, SkillCheck.OLD_THIEF));
+				RollResult roll = Dice.roll("1d20+"+ classes.get(SkillCheck.THIEF_ID).getLevel());
 				if (SkillCheck.config.showDiceRolls) {
 					if (roll.isCritFail()) ((PlayerEntity)(Object)this).addChatMessage(new TranslatableText("msg.skillcheck.roll.fail", roll.getFormattedNaturals()), false);
 					else ((PlayerEntity)(Object)this).addChatMessage(new TranslatableText("msg.skillcheck.roll.result", roll.getTotal(), roll.getFormattedNaturals()), false);

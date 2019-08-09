@@ -1,9 +1,11 @@
 package io.github.cottonmc.skillcheck.container;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import io.github.cottonmc.cottonrpg.CottonRPG;
+import io.github.cottonmc.cottonrpg.data.CharacterClass;
+import io.github.cottonmc.cottonrpg.data.CharacterClasses;
+import io.github.cottonmc.cottonrpg.data.CharacterData;
 import io.github.cottonmc.skillcheck.SkillCheck;
-import io.github.cottonmc.skillcheck.api.classes.LegacyClassManager;
-import io.github.cottonmc.skillcheck.api.classes.PlayerClassType;
 import io.github.cottonmc.skillcheck.util.SkillCheckNetworking;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -42,7 +44,7 @@ public class CharacterSheetScreen extends AbstractContainerScreen<CharacterSheet
 	}
 
 	private void syncLevelUp() {
-		SkillCheckNetworking.syncLevelup(container.classes.get(index), container.getLevelCost());
+		SkillCheckNetworking.syncLevelup(container.classes.get(index));
 	}
 
 	@Override
@@ -91,9 +93,14 @@ public class CharacterSheetScreen extends AbstractContainerScreen<CharacterSheet
 			int rightPanelCenter = left + 187;
 			GlStateManager.disableLighting();
 			GlStateManager.disableBlend();
+			CharacterClasses pClasses = CharacterData.get(playerInventory.player).getClasses();
 			for (Identifier id : classes) {
-				TranslatableText className = new TranslatableText("class." + id.getNamespace() + "." + id.getPath());
-				String level = className.asString() + ": " + new TranslatableText("text.skillcheck.level", LegacyClassManager.getLevel(playerInventory.player, id)).asString();
+				CharacterClass clazz = CottonRPG.CLASSES.get(id);
+				Text className = clazz.getName();
+				int levelVal;
+				if (pClasses.has(id)) levelVal = pClasses.get(id).getLevel();
+				else levelVal = 0;
+				String level = className.asString() + ": " + new TranslatableText("text.skillcheck.level", levelVal).asString();
 				if (shouldScroll(classes.size()) && (scrollOffset < this.scroll || scrollOffset >= 7 + this.scroll)) {
 					scrollOffset++;
 				} else {
@@ -105,7 +112,7 @@ public class CharacterSheetScreen extends AbstractContainerScreen<CharacterSheet
 			}
 			if (index >= 0) {
 				Identifier id = classes.get(index);
-				PlayerClassType pClass = SkillCheck.PLAYER_CLASS_TYPES.get(id);
+				CharacterClass pClass = CottonRPG.CLASSES.get(id);
 				int descLineHeight = top + 20;
 				List<String> lines = new ArrayList<>();
 				for (Text line : pClass.getClassDescription()) {

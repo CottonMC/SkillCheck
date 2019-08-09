@@ -4,12 +4,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 
 /**
- * Flyweight for interacting with classes.
- * A PlayerClass stores the Identifier of the class, the player's level of the class, and how much XP in the class the player has.
- * Experience is not used in the base mod, and is separate from vanilla XP.
- * For most cases, you likely want to use {@link LegacyClassManager}.
- * However, you may want to implement experience on your classes, so feel free to access this then.
+ * Use CottonRPG instead.
  */
+@Deprecated
 public class PlayerClass {
 
 	public Identifier id;

@@ -7,6 +7,10 @@ import net.minecraft.text.Text;
 
 import java.util.List;
 
+/**
+ * Use CottonRPG instead.
+ */
+@Deprecated
 public interface PlayerClassType {
 	/**
 	 * @return The max level you can obtain with this class.

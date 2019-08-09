@@ -7,7 +7,8 @@
     "MixinArrow",
     "MixinLoomContainer",
     "MixinPlayerEntity",
-    "MixinVillagerEntity"
+    "MixinVillagerEntity",
+    "MixinPlayerManager"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -5,7 +5,7 @@
   "item.skillcheck.class_prestige": "Scroll of Prestige",
   "item.skillcheck.character_sheet": "Character Sheet",
 
-  "itemGroup.skillcheck.skillcheck_group": "Skillworks",
+  "itemGroup.skillcheck.skillcheck_group": "SkillCheck",
 
   "tooltip.skillcheck.banner": "+ %s more...",
 

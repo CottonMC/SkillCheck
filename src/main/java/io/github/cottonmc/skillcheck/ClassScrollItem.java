@@ -2,8 +2,7 @@ package io.github.cottonmc.skillcheck;
 
 import io.github.cottonmc.cottonrpg.CottonRPG;
 import io.github.cottonmc.cottonrpg.data.CharacterClass;
-import io.github.cottonmc.skillcheck.api.classes.LegacyClassManager;
-import io.github.cottonmc.skillcheck.api.classes.PlayerClassType;
+import io.github.cottonmc.skillcheck.util.ClassUtils;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -35,7 +34,7 @@ public class ClassScrollItem extends Item {
 
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-		LegacyClassManager.levelUp(player, trait);
+		ClassUtils.levelUp(player, trait, 1);
 		ItemStack held = player.getStackInHand(hand);
 		if (!player.abilities.creativeMode) held.decrement(1);
 		player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);

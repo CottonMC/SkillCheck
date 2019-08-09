@@ -1,8 +1,10 @@
 package io.github.cottonmc.skillcheck.util;
 
+import io.github.cottonmc.cottonrpg.CottonRPG;
+import io.github.cottonmc.cottonrpg.data.CharacterClassEntry;
+import io.github.cottonmc.cottonrpg.data.CharacterClasses;
+import io.github.cottonmc.cottonrpg.data.CharacterData;
 import io.github.cottonmc.skillcheck.SkillCheck;
-import io.github.cottonmc.skillcheck.api.classes.ClassManager;
-import io.github.cottonmc.skillcheck.api.classes.LegacyClassManager;
 import io.github.cottonmc.skillcheck.container.CharacterSheetContainer;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
@@ -24,8 +26,6 @@ public class SkillCheckNetworking {
 	public static final Identifier SYNC_PLAYER_LEVEL = new Identifier(SkillCheck.MOD_ID, "sync_player_level");
 
 	public static final Identifier CLEAR_FALL = new Identifier(SkillCheck.MOD_ID, "clear_fall");
-
-	public static final Identifier REQUEST_PORT = new Identifier(SkillCheck.MOD_ID, "request_port");
 
 	public static void init() {
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) initClient();
@@ -49,24 +49,24 @@ public class SkillCheckNetworking {
 		ServerSidePacketRegistry.INSTANCE.register(SYNC_LEVELUP, (packetContext, packetByteBuf) -> {
 			if (((CharacterSheetContainer)packetContext.getPlayer().container).canLevelUp()) {
 				Identifier id = packetByteBuf.readIdentifier();
-				int xpCost = packetByteBuf.readInt();
+				CharacterClasses classes = CharacterData.get(packetContext.getPlayer()).getClasses();
+				classes.giveIfAbsent(new CharacterClassEntry(id));
+				int currentLevel = classes.get(id).getLevel();
+				int xpCost = ((CharSheetClass)CottonRPG.CLASSES.get(id)).getNextLevelCost(currentLevel);
 				if (!packetContext.getPlayer().isCreative()) {
 					packetContext.getPlayer().experienceLevel -= xpCost;
-					syncPlayerLevel(packetContext.getPlayer().experienceLevel, (ServerPlayerEntity) packetContext.getPlayer());
+					syncPlayerXP(packetContext.getPlayer().experienceLevel, (ServerPlayerEntity) packetContext.getPlayer());
 				}
-				ClassManager.levelUp(packetContext.getPlayer(), id);
+				ClassUtils.levelUp(packetContext.getPlayer(), id, 1);
 			}
 		});
 		ServerSidePacketRegistry.INSTANCE.register(CLEAR_FALL, (packetContext, packetByteBuf) -> {
 			PlayerEntity player = packetContext.getPlayer();
 			player.fallDistance = 0;
 		});
-		ServerSidePacketRegistry.INSTANCE.register(REQUEST_PORT, (packetContext, packetByteBuf) -> {
-		  ClassManager.tryPortClasses(packetContext.getPlayer());
-		});
 	}
 
-	public static void syncPlayerLevel(int level, ServerPlayerEntity player) {
+	public static void syncPlayerXP(int level, ServerPlayerEntity player) {
 		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 		buf.writeInt(level);
 		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, new CustomPayloadS2CPacket(SYNC_PLAYER_LEVEL, buf));
@@ -78,20 +78,14 @@ public class SkillCheckNetworking {
 		ClientSidePacketRegistry.INSTANCE.sendToServer(new CustomPayloadC2SPacket(SYNC_SELECTION, buf));
 	}
 
-	public static void syncLevelup(Identifier id, int xpCost) {
+	public static void syncLevelup(Identifier id) {
 		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 		buf.writeIdentifier(id);
-		buf.writeInt(xpCost);
 		ClientSidePacketRegistry.INSTANCE.sendToServer(new CustomPayloadC2SPacket(SYNC_LEVELUP, buf));
 	}
 
 	public static void clearFall() {
 		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 		ClientSidePacketRegistry.INSTANCE.sendToServer(new CustomPayloadC2SPacket(CLEAR_FALL, buf));
-	}
-
-	public static void requestClassPort() {
-	  PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-	  ClientSidePacketRegistry.INSTANCE.sendToServer(new CustomPayloadC2SPacket(REQUEST_PORT, buf));
 	}
 }

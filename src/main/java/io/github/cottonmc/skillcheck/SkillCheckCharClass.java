@@ -1,9 +1,9 @@
 package io.github.cottonmc.skillcheck;
 
 import io.github.cottonmc.cottonrpg.data.SimpleCharacterClass;
-import io.github.cottonmc.skillcheck.util.CharacterSheetCapable;
+import io.github.cottonmc.skillcheck.util.CharSheetClass;
 
-public class SkillCheckCharClass extends SimpleCharacterClass implements CharacterSheetCapable {
+public class SkillCheckCharClass extends SimpleCharacterClass implements CharSheetClass {
   public SkillCheckCharClass(int maxLevel) {
     super(maxLevel);
   }

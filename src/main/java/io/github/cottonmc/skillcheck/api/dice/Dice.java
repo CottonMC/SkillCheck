@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 public class Dice {
 
+	//TODO: multiple dice? operations other than addition?
 	public static final Pattern PATTERN = Pattern.compile("(?<count>\\d+)\\s*d(?<sides>\\d+)\\s*(?:\\+(?<bonus>\\d+(?!d)))?");
 
 	/**
