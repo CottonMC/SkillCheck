@@ -29,16 +29,27 @@ public abstract class MixinVillagerEntity extends AbstractTraderEntity {
 		if (classes.has(SkillCheck.ARTISAN_ID)) {
 			int level = classes.get(SkillCheck.ARTISAN_ID).getLevel();
 			for (TradeOffer offer : this.getOffers()) {
-				//villagers only ever buy items for 1 emerald,
+				//normal villagers only ever buy items for 1 emerald.
 				if (offer.getSellItem().getItem() == Items.EMERALD) {
 					int newLevel = level;
-					if (level >= 5 && offer.getSellItem().getCount() == 1) {
+					if (level >= 5  && offer.getSellItem().getCount() == 1) {
 						offer.getMutableSellItem().increment(1);
 						newLevel -= 3;
+					}
+					//prevent non-level-5 players from getting the 2-emerald deal
+					if (level < 5 && offer.getSellItem().getCount() == 2) {
+						offer.getMutableSellItem().decrement(1);
 					}
 					double discount = 0.2D + 0.0625D * (double) newLevel;
 					int discounted = (int) Math.floor(discount * (double) offer.getOriginalFirstBuyItem().getCount());
 					offer.increaseSpecialPrice(-Math.max(discounted, 1));
+				}
+			}
+		} else {
+			for (TradeOffer offer : this.getOffers()) {
+				//prevent non-level-5 players from getting the 2-emerald deal
+				if (offer.getSellItem().getItem() == Items.EMERALD && offer.getSellItem().getCount() == 2) {
+					offer.getMutableSellItem().decrement(1);
 				}
 			}
 		}

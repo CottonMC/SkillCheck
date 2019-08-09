@@ -234,8 +234,8 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 		if (SkillCheck.SLIPPERY_BLOCKS.contains(player.world.getBlockState(getWallPos(player)).getBlock()) ^ SkillCheck.config.invertSlipperyTag
 				|| player.world.getBlockState(getWallPos(player)).getBlock() instanceof FluidBlock) return false;
 
-		//TODO maybe have a higher thief level where you can spam up a wall?
-		if (player.getPos().getY() < lastJumpY) return true;
+		//let players vault up walls if they're a good enough thief
+		if (player.getPos().getY() < lastJumpY || CharacterData.get(player).getClasses().get(SkillCheck.THIEF_ID).getLevel() >= 5) return true;
 
 		if (walls.size() == 1) {
 
