@@ -6,6 +6,7 @@ import io.github.cottonmc.cottonrpg.CottonRPG;
 import io.github.cottonmc.cottonrpg.data.clazz.CharacterClass;
 import io.github.cottonmc.cottonrpg.data.resource.CharacterResource;
 import io.github.cottonmc.cottonrpg.data.resource.CharacterResourceEntry;
+import io.github.cottonmc.cottonrpg.data.resource.SimpleCharacterResource;
 import io.github.cottonmc.skillcheck.api.classes.PlayerClassType;
 import io.github.cottonmc.skillcheck.classes.SimpleClassType;
 import io.github.cottonmc.skillcheck.container.CharacterSheetContainer;
@@ -66,7 +67,7 @@ public class SkillCheck implements ModInitializer {
     public static CharacterClass THIEF = Registry.register(CottonRPG.CLASSES, new Identifier(MOD_ID, "thief"), new ThiefCharacterClass(5));
 
     public static CharacterResource STAMINA = Registry.register(CottonRPG.RESOURCES, new Identifier(MOD_ID, "stamina"),
-            new SkillCheckCharacterResource(10, 10, 25, 2, 0x00C6FF, CharacterResource.ResourceVisibility.HUD));
+            new SimpleCharacterResource(10, 10, 25, 2, 0x00C6FF, CharacterResource.ResourceVisibility.HUD));
 
     public static Item BRAWLER_SCROLL = register("brawler_scroll", new ClassScrollItem(BRAWLER));
     public static Item WEAVER_SCROLL = register("artisan_scroll", new ClassScrollItem(ARTISAN));
@@ -116,7 +117,7 @@ public class SkillCheck implements ModInitializer {
 	  for (Identifier id : allIds) {
 	    if (CottonRPG.CLASSES.get(id) instanceof SkillCheckCharacterClass) ret.add(id);
 	  }
-	  ret.sort(Comparator.comparing(Identifier::getPath));
+	  ret.sort(Comparator.comparing(Identifier::toString));
 	  return ret;
 	}
 

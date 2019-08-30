@@ -25,6 +25,7 @@ public class ClassPrestigeItem extends Item {
 		for (Identifier id : SkillCheck.getCharSheetClasses()) {
 			classes.remove(id);
 		}
+		CharacterData.get(player).getResources().remove(SkillCheck.STAMINA);
 		player.addChatMessage(new TranslatableText("msg.skillcheck.prestige"), true);
 		return new TypedActionResult<>(ActionResult.SUCCESS, player.getStackInHand(hand));
 	}

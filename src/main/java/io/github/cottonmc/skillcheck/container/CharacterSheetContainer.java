@@ -37,12 +37,14 @@ public class CharacterSheetContainer extends Container {
 	}
 
 	public boolean canLevelUp() {
-		if (currentSkill == null) return false;
+		if (currentSkill == null || !CottonRPG.CLASSES.containsId(currentSkill)) return false;
 		CharacterClasses classes = CharacterData.get(player).getClasses();
 		CharacterClassEntry entry = classes.get(currentSkill);
+		int currentLevel = 0;
 		if (entry != null) {
-			if (entry.getLevel() >= CottonRPG.CLASSES.get(currentSkill).getMaxLevel()) return false;
+			currentLevel = entry.getLevel();
+			if (currentLevel >= CottonRPG.CLASSES.get(currentSkill).getMaxLevel()) return false;
 		}
-		return CottonRPG.CLASSES.get(currentSkill).canLevelUp(entry.getLevel(), player);
+		return CottonRPG.CLASSES.get(currentSkill).canLevelUp(currentLevel, player);
 	}
 }

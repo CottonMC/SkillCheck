@@ -3,6 +3,7 @@ package io.github.cottonmc.skillcheck.mixins;
 import com.mojang.authlib.GameProfile;
 import io.github.cottonmc.cottonrpg.data.CharacterData;
 import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
+import io.github.cottonmc.cottonrpg.data.resource.CharacterResourceEntry;
 import io.github.cottonmc.cottonrpg.data.resource.CharacterResources;
 import io.github.cottonmc.skillcheck.SkillCheck;
 import io.github.cottonmc.skillcheck.util.ClassUtils;
@@ -69,7 +70,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 	}
 
 	@Inject(method = "tick", at = @At("TAIL"))
-	public void gymnistMovement(CallbackInfo ci) {
+	public void thiefMovement(CallbackInfo ci) {
 		CharacterClasses classes = CharacterData.get(this).getClasses();
 
 		// wall-cling/wall-jump code from Wall-Jump
@@ -84,10 +85,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 
 		if (this.input.sneaking) keyTimer++;
 		else keyTimer = 0;
-		//TODO: properly implement stamina use
-		int compositeCling = clingTime;
 		CharacterResources resources = CharacterData.get(this).getResources();
-		if (resources.has(SkillCheck.STAMINA)) clingTime += resources.get(SkillCheck.STAMINA).getCurrent();
 
 		if (this.onGround || this.abilities.flying) {
 
@@ -104,7 +102,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 			if (keyTimer == 0 || this.onGround || !nearWall(this, 0.2)) {
 
 				clingTime = 0;
-				if ((this.forwardSpeed != 0 || this.sidewaysSpeed != 0) && this.getHungerManager().getFoodLevel() > 6 && nearWall(this, 0.5)) {
+				if ((this.forwardSpeed != 0 || this.sidewaysSpeed != 0) && (tryUseStamina(resources, 5) || !SkillCheck.config.useStamina) && nearWall(this, 0.5)) {
 
 					lastDirection = clingDirection;
 					lastDirection2 = clingDirection2;
@@ -129,7 +127,8 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 
 				} else {
 
-					if ((clingTime++ > wallSlideDelay || this.getHungerManager().getFoodLevel() < 7)) {
+					if (!tryUseStamina(resources, 1)) clingTime++;
+					if ((clingTime > wallSlideDelay)) {
 
 						velY = -wallSlideSpeed;
 						spawnWallParticle(this, wall);
@@ -201,13 +200,27 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 		}
 	}
 
+	public boolean tryUseStamina(CharacterResources resources, int amount) {
+		//TODO: figure out a way to make this all happen serverside instead?
+		if (!resources.has(SkillCheck.STAMINA) || !SkillCheck.config.useStamina) return false;
+		CharacterResourceEntry stamina = resources.get(SkillCheck.STAMINA);
+		if (stamina.getCurrent() < amount) return false;
+		SkillCheckNetworking.consumeStamina(amount);
+		return true;
+	}
+
 	private static boolean nearWall(Entity entity, double dist) {
 		return entity.world.isAreaNotEmpty(entity.getBoundingBox().expand(dist, 0, dist));
 	}
 
 	private static boolean canWallCling(PlayerEntity player) {
+		CharacterResources resources = CharacterData.get(player).getResources();
+		long currentStamina = 0;
+		if (resources.has(SkillCheck.STAMINA)) {
+			currentStamina = resources.get(SkillCheck.STAMINA).getCurrent();
+		}
 
-		if (clingTime > -5 || player.getHungerManager().getFoodLevel() < 1 || player.isClimbing()) return false;
+		if (clingTime > -5 || (currentStamina <= 0 && SkillCheck.config.useStamina) || player.isClimbing()) return false;
 
 		if (player.world.getBlockState(new BlockPos(player.getPos().getX(), player.getPos().getY() - 0.8, player.getPos().getZ())).isOpaque()) return false;
 
@@ -308,7 +321,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 
 		} else if (this.input.jumping && !this.abilities.flying) {
 
-			if (!jumpKey && jumpCount < 2 && airTime > 1 && this.getHungerManager().getFoodLevel() > 6) {
+			if (!jumpKey && jumpCount < 2 && airTime > 1 && (tryUseStamina(CharacterData.get(this).getResources(), 5) || !SkillCheck.config.useStamina)) {
 
 				this.jump();
 				jumpCount++;

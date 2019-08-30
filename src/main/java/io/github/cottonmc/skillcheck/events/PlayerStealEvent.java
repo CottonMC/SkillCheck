@@ -19,7 +19,7 @@ public class PlayerStealEvent {
 		CharacterClasses classes = CharacterData.get(player).getClasses();
 		if (player.isSpectator()
 				|| !player.getStackInHand(hand).isEmpty()
-				|| !classes.has(SkillCheck.THIEF_ID)
+				|| !classes.has(SkillCheck.THIEF)
 				|| !(entity instanceof MobEntity)
 				|| world.isClient
 				|| !player.isSneaking()) return ActionResult.PASS;
@@ -27,7 +27,7 @@ public class PlayerStealEvent {
 		//TODO: try to figure out a good way to require you to sneak around to pickpocket?
 		for (ItemStack stack : mob.getArmorItems()) {
 			if (stack.isEmpty()) continue;
-			RollResult roll = Dice.roll("1d20+"+ classes.get(SkillCheck.THIEF_ID).getLevel());
+			RollResult roll = Dice.roll("1d20+"+ classes.get(SkillCheck.THIEF).getLevel());
 			if (SkillCheck.config.showDiceRolls) {
 				if (roll.isCritFail()) player.addChatMessage(new TranslatableText("msg.skillcheck.roll.fail", roll.getFormattedNaturals()), false);
 				else player.addChatMessage(new TranslatableText("msg.skillcheck.roll.result", roll.getTotal(), roll.getFormattedNaturals()), false);

@@ -26,8 +26,8 @@ public abstract class MixinVillagerEntity extends AbstractTraderEntity {
 	@Inject(method = "prepareRecipesFor", at = @At(value = "TAIL"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
 	public void improveArtisanPrice(PlayerEntity player, CallbackInfo ci) {
 		CharacterClasses classes = CharacterData.get(player).getClasses();
-		if (classes.has(SkillCheck.ARTISAN_ID)) {
-			int level = classes.get(SkillCheck.ARTISAN_ID).getLevel();
+		if (classes.has(SkillCheck.ARTISAN)) {
+			int level = classes.get(SkillCheck.ARTISAN).getLevel();
 			for (TradeOffer offer : this.getOffers()) {
 				//normal villagers only ever buy items for 1 emerald.
 				if (offer.getSellItem().getItem() == Items.EMERALD) {

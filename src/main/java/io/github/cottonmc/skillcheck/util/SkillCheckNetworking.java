@@ -4,6 +4,8 @@ import io.github.cottonmc.cottonrpg.CottonRPG;
 import io.github.cottonmc.cottonrpg.data.CharacterData;
 import io.github.cottonmc.cottonrpg.data.clazz.CharacterClassEntry;
 import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
+import io.github.cottonmc.cottonrpg.data.resource.CharacterResourceEntry;
+import io.github.cottonmc.cottonrpg.data.resource.CharacterResources;
 import io.github.cottonmc.skillcheck.SkillCheck;
 import io.github.cottonmc.skillcheck.container.CharacterSheetContainer;
 import io.netty.buffer.Unpooled;
@@ -26,6 +28,7 @@ public class SkillCheckNetworking {
 	public static final Identifier SYNC_PLAYER_LEVEL = new Identifier(SkillCheck.MOD_ID, "sync_player_level");
 
 	public static final Identifier CLEAR_FALL = new Identifier(SkillCheck.MOD_ID, "clear_fall");
+	public static final Identifier CONSUME_STAMINA = new Identifier(SkillCheck.MOD_ID, "consume_stamina");
 
 	public static void init() {
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) initClient();
@@ -60,6 +63,14 @@ public class SkillCheckNetworking {
 			PlayerEntity player = packetContext.getPlayer();
 			player.fallDistance = 0;
 		});
+		ServerSidePacketRegistry.INSTANCE.register(CONSUME_STAMINA, ((packetContext, packetByteBuf) -> {
+			CharacterResources resources = CharacterData.get(packetContext.getPlayer()).getResources();
+			if (resources.has(SkillCheck.STAMINA)) {
+				CharacterResourceEntry entry = resources.get(SkillCheck.STAMINA);
+				entry.setCurrent(entry.getCurrent() - packetByteBuf.readInt());
+				//TODO: kicking the player instead of crashing the server is a good idea
+			} else throw new IllegalStateException("");
+		}));
 	}
 
 	public static void syncPlayerXP(int level, ServerPlayerEntity player) {
@@ -83,5 +94,11 @@ public class SkillCheckNetworking {
 	public static void clearFall() {
 		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 		ClientSidePacketRegistry.INSTANCE.sendToServer(new CustomPayloadC2SPacket(CLEAR_FALL, buf));
+	}
+
+	public static void consumeStamina(int amount) {
+		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+		buf.writeInt(amount);
+		ClientSidePacketRegistry.INSTANCE.sendToServer(new CustomPayloadC2SPacket(CONSUME_STAMINA, buf));
 	}
 }

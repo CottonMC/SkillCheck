@@ -24,7 +24,7 @@ public abstract class MixinLoomContainer {
 
 	@ModifyConstant(method = "onContentChanged", constant = @Constant(intValue = 6))
 	private int changeBannerPatternLimit(int orig) {
-		if (CharacterData.get(player).getClasses().has(SkillCheck.ARTISAN_ID)) return 16;
+		if (CharacterData.get(player).getClasses().has(SkillCheck.ARTISAN)) return 16;
 		else return orig;
 	}
 

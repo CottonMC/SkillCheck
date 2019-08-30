@@ -42,9 +42,9 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 	public void catchArrow(DamageSource source, float amount, CallbackInfoReturnable ci) {
 		if (source.isProjectile() && source.getSource() instanceof ArrowEntity) {
 			CharacterClasses classes = CharacterData.get((PlayerEntity)(Object)this).getClasses();
-			if (ClassUtils.hasLevel(classes, SkillCheck.THIEF_ID, 3)
+			if (ClassUtils.hasLevel(classes, SkillCheck.THIEF, 3)
 					&& canCatchArrow()) {
-				RollResult roll = Dice.roll("1d20+"+ classes.get(SkillCheck.THIEF_ID).getLevel());
+				RollResult roll = Dice.roll("1d20+"+ classes.get(SkillCheck.THIEF).getLevel());
 				if (SkillCheck.config.showDiceRolls) {
 					if (roll.isCritFail()) ((PlayerEntity)(Object)this).addChatMessage(new TranslatableText("msg.skillcheck.roll.fail", roll.getFormattedNaturals()), false);
 					else ((PlayerEntity)(Object)this).addChatMessage(new TranslatableText("msg.skillcheck.roll.result", roll.getTotal(), roll.getFormattedNaturals()), false);

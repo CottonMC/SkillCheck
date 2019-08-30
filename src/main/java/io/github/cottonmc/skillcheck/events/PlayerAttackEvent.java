@@ -22,14 +22,14 @@ public class PlayerAttackEvent {
 	public static AttackEntityCallback onPlayerAttack = (player, world, hand, entity, hitResult) -> {
 		CharacterClasses classes = CharacterData.get(player).getClasses();
 		if (player.getStackInHand(hand).isEmpty()) {
-			if (classes.has(SkillCheck.BRAWLER_ID)) {
+			if (classes.has(SkillCheck.BRAWLER)) {
 				for (ItemStack stack : entity.getArmorItems()) {
 					if (stack.getItem() instanceof ArmorItem) return ActionResult.PASS;
 				}
 				if (entity instanceof LivingEntity) {
 					LivingEntity mob = (LivingEntity) entity;
-					if (ClassUtils.hasLevel(classes, SkillCheck.BRAWLER_ID, 2) && !hasWeakness(mob)) {
-						RollResult roll = Dice.roll("1d20+"+ classes.get(SkillCheck.BRAWLER_ID).getLevel());
+					if (ClassUtils.hasLevel(classes, SkillCheck.BRAWLER, 2) && !hasWeakness(mob)) {
+						RollResult roll = Dice.roll("1d20+"+ classes.get(SkillCheck.BRAWLER).getLevel());
 						if (SkillCheck.config.showDiceRolls) {
 							if (roll.isCritFail()) player.addChatMessage(new TranslatableText("msg.skillcheck.roll.fail", roll.getFormattedNaturals()), false);
 							else player.addChatMessage(new TranslatableText("msg.skillcheck.roll.result", roll.getTotal(), roll.getFormattedNaturals()), false);
@@ -43,7 +43,7 @@ public class PlayerAttackEvent {
 						}
 					}
 				}
-				entity.damage(DamageSource.player(player), classes.get(SkillCheck.BRAWLER_ID).getLevel()*2);
+				entity.damage(DamageSource.player(player), classes.get(SkillCheck.BRAWLER).getLevel()*2);
 				return ActionResult.SUCCESS;
 			}
 		}

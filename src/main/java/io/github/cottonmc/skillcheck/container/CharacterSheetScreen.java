@@ -125,7 +125,8 @@ public class CharacterSheetScreen extends AbstractContainerScreen<CharacterSheet
 					this.drawCenteredString(textRenderer, line, rightPanelCenter, descLineHeight, 0xffffff);
 					descLineHeight += 10;
 				}
-				this.drawCenteredString(textRenderer, ((SkillCheckCharacterClass)pClass).getLevelRequirement(pClasses.get(id).getLevel(), playerInventory.player).asString(), rightPanelCenter, descLineHeight, 0x55ff55);
+				
+				this.drawCenteredString(textRenderer, ((SkillCheckCharacterClass)pClass).getLevelRequirement(pClasses.has(id)? pClasses.get(id).getLevel() : 0, playerInventory.player).asString(), rightPanelCenter, descLineHeight, 0x55ff55);
 			}
 			GlStateManager.enableLighting();
 			GlStateManager.enableBlend();

@@ -22,8 +22,6 @@ public class StaminaTicker implements Ticker {
 		if (lastEntryValue > entry.getCurrent()) {
 			lastEntryValue = entry.getCurrent();
 			cooldown = delay;
-			this.markDirty();
-			return false;
 		}
 		if (cooldown > 0) {
 			cooldown--;
