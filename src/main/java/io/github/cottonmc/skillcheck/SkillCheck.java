@@ -3,7 +3,9 @@ package io.github.cottonmc.skillcheck;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import io.github.cottonmc.cotton.config.ConfigManager;
 import io.github.cottonmc.cottonrpg.CottonRPG;
-import io.github.cottonmc.cottonrpg.data.CharacterClass;
+import io.github.cottonmc.cottonrpg.data.clazz.CharacterClass;
+import io.github.cottonmc.cottonrpg.data.resource.CharacterResource;
+import io.github.cottonmc.cottonrpg.data.resource.CharacterResourceEntry;
 import io.github.cottonmc.skillcheck.api.classes.PlayerClassType;
 import io.github.cottonmc.skillcheck.classes.SimpleClassType;
 import io.github.cottonmc.skillcheck.container.CharacterSheetContainer;
@@ -11,7 +13,12 @@ import io.github.cottonmc.skillcheck.events.PlayerAttackEvent;
 import io.github.cottonmc.skillcheck.events.PlayerStealEvent;
 import io.github.cottonmc.skillcheck.api.dice.Dice;
 import io.github.cottonmc.skillcheck.api.dice.RollResult;
-import io.github.cottonmc.skillcheck.util.CharSheetClass;
+import io.github.cottonmc.skillcheck.impl.SkillCheckCharacterClass;
+import io.github.cottonmc.skillcheck.impl.SkillCheckCharacterResource;
+import io.github.cottonmc.skillcheck.impl.ThiefCharacterClass;
+import io.github.cottonmc.skillcheck.item.CharacterSheetItem;
+import io.github.cottonmc.skillcheck.item.ClassPrestigeItem;
+import io.github.cottonmc.skillcheck.item.ClassScrollItem;
 import io.github.cottonmc.skillcheck.util.SkillCheckConfig;
 import io.github.cottonmc.skillcheck.util.SkillCheckNetworking;
 import net.fabricmc.api.ModInitializer;
@@ -54,18 +61,17 @@ public class SkillCheck implements ModInitializer {
     public static PlayerClassType OLD_ARTISAN = Registry.register(PLAYER_CLASS_TYPES, new Identifier(MOD_ID, "artisan"), new SimpleClassType(5));
     public static PlayerClassType OLD_THIEF = Registry.register(PLAYER_CLASS_TYPES, new Identifier(MOD_ID, "thief"), new SimpleClassType(5));
 
-    public static final Identifier ARTISAN_ID = new Identifier(MOD_ID, "artisan");
-    public static final Identifier BRAWLER_ID = new Identifier(MOD_ID, "brawler");
-    public static final Identifier THIEF_ID = new Identifier(MOD_ID, "thief");
+    public static CharacterClass ARTISAN = Registry.register(CottonRPG.CLASSES, new Identifier(MOD_ID, "artisan"), new SkillCheckCharacterClass(5));
+    public static CharacterClass BRAWLER = Registry.register(CottonRPG.CLASSES, new Identifier(MOD_ID, "brawler"), new SkillCheckCharacterClass(10));
+    public static CharacterClass THIEF = Registry.register(CottonRPG.CLASSES, new Identifier(MOD_ID, "thief"), new ThiefCharacterClass(5));
 
-    public static CharacterClass ARTISAN = Registry.register(CottonRPG.CLASSES, ARTISAN_ID, new SkillCheckCharClass(5));
-    public static CharacterClass BRAWLER = Registry.register(CottonRPG.CLASSES, BRAWLER_ID, new SkillCheckCharClass(10));
-    public static CharacterClass THIEF = Registry.register(CottonRPG.CLASSES, THIEF_ID, new SkillCheckCharClass(5));
+    public static CharacterResource STAMINA = Registry.register(CottonRPG.RESOURCES, new Identifier(MOD_ID, "stamina"),
+            new SkillCheckCharacterResource(10, 10, 25, 2, 0x00C6FF, CharacterResource.ResourceVisibility.HUD));
 
     public static Item BRAWLER_SCROLL = register("brawler_scroll", new ClassScrollItem(BRAWLER));
     public static Item WEAVER_SCROLL = register("artisan_scroll", new ClassScrollItem(ARTISAN));
     public static Item THIEF_SCROLL = register("thief_scroll", new ClassScrollItem(THIEF));
-    public static Item PRESTIGE = register("class_prestige", new TraitPrestigeItem());
+    public static Item PRESTIGE = register("class_prestige", new ClassPrestigeItem());
 
     public static final Identifier CHARACTER_SHEET_CONTAINER = new Identifier(MOD_ID, "character_sheet");
 
@@ -108,7 +114,7 @@ public class SkillCheck implements ModInitializer {
 	  Set<Identifier> allIds = CottonRPG.CLASSES.getIds();
 	  List<Identifier> ret = new ArrayList<>();
 	  for (Identifier id : allIds) {
-	    if (CottonRPG.CLASSES.get(id) instanceof CharSheetClass) ret.add(id);
+	    if (CottonRPG.CLASSES.get(id) instanceof SkillCheckCharacterClass) ret.add(id);
 	  }
 	  ret.sort(Comparator.comparing(Identifier::getPath));
 	  return ret;

@@ -1,5 +1,6 @@
-package io.github.cottonmc.skillcheck;
+package io.github.cottonmc.skillcheck.item;
 
+import io.github.cottonmc.skillcheck.SkillCheck;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;

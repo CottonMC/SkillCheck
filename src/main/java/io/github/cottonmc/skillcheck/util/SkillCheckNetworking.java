@@ -1,9 +1,9 @@
 package io.github.cottonmc.skillcheck.util;
 
 import io.github.cottonmc.cottonrpg.CottonRPG;
-import io.github.cottonmc.cottonrpg.data.CharacterClassEntry;
-import io.github.cottonmc.cottonrpg.data.CharacterClasses;
 import io.github.cottonmc.cottonrpg.data.CharacterData;
+import io.github.cottonmc.cottonrpg.data.clazz.CharacterClassEntry;
+import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
 import io.github.cottonmc.skillcheck.SkillCheck;
 import io.github.cottonmc.skillcheck.container.CharacterSheetContainer;
 import io.netty.buffer.Unpooled;
@@ -52,11 +52,7 @@ public class SkillCheckNetworking {
 				CharacterClasses classes = CharacterData.get(packetContext.getPlayer()).getClasses();
 				classes.giveIfAbsent(new CharacterClassEntry(id));
 				int currentLevel = classes.get(id).getLevel();
-				int xpCost = ((CharSheetClass)CottonRPG.CLASSES.get(id)).getNextLevelCost(currentLevel);
-				if (!packetContext.getPlayer().isCreative()) {
-					packetContext.getPlayer().experienceLevel -= xpCost;
-					syncPlayerXP(packetContext.getPlayer().experienceLevel, (ServerPlayerEntity) packetContext.getPlayer());
-				}
+				CottonRPG.CLASSES.get(id).applyLevelUp(currentLevel, packetContext.getPlayer());
 				ClassUtils.levelUp(packetContext.getPlayer(), id, 1);
 			}
 		});

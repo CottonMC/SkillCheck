@@ -1,8 +1,9 @@
 package io.github.cottonmc.skillcheck.mixins;
 
 import com.mojang.authlib.GameProfile;
-import io.github.cottonmc.cottonrpg.data.CharacterClasses;
 import io.github.cottonmc.cottonrpg.data.CharacterData;
+import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
+import io.github.cottonmc.cottonrpg.data.resource.CharacterResources;
 import io.github.cottonmc.skillcheck.SkillCheck;
 import io.github.cottonmc.skillcheck.util.ClassUtils;
 import io.github.cottonmc.skillcheck.util.SkillCheckNetworking;
@@ -72,10 +73,10 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 		CharacterClasses classes = CharacterData.get(this).getClasses();
 
 		// wall-cling/wall-jump code from Wall-Jump
-		if (classes.has(SkillCheck.THIEF_ID)) this.handleWallJump();
+		if (classes.has(SkillCheck.THIEF)) this.handleWallJump();
 
 		// double-jump code from Wall-Jump
-		if (ClassUtils.hasLevel(classes, SkillCheck.THIEF_ID, 2)) this.handleDoubleJump();
+		if (ClassUtils.hasLevel(classes, SkillCheck.THIEF, 2)) this.handleDoubleJump();
 
 	}
 
@@ -83,6 +84,10 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 
 		if (this.input.sneaking) keyTimer++;
 		else keyTimer = 0;
+		//TODO: properly implement stamina use
+		int compositeCling = clingTime;
+		CharacterResources resources = CharacterData.get(this).getResources();
+		if (resources.has(SkillCheck.STAMINA)) clingTime += resources.get(SkillCheck.STAMINA).getCurrent();
 
 		if (this.onGround || this.abilities.flying) {
 
@@ -235,7 +240,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 				|| player.world.getBlockState(getWallPos(player)).getBlock() instanceof FluidBlock) return false;
 
 		//let players vault up walls if they're a good enough thief
-		if (player.getPos().getY() < lastJumpY || CharacterData.get(player).getClasses().get(SkillCheck.THIEF_ID).getLevel() >= 5) return true;
+		if (player.getPos().getY() < lastJumpY || CharacterData.get(player).getClasses().get(SkillCheck.THIEF).getLevel() >= 5) return true;
 
 		if (walls.size() == 1) {
 

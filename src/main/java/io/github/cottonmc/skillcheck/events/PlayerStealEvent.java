@@ -1,7 +1,7 @@
 package io.github.cottonmc.skillcheck.events;
 
-import io.github.cottonmc.cottonrpg.data.CharacterClasses;
 import io.github.cottonmc.cottonrpg.data.CharacterData;
+import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
 import io.github.cottonmc.skillcheck.SkillCheck;
 import io.github.cottonmc.skillcheck.api.dice.Dice;
 import io.github.cottonmc.skillcheck.api.dice.RollResult;

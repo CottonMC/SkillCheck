@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Deprecated
 public class SimpleClassType implements PlayerClassType {
 	private int maxLevel;
 	private List<Text> additionalLines = new ArrayList<>();

@@ -1,7 +1,7 @@
 package io.github.cottonmc.skillcheck.events;
 
-import io.github.cottonmc.cottonrpg.data.CharacterClasses;
 import io.github.cottonmc.cottonrpg.data.CharacterData;
+import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
 import io.github.cottonmc.skillcheck.SkillCheck;
 import io.github.cottonmc.skillcheck.api.dice.Dice;
 import io.github.cottonmc.skillcheck.api.dice.RollResult;
@@ -13,8 +13,8 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 
 public class PlayerAttackEvent {

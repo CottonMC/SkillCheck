@@ -1,8 +1,8 @@
-package io.github.cottonmc.skillcheck;
+package io.github.cottonmc.skillcheck.item;
 
-import com.raphydaphy.crochet.data.PlayerData;
-import io.github.cottonmc.cottonrpg.data.CharacterClasses;
 import io.github.cottonmc.cottonrpg.data.CharacterData;
+import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
+import io.github.cottonmc.skillcheck.SkillCheck;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -14,8 +14,8 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class TraitPrestigeItem extends Item {
-	public TraitPrestigeItem() {
+public class ClassPrestigeItem extends Item {
+	public ClassPrestigeItem() {
 		super(new Item.Settings().group(SkillCheck.SKILLCHECK_GROUP));
 	}
 

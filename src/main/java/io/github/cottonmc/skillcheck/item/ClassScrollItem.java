@@ -1,7 +1,8 @@
-package io.github.cottonmc.skillcheck;
+package io.github.cottonmc.skillcheck.item;
 
 import io.github.cottonmc.cottonrpg.CottonRPG;
-import io.github.cottonmc.cottonrpg.data.CharacterClass;
+import io.github.cottonmc.cottonrpg.data.clazz.CharacterClass;
+import io.github.cottonmc.skillcheck.SkillCheck;
 import io.github.cottonmc.skillcheck.util.ClassUtils;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.client.item.TooltipContext;

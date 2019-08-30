@@ -13,6 +13,10 @@ public class SkillCheckConfig {
 	@Comment("If true, the \"skillcheck:slippery\" tag will act as a whitelist of wall-cligable blocks instead.")
 	public boolean invertSlipperyTag = false;
 
+	@Comment("If true, Thief actions like wall-jumping and double-jumping will cost stamina.\n" +
+			"Vanilla movement will never use stamina.")
+	public boolean useStamina = true;
+
 	@Comment("Send a player's dice rolls to their chat.")
 	public boolean showDiceRolls = false;
 

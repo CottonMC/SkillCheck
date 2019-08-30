@@ -1,12 +1,10 @@
 package io.github.cottonmc.skillcheck.container;
 
 import io.github.cottonmc.cottonrpg.CottonRPG;
-import io.github.cottonmc.cottonrpg.data.CharacterClass;
-import io.github.cottonmc.cottonrpg.data.CharacterClassEntry;
-import io.github.cottonmc.cottonrpg.data.CharacterClasses;
 import io.github.cottonmc.cottonrpg.data.CharacterData;
+import io.github.cottonmc.cottonrpg.data.clazz.CharacterClassEntry;
+import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
 import io.github.cottonmc.skillcheck.SkillCheck;
-import io.github.cottonmc.skillcheck.util.CharSheetClass;
 import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
@@ -29,17 +27,6 @@ public class CharacterSheetContainer extends Container {
 		return true;
 	}
 
-	public int getLevelCost() {
-		if (currentSkill == null) return 0;
-		CharacterClasses classes = CharacterData.get(player).getClasses();
-		int level;
-		if (!classes.has(currentSkill)) level = 0;
-		else level = classes.get(currentSkill).getLevel();
-		CharacterClass pClass = CottonRPG.CLASSES.get(currentSkill);
-		if (!(pClass instanceof CharSheetClass)) return 0;
-		return ((CharSheetClass)pClass).getNextLevelCost(level);
-	}
-
 	@Override
 	public void close(PlayerEntity player) {
 		super.close(player);
@@ -56,6 +43,6 @@ public class CharacterSheetContainer extends Container {
 		if (entry != null) {
 			if (entry.getLevel() >= CottonRPG.CLASSES.get(currentSkill).getMaxLevel()) return false;
 		}
-		return player.experienceLevel >= getLevelCost() || player.isCreative();
+		return CottonRPG.CLASSES.get(currentSkill).canLevelUp(entry.getLevel(), player);
 	}
 }

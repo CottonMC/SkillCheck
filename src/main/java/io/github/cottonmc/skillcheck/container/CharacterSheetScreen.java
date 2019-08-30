@@ -2,10 +2,11 @@ package io.github.cottonmc.skillcheck.container;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.cottonmc.cottonrpg.CottonRPG;
-import io.github.cottonmc.cottonrpg.data.CharacterClass;
-import io.github.cottonmc.cottonrpg.data.CharacterClasses;
 import io.github.cottonmc.cottonrpg.data.CharacterData;
+import io.github.cottonmc.cottonrpg.data.clazz.CharacterClass;
+import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
 import io.github.cottonmc.skillcheck.SkillCheck;
+import io.github.cottonmc.skillcheck.impl.SkillCheckCharacterClass;
 import io.github.cottonmc.skillcheck.util.SkillCheckNetworking;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -115,7 +116,7 @@ public class CharacterSheetScreen extends AbstractContainerScreen<CharacterSheet
 				CharacterClass pClass = CottonRPG.CLASSES.get(id);
 				int descLineHeight = top + 20;
 				List<String> lines = new ArrayList<>();
-				for (Text line : pClass.getClassDescription()) {
+				for (Text line : pClass.getDescription()) {
 					String textToDraw = line.asString();
 					List<String> toAdd = textRenderer.wrapStringToWidthAsList(textToDraw, 161);
 					lines.addAll(toAdd);
@@ -124,8 +125,7 @@ public class CharacterSheetScreen extends AbstractContainerScreen<CharacterSheet
 					this.drawCenteredString(textRenderer, line, rightPanelCenter, descLineHeight, 0xffffff);
 					descLineHeight += 10;
 				}
-				String cost = new TranslatableText("text.skillcheck.cost", this.container.getLevelCost()).asString();
-				this.drawCenteredString(textRenderer, cost, rightPanelCenter, descLineHeight, 0x55ff55);
+				this.drawCenteredString(textRenderer, ((SkillCheckCharacterClass)pClass).getLevelRequirement(pClasses.get(id).getLevel(), playerInventory.player).asString(), rightPanelCenter, descLineHeight, 0x55ff55);
 			}
 			GlStateManager.enableLighting();
 			GlStateManager.enableBlend();

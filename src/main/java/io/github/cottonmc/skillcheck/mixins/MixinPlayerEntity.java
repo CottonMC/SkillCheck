@@ -1,7 +1,7 @@
 package io.github.cottonmc.skillcheck.mixins;
 
-import io.github.cottonmc.cottonrpg.data.CharacterClasses;
 import io.github.cottonmc.cottonrpg.data.CharacterData;
+import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
 import io.github.cottonmc.skillcheck.SkillCheck;
 import io.github.cottonmc.skillcheck.util.ArrowEffects;
 import io.github.cottonmc.skillcheck.api.dice.Dice;

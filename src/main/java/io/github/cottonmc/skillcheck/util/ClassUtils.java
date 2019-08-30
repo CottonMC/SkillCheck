@@ -1,9 +1,10 @@
 package io.github.cottonmc.skillcheck.util;
 
 import io.github.cottonmc.cottonrpg.CottonRPG;
-import io.github.cottonmc.cottonrpg.data.CharacterClassEntry;
-import io.github.cottonmc.cottonrpg.data.CharacterClasses;
 import io.github.cottonmc.cottonrpg.data.CharacterData;
+import io.github.cottonmc.cottonrpg.data.clazz.CharacterClass;
+import io.github.cottonmc.cottonrpg.data.clazz.CharacterClassEntry;
+import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 
@@ -21,5 +22,10 @@ public class ClassUtils {
 	public static boolean hasLevel(CharacterClasses classes, Identifier id, int minLevel) {
 		if (!classes.has(id)) return false;
 		else return classes.get(id).getLevel() >= minLevel;
+	}
+
+	public static boolean hasLevel(CharacterClasses classes, CharacterClass clazz, int minLevel) {
+		if (!classes.has(clazz)) return false;
+		else return classes.get(clazz).getLevel() >= minLevel;
 	}
 }

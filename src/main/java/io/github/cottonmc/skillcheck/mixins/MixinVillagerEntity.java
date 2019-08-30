@@ -1,7 +1,7 @@
 package io.github.cottonmc.skillcheck.mixins;
 
-import io.github.cottonmc.cottonrpg.data.CharacterClasses;
 import io.github.cottonmc.cottonrpg.data.CharacterData;
+import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
 import io.github.cottonmc.skillcheck.SkillCheck;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.AbstractTraderEntity;
