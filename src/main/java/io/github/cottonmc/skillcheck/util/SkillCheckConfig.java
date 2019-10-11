@@ -15,7 +15,7 @@ public class SkillCheckConfig {
 
 	@Comment("If true, Thief actions like wall-jumping and double-jumping will cost stamina.\n" +
 			"Vanilla movement will never use stamina.")
-	public boolean useStamina = true;
+	public boolean useStamina = false;
 
 	@Comment("Send a player's dice rolls to their chat.")
 	public boolean showDiceRolls = false;

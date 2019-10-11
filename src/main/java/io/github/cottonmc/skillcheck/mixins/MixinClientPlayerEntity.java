@@ -8,6 +8,7 @@ import io.github.cottonmc.cottonrpg.data.resource.CharacterResources;
 import io.github.cottonmc.skillcheck.SkillCheck;
 import io.github.cottonmc.skillcheck.util.ClassUtils;
 import io.github.cottonmc.skillcheck.util.SkillCheckNetworking;
+import io.github.cottonmc.skillcheck.util.VoxelShapeGetter;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidBlock;
@@ -23,6 +24,7 @@ import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.math.*;
+import net.minecraft.util.shape.VoxelShape;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -204,6 +206,8 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 		//TODO: figure out a way to make this all happen serverside instead?
 		if (!resources.has(SkillCheck.STAMINA) || !SkillCheck.config.useStamina) return false;
 		CharacterResourceEntry stamina = resources.get(SkillCheck.STAMINA);
+//		System.out.println("current: " + stamina.getCurrent());
+//		System.out.println("max: " + stamina.getMax());
 		if (stamina.getCurrent() < amount) return false;
 		SkillCheckNetworking.consumeStamina(amount);
 		return true;
@@ -222,7 +226,8 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 
 		if (clingTime > -5 || (currentStamina <= 0 && SkillCheck.config.useStamina) || player.isClimbing()) return false;
 
-		if (player.world.getBlockState(new BlockPos(player.getPos().getX(), player.getPos().getY() - 0.8, player.getPos().getZ())).isOpaque()) return false;
+		BlockPos down = new BlockPos(player.getPos().getX(), player.getPos().getY() - 0.8, player.getPos().getZ());
+		if (collidesWith(player.world.getBlockState(down).getCollisionShape(player.world, down), player.getPos(), player.getBlockPos())) return false;
 
 		if (!player.world.getFluidState(player.getBlockPos()).isEmpty() || !player.world.getFluidState(player.getBlockPos().up()).isEmpty()) return false;
 
@@ -338,6 +343,13 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 			jumpKey = false;
 
 		}
+	}
+
+	private static boolean collidesWith(VoxelShape shape, Vec3d pos, Vec3i blockPos) {
+		double x = Math.abs(pos.getX()) - Math.abs(blockPos.getX());
+		double y = Math.abs(pos.getY()) - Math.abs(blockPos.getY());
+		double z = Math.abs(pos.getZ()) - Math.abs(blockPos.getZ());
+		return ((VoxelShapeGetter)shape).skillcheck_contains(x, y, z);
 	}
 
 }

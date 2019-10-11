@@ -18,7 +18,7 @@ public class ThiefCharacterClass extends SkillCheckCharacterClass {
 			CharacterData.get(player).getResources().giveIfAbsent(new CharacterResourceEntry(new Identifier(SkillCheck.MOD_ID, "stamina")));
 			CharacterResourceEntry res = CharacterData.get(player).getResources().get(SkillCheck.STAMINA);
 			res.setMax(10*currentLevel + 10);
-			res.setCurrent(res.getMax());
+//			res.setCurrent(res.getMax());
 		}
 	}
 }

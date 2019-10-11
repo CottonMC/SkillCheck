@@ -8,7 +8,8 @@
     "MixinLoomContainer",
     "MixinPlayerEntity",
     "MixinVillagerEntity",
-    "MixinPlayerManager"
+    "MixinPlayerManager",
+    "MixinVoxelShape"
   ],
   "injectors": {
     "defaultRequire": 1
