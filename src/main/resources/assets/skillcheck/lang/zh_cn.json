@@ -38,7 +38,7 @@
   "desc.class.skillcheck.brawler.1": "Lv2+: 空手攻击一个没有装甲的敌人时候有几率削弱它.",
   "desc.class.skillcheck.brawler.2": "每两等级 +1 削弱敌人几率.",
 
-  "text.skillcheck.level": "Lv%s",
+  "text.skillcheck.level": "%s: Lv%d",
   "text.skillcheck.cost": "下一等级需要: %s 级的经验值",
   "btn.skillcheck.levelup": "等级提升"
 }

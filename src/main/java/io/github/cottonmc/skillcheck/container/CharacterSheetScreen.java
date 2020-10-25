@@ -1,7 +1,6 @@
 package io.github.cottonmc.skillcheck.container;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import io.github.cottonmc.cottonrpg.CottonRPG;
+import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.cottonmc.cottonrpg.data.CharacterData;
 import io.github.cottonmc.cottonrpg.data.clazz.CharacterClass;
 import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
@@ -27,7 +26,6 @@ import net.minecraft.util.math.MathHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class CharacterSheetScreen extends HandledScreen<CharacterSheetContainer> {
 	private static final Identifier TEXTURE = new Identifier(SkillCheck.MOD_ID, "textures/gui/container/scribing.png");
@@ -38,8 +36,8 @@ public class CharacterSheetScreen extends HandledScreen<CharacterSheetContainer>
 	private ConfirmButtonWidget confirm;
 
 	public CharacterSheetScreen(int syncId, PlayerEntity player) {
-		super(new CharacterSheetContainer(syncId, player), player.inventory, new TranslatableText("container.skillcheck.scribing_table"));
-		this.width = 276;
+		super(new CharacterSheetContainer(syncId, player), player.inventory, new TranslatableText("item.skillcheck.character_sheet"));
+		this.backgroundWidth = 276;
 		this.index = -1;
 	}
 
@@ -49,14 +47,14 @@ public class CharacterSheetScreen extends HandledScreen<CharacterSheetContainer>
 	}
 
 	private void syncLevelUp() {
-		SkillCheckNetworking.syncLevelup(handler.classes.get(index));
+		SkillCheckNetworking.syncLevelup(handler.classes.get(index).getId());
 	}
 
 	@Override
 	protected void init() {
 		super.init();
-		int left = (this.width - this.width) / 2;
-		int top = (this.height - this.height) / 2;
+		int left = (this.width - this.backgroundWidth) / 2;
+		int top = (this.height - this.backgroundHeight) / 2;
 		int listHeight = top + 18;
 		confirm = this.addButton(new ConfirmButtonWidget(left + 143, top + 140, new TranslatableText("btn.skillcheck.levelup"), (widget) -> {
 			this.playerInventory.player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1.0f, 1.0f);
@@ -75,11 +73,11 @@ public class CharacterSheetScreen extends HandledScreen<CharacterSheetContainer>
 
 	@Override
 	protected void drawBackground(MatrixStack matrices, float v, int i, int i1) {
-		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.client.getTextureManager().bindTexture(TEXTURE);
-		int left = (this.width - this.width) / 2;
-		int top = (this.height - this.height) / 2;
-		drawTexture(matrices, left, top, 0.0F, 0.0F, this.width, this.height, 256, 512);
+		int left = (this.width - this.backgroundWidth) / 2;
+		int top = (this.height - this.backgroundHeight) / 2;
+		drawTexture(matrices, left, top, this.getZOffset(), 0.0F, 0.0F, this.backgroundWidth, this.backgroundHeight, 256, 512);
 	}
 
 	@Override
@@ -90,15 +88,15 @@ public class CharacterSheetScreen extends HandledScreen<CharacterSheetContainer>
 		List<CharacterClass> classes = this.handler.classes;
 		TextRenderer textRenderer = this.client.textRenderer;
 		if (!classes.isEmpty()) {
-			int left = (this.width - this.width) / 2;
-			int top = (this.height - this.height) / 2;
+			int left = (this.width - this.backgroundWidth) / 2;
+			int top = (this.height - this.backgroundHeight) / 2;
 			int drawHeight = top + 17;
 			int listLeft = left + 10;
 			int scrollOffset = 0;
 			int rightPanelCenter = left + 187;
 			int maxDescLineHeight = top + 120;
-			GlStateManager.disableLighting();
-			GlStateManager.disableBlend();
+			RenderSystem.disableLighting();
+			RenderSystem.disableBlend();
 			CharacterClasses pClasses = CharacterData.get(playerInventory.player).getClasses();
 			for (CharacterClass clazz : classes) {
 				int levelVal;
@@ -117,18 +115,18 @@ public class CharacterSheetScreen extends HandledScreen<CharacterSheetContainer>
 				int descLineHeight = top + 20;
 				List<OrderedText> lines = new ArrayList<>();
 				for (Text line : pClass.getDescription()) {
-					List<OrderedText> toAdd = textRenderer.wrapLines(line, 161);
-					lines.addAll(toAdd);
+					lines.addAll(textRenderer.wrapLines(line, 161));
 				}
 				for (OrderedText line : lines) {
-					textRenderer.draw(matrices, line, rightPanelCenter, descLineHeight, 0xffffff);
+					// drawCenteredText does not exist for OrderedText, this is the inlined implementation
+					textRenderer.drawWithShadow(matrices, line, rightPanelCenter - 80, descLineHeight, 0xffffff);
 					descLineHeight += 10;
 				}
 
 				drawCenteredText(matrices, textRenderer, ((SkillCheckCharacterClass)pClass).getLevelRequirement(pClasses.has(pClass)? pClasses.get(pClass).getLevel() : 0, playerInventory.player), rightPanelCenter, maxDescLineHeight, 0x55ff55);
 			}
-			GlStateManager.enableLighting();
-			GlStateManager.enableBlend();
+			RenderSystem.enableLighting();
+			RenderSystem.enableBlend();
 
 			for (ButtonPageWidget button : this.visibleButtons) {
 				if (button.isHovered()) {
@@ -139,6 +137,11 @@ public class CharacterSheetScreen extends HandledScreen<CharacterSheetContainer>
 			}
 			DiffuseLighting.disable();
 		}
+	}
+
+	@Override
+	protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
+		this.textRenderer.draw(matrices, this.title, this.titleX, this.titleY, 0x404040);
 	}
 
 	private boolean shouldScroll(int size) {
@@ -173,15 +176,15 @@ public class CharacterSheetScreen extends HandledScreen<CharacterSheetContainer>
 	}
 
 	@Override
-	public boolean mouseClicked(double double_1, double double_2, int int_1) {
+	public boolean mouseClicked(double mouseX, double mouseY, int button) {
 		this.needsScroll = false;
-		int int_2 = (this.width - this.width) / 2;
-		int int_3 = (this.height - this.height) / 2;
-		if (this.shouldScroll(handler.classes.size()) && double_1 > (double)(int_2 + 94) && double_1 < (double)(int_2 + 94 + 6) && double_2 > (double)(int_3 + 18) && double_2 <= (double)(int_3 + 18 + 139 + 1)) {
+		int left = (this.width - this.backgroundWidth) / 2;
+		int top = (this.height - this.backgroundHeight) / 2;
+		if (this.shouldScroll(handler.classes.size()) && mouseX > (double)(left + 94) && mouseX < (double)(left + 94 + 6) && mouseY > (double)(top + 18) && mouseY <= (double)(top + 18 + 139 + 1)) {
 			this.needsScroll = true;
 		}
 
-		return super.mouseClicked(double_1, double_2, int_1);
+		return super.mouseClicked(mouseX, mouseY, button);
 	}
 
 	@Environment(EnvType.CLIENT)
