@@ -22,6 +22,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -81,6 +82,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 		}
 	}
 
+	@Unique
 	private boolean canCatchArrow() {
 		return this.getMainHandStack().isEmpty() || this.getOffHandStack().isEmpty()
 				|| (this.getMainHandStack().getItem() == Items.ARROW && this.getMainHandStack().getCount() < Items.ARROW.getMaxCount())

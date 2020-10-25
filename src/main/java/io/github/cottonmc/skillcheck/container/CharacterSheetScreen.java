@@ -87,7 +87,7 @@ public class CharacterSheetScreen extends HandledScreen<CharacterSheetContainer>
 		this.renderBackground(matrices);
 		super.render(matrices, x, y, partialTicks);
 		confirm.active = handler.canLevelUp();
-		List<Identifier> classes = this.handler.classes;
+		List<CharacterClass> classes = this.handler.classes;
 		TextRenderer textRenderer = this.client.textRenderer;
 		if (!classes.isEmpty()) {
 			int left = (this.width - this.width) / 2;
@@ -96,16 +96,15 @@ public class CharacterSheetScreen extends HandledScreen<CharacterSheetContainer>
 			int listLeft = left + 10;
 			int scrollOffset = 0;
 			int rightPanelCenter = left + 187;
+			int maxDescLineHeight = top + 120;
 			GlStateManager.disableLighting();
 			GlStateManager.disableBlend();
 			CharacterClasses pClasses = CharacterData.get(playerInventory.player).getClasses();
-			for (Identifier id : classes) {
-				CharacterClass clazz = Objects.requireNonNull(CottonRPG.CLASSES.get(id));
-				Text className = clazz.getName();
+			for (CharacterClass clazz : classes) {
 				int levelVal;
-				if (pClasses.has(id)) levelVal = pClasses.get(id).getLevel();
+				if (pClasses.has(clazz)) levelVal = pClasses.get(clazz).getLevel();
 				else levelVal = 0;
-				String level = className.asString() + ": " + new TranslatableText("text.skillcheck.level", levelVal).asString();
+				Text level = new TranslatableText("text.skillcheck.level", clazz.getName(), levelVal);
 				if (!shouldScroll(classes.size()) || (scrollOffset >= this.scroll && scrollOffset < 7 + this.scroll)) {
 					int renderHeight = drawHeight + 6;
 					textRenderer.draw(matrices, level, listLeft, renderHeight, 0xffffff);
@@ -114,8 +113,7 @@ public class CharacterSheetScreen extends HandledScreen<CharacterSheetContainer>
 				scrollOffset++;
 			}
 			if (index >= 0) {
-				Identifier id = classes.get(index);
-				CharacterClass pClass = CottonRPG.CLASSES.get(id);
+				CharacterClass pClass = classes.get(index);
 				int descLineHeight = top + 20;
 				List<OrderedText> lines = new ArrayList<>();
 				for (Text line : pClass.getDescription()) {
@@ -126,8 +124,8 @@ public class CharacterSheetScreen extends HandledScreen<CharacterSheetContainer>
 					textRenderer.draw(matrices, line, rightPanelCenter, descLineHeight, 0xffffff);
 					descLineHeight += 10;
 				}
-				
-				drawCenteredText(matrices, textRenderer, ((SkillCheckCharacterClass)pClass).getLevelRequirement(pClasses.has(id)? pClasses.get(id).getLevel() : 0, playerInventory.player), rightPanelCenter, descLineHeight, 0x55ff55);
+
+				drawCenteredText(matrices, textRenderer, ((SkillCheckCharacterClass)pClass).getLevelRequirement(pClasses.has(pClass)? pClasses.get(pClass).getLevel() : 0, playerInventory.player), rightPanelCenter, maxDescLineHeight, 0x55ff55);
 			}
 			GlStateManager.enableLighting();
 			GlStateManager.enableBlend();

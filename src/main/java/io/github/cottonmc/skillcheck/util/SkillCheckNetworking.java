@@ -1,6 +1,5 @@
 package io.github.cottonmc.skillcheck.util;
 
-import io.github.cottonmc.cottonrpg.CottonRPG;
 import io.github.cottonmc.cottonrpg.data.CharacterData;
 import io.github.cottonmc.cottonrpg.data.clazz.CharacterClassEntry;
 import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
@@ -51,9 +50,9 @@ public class SkillCheckNetworking {
 			if (((CharacterSheetContainer)packetContext.getPlayer().currentScreenHandler).canLevelUp()) {
 				Identifier id = packetByteBuf.readIdentifier();
 				CharacterClasses classes = CharacterData.get(packetContext.getPlayer()).getClasses();
-				classes.giveIfAbsent(new CharacterClassEntry(id));
-				int currentLevel = classes.get(id).getLevel();
-				CottonRPG.CLASSES.get(id).applyLevelUp(currentLevel, packetContext.getPlayer());
+				CharacterClassEntry entry = classes.giveIfAbsent(id);
+				int currentLevel = entry.getLevel();
+				entry.getType().applyLevelUp(currentLevel, packetContext.getPlayer());
 				ClassUtils.levelUp(packetContext.getPlayer(), id, 1);
 			}
 		});

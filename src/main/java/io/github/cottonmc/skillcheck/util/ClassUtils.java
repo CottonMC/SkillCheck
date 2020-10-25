@@ -11,17 +11,11 @@ import net.minecraft.util.Identifier;
 public class ClassUtils {
 	public static boolean levelUp(PlayerEntity player, Identifier id, int levels) {
 		CharacterClasses classes = CharacterData.get(player).getClasses();
-		classes.giveIfAbsent(new CharacterClassEntry(id));
-		CharacterClassEntry entry = classes.get(id);
+		CharacterClassEntry entry = classes.giveIfAbsent(id);
 		int newLevel = entry.getLevel() + levels;
 		if (newLevel > CottonRPG.CLASSES.get(id).getMaxLevel()) return false;
 		entry.setLevel(newLevel);
 		return true;
-	}
-
-	public static boolean hasLevel(CharacterClasses classes, Identifier id, int minLevel) {
-		if (!classes.has(id)) return false;
-		else return classes.get(id).getLevel() >= minLevel;
 	}
 
 	public static boolean hasLevel(CharacterClasses classes, CharacterClass clazz, int minLevel) {

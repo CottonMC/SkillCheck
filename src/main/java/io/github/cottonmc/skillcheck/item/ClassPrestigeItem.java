@@ -1,6 +1,7 @@
 package io.github.cottonmc.skillcheck.item;
 
 import io.github.cottonmc.cottonrpg.data.CharacterData;
+import io.github.cottonmc.cottonrpg.data.clazz.CharacterClass;
 import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
 import io.github.cottonmc.skillcheck.SkillCheck;
 import net.minecraft.client.item.TooltipContext;
@@ -22,7 +23,7 @@ public class ClassPrestigeItem extends Item {
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
 		CharacterClasses classes = CharacterData.get(player).getClasses();
-		for (Identifier id : SkillCheck.getCharSheetClasses()) {
+		for (CharacterClass id : SkillCheck.getCharSheetClasses()) {
 			classes.remove(id);
 		}
 		CharacterData.get(player).getResources().remove(SkillCheck.STAMINA);

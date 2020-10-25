@@ -8,7 +8,6 @@ import io.github.cottonmc.skillcheck.SkillCheck;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,8 +23,7 @@ public class MixinPlayerManager {
 			CharacterResources resources = CharacterData.get(player).getResources();
 			if (classes.has(SkillCheck.THIEF) && !resources.has(SkillCheck.STAMINA)) {
 				int thief = classes.get(SkillCheck.THIEF).getLevel();
-				resources.giveIfAbsent(new CharacterResourceEntry(new Identifier(SkillCheck.MOD_ID, "stamina")));
-				CharacterResourceEntry entry = resources.get(SkillCheck.STAMINA);
+				CharacterResourceEntry entry = resources.giveIfAbsent(SkillCheck.STAMINA);
 				entry.setMax(10*thief);
 				entry.setCurrent(10*thief);
 			}

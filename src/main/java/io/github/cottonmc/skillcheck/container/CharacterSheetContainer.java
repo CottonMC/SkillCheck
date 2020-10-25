@@ -1,20 +1,19 @@
 package io.github.cottonmc.skillcheck.container;
 
-import io.github.cottonmc.cottonrpg.CottonRPG;
 import io.github.cottonmc.cottonrpg.data.CharacterData;
+import io.github.cottonmc.cottonrpg.data.clazz.CharacterClass;
 import io.github.cottonmc.cottonrpg.data.clazz.CharacterClassEntry;
 import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
 import io.github.cottonmc.skillcheck.SkillCheck;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.util.Identifier;
 
 import java.util.List;
 
 public class CharacterSheetContainer extends ScreenHandler {
 	private final PlayerEntity player;
-	private Identifier currentSkill;
-	public List<Identifier> classes;
+	private CharacterClass currentSkill;
+	public List<CharacterClass> classes;
 
 	public CharacterSheetContainer(int syncId, PlayerEntity player) {
 		super(null, syncId);
@@ -37,14 +36,14 @@ public class CharacterSheetContainer extends ScreenHandler {
 	}
 
 	public boolean canLevelUp() {
-		if (currentSkill == null || !CottonRPG.CLASSES.containsId(currentSkill)) return false;
+		if (currentSkill == null) return false;
 		CharacterClasses classes = CharacterData.get(player).getClasses();
 		CharacterClassEntry entry = classes.get(currentSkill);
 		int currentLevel = 0;
 		if (entry != null) {
 			currentLevel = entry.getLevel();
-			if (currentLevel >= CottonRPG.CLASSES.get(currentSkill).getMaxLevel()) return false;
+			if (currentLevel >= currentSkill.getMaxLevel()) return false;
 		}
-		return CottonRPG.CLASSES.get(currentSkill).canLevelUp(currentLevel, player);
+		return currentSkill.canLevelUp(currentLevel, player);
 	}
 }
