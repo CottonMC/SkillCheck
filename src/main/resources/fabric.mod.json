@@ -24,9 +24,9 @@
     ]
   },
   "mixins": [
-    "skillcheck.common.json",
+    "mixins.skillcheck.common.json",
     {
-      "config": "skillcheck.client.json",
+      "config": "mixins.skillcheck.client.json",
       "environment": "client"
     }
   ],

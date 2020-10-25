@@ -29,11 +29,11 @@ public class PlayerStealEvent {
 			if (stack.isEmpty()) continue;
 			RollResult roll = Dice.roll("1d20+"+ classes.get(SkillCheck.THIEF).getLevel());
 			if (SkillCheck.config.showDiceRolls) {
-				if (roll.isCritFail()) player.addChatMessage(new TranslatableText("msg.skillcheck.roll.fail", roll.getFormattedNaturals()), false);
-				else player.addChatMessage(new TranslatableText("msg.skillcheck.roll.result", roll.getTotal(), roll.getFormattedNaturals()), false);
+				if (roll.isCritFail()) player.sendMessage(new TranslatableText("msg.skillcheck.roll.fail", roll.getFormattedNaturals()), false);
+				else player.sendMessage(new TranslatableText("msg.skillcheck.roll.result", roll.getTotal(), roll.getFormattedNaturals()), false);
 			}
 			if (roll.isCritFail()) {
-				mob.addPotionEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 2000));
+				mob.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 2000));
 				mob.tryAttack(player);
 				if (!player.isCreative()) mob.setTarget(player);
 				player.swingHand(hand);

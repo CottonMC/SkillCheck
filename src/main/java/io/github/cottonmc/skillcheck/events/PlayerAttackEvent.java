@@ -31,14 +31,14 @@ public class PlayerAttackEvent {
 					if (ClassUtils.hasLevel(classes, SkillCheck.BRAWLER, 2) && !hasWeakness(mob)) {
 						RollResult roll = Dice.roll("1d20+"+ classes.get(SkillCheck.BRAWLER).getLevel());
 						if (SkillCheck.config.showDiceRolls) {
-							if (roll.isCritFail()) player.addChatMessage(new TranslatableText("msg.skillcheck.roll.fail", roll.getFormattedNaturals()), false);
-							else player.addChatMessage(new TranslatableText("msg.skillcheck.roll.result", roll.getTotal(), roll.getFormattedNaturals()), false);
+							if (roll.isCritFail()) player.sendMessage(new TranslatableText("msg.skillcheck.roll.fail", roll.getFormattedNaturals()), false);
+							else player.sendMessage(new TranslatableText("msg.skillcheck.roll.result", roll.getTotal(), roll.getFormattedNaturals()), false);
 						}
 						if (roll.isCritFail()) {
-							player.addPotionEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 200));
+							player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 200));
 							player.playSound(SoundEvents.ITEM_SHIELD_BREAK, 1.0f, 1.0f);
 						} else if (roll.getTotal() >= SkillCheck.config.weakenEnemyRoll) {
-							mob.addPotionEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 200));
+							mob.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 200));
 							player.playSound(SoundEvents.ITEM_SHIELD_BREAK, 1.0f, 1.0f);
 						}
 					}

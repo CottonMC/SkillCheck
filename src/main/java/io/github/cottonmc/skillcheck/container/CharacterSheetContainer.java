@@ -5,13 +5,13 @@ import io.github.cottonmc.cottonrpg.data.CharacterData;
 import io.github.cottonmc.cottonrpg.data.clazz.CharacterClassEntry;
 import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
 import io.github.cottonmc.skillcheck.SkillCheck;
-import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
 
-public class CharacterSheetContainer extends Container {
+public class CharacterSheetContainer extends ScreenHandler {
 	private final PlayerEntity player;
 	private Identifier currentSkill;
 	public List<Identifier> classes;

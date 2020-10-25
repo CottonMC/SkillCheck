@@ -11,12 +11,15 @@ import io.github.cottonmc.skillcheck.util.SkillCheckNetworking;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.render.GuiLighting;
+import net.minecraft.client.render.DiffuseLighting;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -24,8 +27,9 @@ import net.minecraft.util.math.MathHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class CharacterSheetScreen extends AbstractContainerScreen<CharacterSheetContainer> {
+public class CharacterSheetScreen extends HandledScreen<CharacterSheetContainer> {
 	private static final Identifier TEXTURE = new Identifier(SkillCheck.MOD_ID, "textures/gui/container/scribing.png");
 	private int index;
 	private final ButtonPageWidget[] visibleButtons = new ButtonPageWidget[7];
@@ -35,24 +39,24 @@ public class CharacterSheetScreen extends AbstractContainerScreen<CharacterSheet
 
 	public CharacterSheetScreen(int syncId, PlayerEntity player) {
 		super(new CharacterSheetContainer(syncId, player), player.inventory, new TranslatableText("container.skillcheck.scribing_table"));
-		this.containerWidth = 276;
+		this.width = 276;
 		this.index = -1;
 	}
 
 	private void syncClassIndex() {
-		this.container.setCurrentSkill(index);
+		this.handler.setCurrentSkill(index);
 		SkillCheckNetworking.syncSelection(index);
 	}
 
 	private void syncLevelUp() {
-		SkillCheckNetworking.syncLevelup(container.classes.get(index));
+		SkillCheckNetworking.syncLevelup(handler.classes.get(index));
 	}
 
 	@Override
 	protected void init() {
 		super.init();
-		int left = (this.width - this.containerWidth) / 2;
-		int top = (this.height - this.containerHeight) / 2;
+		int left = (this.width - this.width) / 2;
+		int top = (this.height - this.height) / 2;
 		int listHeight = top + 18;
 		confirm = this.addButton(new ConfirmButtonWidget(left + 143, top + 140, new TranslatableText("btn.skillcheck.levelup"), (widget) -> {
 			this.playerInventory.player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1.0f, 1.0f);
@@ -61,7 +65,7 @@ public class CharacterSheetScreen extends AbstractContainerScreen<CharacterSheet
 		for (int i = 0; i < 7; i++) {
 			this.visibleButtons[i] = this.addButton(new ButtonPageWidget(left + 5, listHeight, i, (widget) -> {
 				if (widget instanceof ButtonPageWidget) {
-					this.index = ((ButtonPageWidget)widget).getIndex() + scroll;
+					this.index = ((ButtonPageWidget) widget).getIndex() + scroll;
 					this.syncClassIndex();
 				}
 			}));
@@ -70,24 +74,24 @@ public class CharacterSheetScreen extends AbstractContainerScreen<CharacterSheet
 	}
 
 	@Override
-	protected void drawBackground(float v, int i, int i1) {
+	protected void drawBackground(MatrixStack matrices, float v, int i, int i1) {
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		this.minecraft.getTextureManager().bindTexture(TEXTURE);
-		int left = (this.width - this.containerWidth) / 2;
-		int top = (this.height - this.containerHeight) / 2;
-		blit(left, top, this.blitOffset, 0.0F, 0.0F, this.containerWidth, this.containerHeight, 256, 512);
+		this.client.getTextureManager().bindTexture(TEXTURE);
+		int left = (this.width - this.width) / 2;
+		int top = (this.height - this.height) / 2;
+		drawTexture(matrices, left, top, 0.0F, 0.0F, this.width, this.height, 256, 512);
 	}
 
 	@Override
-	public void render(int x, int y, float partialTicks) {
-		this.renderBackground();
-		super.render(x, y, partialTicks);
-		confirm.active = container.canLevelUp();
-		List<Identifier> classes = this.container.classes;
-		TextRenderer textRenderer = this.minecraft.textRenderer;
+	public void render(MatrixStack matrices, int x, int y, float partialTicks) {
+		this.renderBackground(matrices);
+		super.render(matrices, x, y, partialTicks);
+		confirm.active = handler.canLevelUp();
+		List<Identifier> classes = this.handler.classes;
+		TextRenderer textRenderer = this.client.textRenderer;
 		if (!classes.isEmpty()) {
-			int left = (this.width - this.containerWidth) / 2;
-			int top = (this.height - this.containerHeight) / 2;
+			int left = (this.width - this.width) / 2;
+			int top = (this.height - this.height) / 2;
 			int drawHeight = top + 17;
 			int listLeft = left + 10;
 			int scrollOffset = 0;
@@ -96,49 +100,46 @@ public class CharacterSheetScreen extends AbstractContainerScreen<CharacterSheet
 			GlStateManager.disableBlend();
 			CharacterClasses pClasses = CharacterData.get(playerInventory.player).getClasses();
 			for (Identifier id : classes) {
-				CharacterClass clazz = CottonRPG.CLASSES.get(id);
+				CharacterClass clazz = Objects.requireNonNull(CottonRPG.CLASSES.get(id));
 				Text className = clazz.getName();
 				int levelVal;
 				if (pClasses.has(id)) levelVal = pClasses.get(id).getLevel();
 				else levelVal = 0;
 				String level = className.asString() + ": " + new TranslatableText("text.skillcheck.level", levelVal).asString();
-				if (shouldScroll(classes.size()) && (scrollOffset < this.scroll || scrollOffset >= 7 + this.scroll)) {
-					scrollOffset++;
-				} else {
+				if (!shouldScroll(classes.size()) || (scrollOffset >= this.scroll && scrollOffset < 7 + this.scroll)) {
 					int renderHeight = drawHeight + 6;
-					this.drawString(textRenderer, level, listLeft, renderHeight, 0xffffff);
+					textRenderer.draw(matrices, level, listLeft, renderHeight, 0xffffff);
 					drawHeight += 20;
-					scrollOffset++;
 				}
+				scrollOffset++;
 			}
 			if (index >= 0) {
 				Identifier id = classes.get(index);
 				CharacterClass pClass = CottonRPG.CLASSES.get(id);
 				int descLineHeight = top + 20;
-				List<String> lines = new ArrayList<>();
+				List<OrderedText> lines = new ArrayList<>();
 				for (Text line : pClass.getDescription()) {
-					String textToDraw = line.asString();
-					List<String> toAdd = textRenderer.wrapStringToWidthAsList(textToDraw, 161);
+					List<OrderedText> toAdd = textRenderer.wrapLines(line, 161);
 					lines.addAll(toAdd);
 				}
-				for (String line : lines) {
-					this.drawCenteredString(textRenderer, line, rightPanelCenter, descLineHeight, 0xffffff);
+				for (OrderedText line : lines) {
+					textRenderer.draw(matrices, line, rightPanelCenter, descLineHeight, 0xffffff);
 					descLineHeight += 10;
 				}
 				
-				this.drawCenteredString(textRenderer, ((SkillCheckCharacterClass)pClass).getLevelRequirement(pClasses.has(id)? pClasses.get(id).getLevel() : 0, playerInventory.player).asString(), rightPanelCenter, descLineHeight, 0x55ff55);
+				drawCenteredText(matrices, textRenderer, ((SkillCheckCharacterClass)pClass).getLevelRequirement(pClasses.has(id)? pClasses.get(id).getLevel() : 0, playerInventory.player), rightPanelCenter, descLineHeight, 0x55ff55);
 			}
 			GlStateManager.enableLighting();
 			GlStateManager.enableBlend();
 
 			for (ButtonPageWidget button : this.visibleButtons) {
 				if (button.isHovered()) {
-					button.renderToolTip(x, y);
+					button.renderToolTip(matrices, x, y);
 				}
-				button.visible = button.index < this.container.classes.size();
+				button.visible = button.index < this.handler.classes.size();
 				button.active = button.index != this.index;
 			}
-			GuiLighting.disable();
+			DiffuseLighting.disable();
 		}
 	}
 
@@ -148,7 +149,7 @@ public class CharacterSheetScreen extends AbstractContainerScreen<CharacterSheet
 
 	@Override
 	public boolean mouseScrolled(double double_1, double double_2, double double_3) {
-		int amount = this.container.classes.size();
+		int amount = this.handler.classes.size();
 		if (shouldScroll(amount)) {
 			int remaining = amount - 7;
 			this.scroll = (int) ((double) this.scroll - double_3);
@@ -159,9 +160,9 @@ public class CharacterSheetScreen extends AbstractContainerScreen<CharacterSheet
 
 	@Override
 	public boolean mouseDragged(double double_1, double double_2, int int_1, double double_3, double double_4) {
-		int amount = container.classes.size();
+		int amount = handler.classes.size();
 		if (this.needsScroll) {
-			int listTop = this.top + 18;
+			int listTop = this.y + 18;
 			int listBottom = listTop + 139;
 			int offscreen = amount - 7;
 			float scrollAmount = ((float)double_2 - (float)listTop - 13.5F) / ((float)(listBottom - listTop) - 27.0F);
@@ -176,9 +177,9 @@ public class CharacterSheetScreen extends AbstractContainerScreen<CharacterSheet
 	@Override
 	public boolean mouseClicked(double double_1, double double_2, int int_1) {
 		this.needsScroll = false;
-		int int_2 = (this.width - this.containerWidth) / 2;
-		int int_3 = (this.height - this.containerHeight) / 2;
-		if (this.shouldScroll(container.classes.size()) && double_1 > (double)(int_2 + 94) && double_1 < (double)(int_2 + 94 + 6) && double_2 > (double)(int_3 + 18) && double_2 <= (double)(int_3 + 18 + 139 + 1)) {
+		int int_2 = (this.width - this.width) / 2;
+		int int_3 = (this.height - this.height) / 2;
+		if (this.shouldScroll(handler.classes.size()) && double_1 > (double)(int_2 + 94) && double_1 < (double)(int_2 + 94 + 6) && double_2 > (double)(int_3 + 18) && double_2 <= (double)(int_3 + 18 + 139 + 1)) {
 			this.needsScroll = true;
 		}
 
@@ -186,11 +187,11 @@ public class CharacterSheetScreen extends AbstractContainerScreen<CharacterSheet
 	}
 
 	@Environment(EnvType.CLIENT)
-	class ButtonPageWidget extends ButtonWidget {
+	static class ButtonPageWidget extends ButtonWidget {
 		final int index;
 
 		public ButtonPageWidget(int x, int y, int index, PressAction action) {
-			super(x, y, 89, 20, "", action);
+			super(x, y, 89, 20, LiteralText.EMPTY, action);
 			this.index = index;
 			this.visible = false;
 		}
@@ -200,15 +201,15 @@ public class CharacterSheetScreen extends AbstractContainerScreen<CharacterSheet
 		}
 
 		@Override
-		public void renderToolTip(int int_1, int int_2) {
+		public void renderToolTip(MatrixStack matrices, int int_1, int int_2) {
 
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
-	class ConfirmButtonWidget extends ButtonWidget {
+	static class ConfirmButtonWidget extends ButtonWidget {
 		public ConfirmButtonWidget(int x, int y, TranslatableText name, PressAction action) {
-			super(x, y, 89, 20, name.asString(), action);
+			super(x, y, 89, 20, name, action);
 		}
 	}
 }

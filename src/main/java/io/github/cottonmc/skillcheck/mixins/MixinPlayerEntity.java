@@ -39,23 +39,23 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 	}
 
 	@Inject(method = "damage", at = @At("HEAD"), cancellable = true)
-	public void catchArrow(DamageSource source, float amount, CallbackInfoReturnable ci) {
+	public void catchArrow(DamageSource source, float amount, CallbackInfoReturnable<Boolean> ci) {
 		if (source.isProjectile() && source.getSource() instanceof ArrowEntity) {
 			CharacterClasses classes = CharacterData.get((PlayerEntity)(Object)this).getClasses();
 			if (ClassUtils.hasLevel(classes, SkillCheck.THIEF, 3)
 					&& canCatchArrow()) {
 				RollResult roll = Dice.roll("1d20+"+ classes.get(SkillCheck.THIEF).getLevel());
 				if (SkillCheck.config.showDiceRolls) {
-					if (roll.isCritFail()) ((PlayerEntity)(Object)this).addChatMessage(new TranslatableText("msg.skillcheck.roll.fail", roll.getFormattedNaturals()), false);
-					else ((PlayerEntity)(Object)this).addChatMessage(new TranslatableText("msg.skillcheck.roll.result", roll.getTotal(), roll.getFormattedNaturals()), false);
+					if (roll.isCritFail()) ((PlayerEntity)(Object)this).sendMessage(new TranslatableText("msg.skillcheck.roll.fail", roll.getFormattedNaturals()), false);
+					else ((PlayerEntity)(Object)this).sendMessage(new TranslatableText("msg.skillcheck.roll.result", roll.getTotal(), roll.getFormattedNaturals()), false);
 				}
 				if (roll.isCritFail()) {
-					this.addPotionEffect(new StatusEffectInstance(StatusEffects.INSTANT_DAMAGE, 2, 1));
+					this.addStatusEffect(new StatusEffectInstance(StatusEffects.INSTANT_DAMAGE, 2, 1));
 				} else if (roll.getTotal() >= SkillCheck.config.arrowCatchRoll) {
 					ArrowEntity arrow = (ArrowEntity) source.getSource();
 					if (!((ArrowEffects) arrow).getEffects().isEmpty()) {
 						for (StatusEffectInstance effect : (((ArrowEffects) arrow).getEffects())) {
-							this.addPotionEffect(effect);
+							this.addStatusEffect(effect);
 						}
 					}
 					if (arrow.isOnFire()) this.setOnFireFor(5);
