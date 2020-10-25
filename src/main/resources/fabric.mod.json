@@ -6,7 +6,7 @@
   "name": "SkillCheck",
   "icon": "assets/skillcheck/icon.png",
   "description": "RPG-style classes and abilities",
-  "licence": "LGPL v3",
+  "license": "LGPL-3.0-or-later",
   "contact": {
     "sources": "https://github.com/CottonMC/skillcheck"
   },
