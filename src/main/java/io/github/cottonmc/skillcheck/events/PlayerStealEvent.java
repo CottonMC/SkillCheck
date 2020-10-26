@@ -1,7 +1,6 @@
 package io.github.cottonmc.skillcheck.events;
 
-import io.github.cottonmc.cottonrpg.data.CharacterData;
-import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
+import io.github.cottonmc.cottonrpg.data.rpgclass.CharacterClasses;
 import io.github.cottonmc.skillcheck.SkillCheck;
 import io.github.cottonmc.skillcheck.api.dice.Dice;
 import io.github.cottonmc.skillcheck.api.dice.RollResult;
@@ -22,7 +21,7 @@ public class PlayerStealEvent  implements UseEntityCallback {
 
 	@Override
 	public ActionResult interact(PlayerEntity player, World world, Hand hand, Entity entity, EntityHitResult HitResult) {
-		CharacterClasses classes = CharacterData.get(player).getClasses();
+		CharacterClasses classes = CharacterClasses.get(player);
 		if (player.isSpectator()
 				|| !player.getStackInHand(hand).isEmpty()
 				|| !classes.has(SkillCheck.THIEF)

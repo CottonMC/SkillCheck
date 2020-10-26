@@ -1,7 +1,6 @@
 package io.github.cottonmc.skillcheck.mixins;
 
-import io.github.cottonmc.cottonrpg.data.CharacterData;
-import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
+import io.github.cottonmc.cottonrpg.data.rpgclass.CharacterClasses;
 import io.github.cottonmc.skillcheck.SkillCheck;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.MerchantEntity;
@@ -25,7 +24,7 @@ public abstract class MixinVillagerEntity extends MerchantEntity {
 
 	@Inject(method = "prepareRecipesFor", at = @At(value = "TAIL"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
 	public void improveArtisanPrice(PlayerEntity player, CallbackInfo ci) {
-		CharacterClasses classes = CharacterData.get(player).getClasses();
+		CharacterClasses classes = CharacterClasses.get(player);
 		if (classes.has(SkillCheck.ARTISAN)) {
 			int level = classes.get(SkillCheck.ARTISAN).getLevel();
 			for (TradeOffer offer : this.getOffers()) {

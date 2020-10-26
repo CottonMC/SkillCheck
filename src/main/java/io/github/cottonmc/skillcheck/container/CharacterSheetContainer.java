@@ -1,9 +1,8 @@
 package io.github.cottonmc.skillcheck.container;
 
-import io.github.cottonmc.cottonrpg.data.CharacterData;
-import io.github.cottonmc.cottonrpg.data.clazz.CharacterClass;
-import io.github.cottonmc.cottonrpg.data.clazz.CharacterClassEntry;
-import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
+import io.github.cottonmc.cottonrpg.data.rpgclass.CharacterClass;
+import io.github.cottonmc.cottonrpg.data.rpgclass.CharacterClassEntry;
+import io.github.cottonmc.cottonrpg.data.rpgclass.CharacterClasses;
 import io.github.cottonmc.skillcheck.SkillCheck;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.ScreenHandler;
@@ -37,7 +36,7 @@ public class CharacterSheetContainer extends ScreenHandler {
 
 	public boolean canLevelUp() {
 		if (currentSkill == null) return false;
-		CharacterClasses classes = CharacterData.get(player).getClasses();
+		CharacterClasses classes = CharacterClasses.get(player);
 		CharacterClassEntry entry = classes.get(currentSkill);
 		int currentLevel = 0;
 		if (entry != null) {

@@ -1,9 +1,8 @@
 package io.github.cottonmc.skillcheck.container;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import io.github.cottonmc.cottonrpg.data.CharacterData;
-import io.github.cottonmc.cottonrpg.data.clazz.CharacterClass;
-import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
+import io.github.cottonmc.cottonrpg.data.rpgclass.CharacterClass;
+import io.github.cottonmc.cottonrpg.data.rpgclass.CharacterClasses;
 import io.github.cottonmc.skillcheck.SkillCheck;
 import io.github.cottonmc.skillcheck.impl.SkillCheckCharacterClass;
 import io.github.cottonmc.skillcheck.util.SkillCheckNetworking;
@@ -97,7 +96,7 @@ public class CharacterSheetScreen extends HandledScreen<CharacterSheetContainer>
 			int maxDescLineHeight = top + 120;
 			RenderSystem.disableLighting();
 			RenderSystem.disableBlend();
-			CharacterClasses pClasses = CharacterData.get(playerInventory.player).getClasses();
+			CharacterClasses pClasses = CharacterClasses.get(playerInventory.player);
 			for (CharacterClass clazz : classes) {
 				int levelVal;
 				if (pClasses.has(clazz)) levelVal = pClasses.get(clazz).getLevel();

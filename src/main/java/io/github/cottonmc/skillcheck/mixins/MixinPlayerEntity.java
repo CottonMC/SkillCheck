@@ -1,11 +1,10 @@
 package io.github.cottonmc.skillcheck.mixins;
 
-import io.github.cottonmc.cottonrpg.data.CharacterData;
-import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
+import io.github.cottonmc.cottonrpg.data.rpgclass.CharacterClasses;
 import io.github.cottonmc.skillcheck.SkillCheck;
-import io.github.cottonmc.skillcheck.util.ArrowEffects;
 import io.github.cottonmc.skillcheck.api.dice.Dice;
 import io.github.cottonmc.skillcheck.api.dice.RollResult;
+import io.github.cottonmc.skillcheck.util.ArrowEffects;
 import io.github.cottonmc.skillcheck.util.ClassUtils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
@@ -42,7 +41,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 	@Inject(method = "damage", at = @At("HEAD"), cancellable = true)
 	public void catchArrow(DamageSource source, float amount, CallbackInfoReturnable<Boolean> ci) {
 		if (source.isProjectile() && source.getSource() instanceof ArrowEntity) {
-			CharacterClasses classes = CharacterData.get((PlayerEntity)(Object)this).getClasses();
+			CharacterClasses classes = CharacterClasses.get((PlayerEntity)(Object)this);
 			if (ClassUtils.hasLevel(classes, SkillCheck.THIEF, 3)
 					&& canCatchArrow()) {
 				RollResult roll = Dice.roll("1d20+"+ classes.get(SkillCheck.THIEF).getLevel());

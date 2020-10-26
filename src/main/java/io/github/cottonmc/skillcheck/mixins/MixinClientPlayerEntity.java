@@ -1,10 +1,9 @@
 package io.github.cottonmc.skillcheck.mixins;
 
 import com.mojang.authlib.GameProfile;
-import io.github.cottonmc.cottonrpg.data.CharacterData;
-import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
-import io.github.cottonmc.cottonrpg.data.resource.CharacterResourceEntry;
-import io.github.cottonmc.cottonrpg.data.resource.CharacterResources;
+import io.github.cottonmc.cottonrpg.data.rpgclass.CharacterClasses;
+import io.github.cottonmc.cottonrpg.data.rpgresource.CharacterResourceEntry;
+import io.github.cottonmc.cottonrpg.data.rpgresource.CharacterResources;
 import io.github.cottonmc.skillcheck.SkillCheck;
 import io.github.cottonmc.skillcheck.util.ClassUtils;
 import io.github.cottonmc.skillcheck.util.SkillCheckNetworking;
@@ -75,7 +74,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 
 	@Inject(method = "tick", at = @At("TAIL"))
 	public void thiefMovement(CallbackInfo ci) {
-		CharacterClasses classes = CharacterData.get(this).getClasses();
+		CharacterClasses classes = CharacterClasses.get(this);
 
 		// wall-cling/wall-jump code from Wall-Jump
 		if (classes.has(SkillCheck.THIEF)) this.handleWallJump();
@@ -89,7 +88,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 
 		if (this.input.sneaking) keyTimer++;
 		else keyTimer = 0;
-		CharacterResources resources = CharacterData.get(this).getResources();
+		CharacterResources resources = CharacterResources.get(this);
 
 		if (this.onGround || this.abilities.flying) {
 
@@ -220,7 +219,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 	}
 
 	private static boolean canWallCling(PlayerEntity player) {
-		CharacterResources resources = CharacterData.get(player).getResources();
+		CharacterResources resources = CharacterResources.get(player);
 		long currentStamina = 0;
 		if (resources.has(SkillCheck.STAMINA)) {
 			currentStamina = resources.get(SkillCheck.STAMINA).getCurrent();
@@ -260,7 +259,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 				|| player.world.getBlockState(getWallPos(player)).getBlock() instanceof FluidBlock) return false;
 
 		//let players vault up walls if they're a good enough thief
-		if (player.getPos().getY() < lastJumpY || CharacterData.get(player).getClasses().get(SkillCheck.THIEF).getLevel() >= 5) return true;
+		if (player.getPos().getY() < lastJumpY || CharacterClasses.get(player).get(SkillCheck.THIEF).getLevel() >= 5) return true;
 
 		if (walls.size() == 1) {
 
@@ -328,7 +327,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 
 		} else if (this.input.jumping && !this.abilities.flying) {
 
-			if (!jumpKey && jumpCount < 2 && airTime > 1 && (tryUseStamina(CharacterData.get(this).getResources(), 5) || !SkillCheck.config.useStamina)) {
+			if (!jumpKey && jumpCount < 2 && airTime > 1 && (tryUseStamina(CharacterResources.get(this), 5) || !SkillCheck.config.useStamina)) {
 
 				this.jump();
 				jumpCount++;
@@ -355,4 +354,3 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 	}
 
 }
- 

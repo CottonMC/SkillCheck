@@ -1,8 +1,8 @@
 package io.github.cottonmc.skillcheck.impl;
 
-import io.github.cottonmc.cottonrpg.data.resource.CharacterResourceEntry;
-import io.github.cottonmc.cottonrpg.data.resource.SimpleCharacterResource;
-import io.github.cottonmc.cottonrpg.data.resource.Ticker;
+import io.github.cottonmc.cottonrpg.data.rpgresource.CharacterResourceEntry;
+import io.github.cottonmc.cottonrpg.data.rpgresource.SimpleCharacterResource;
+import io.github.cottonmc.cottonrpg.data.rpgresource.Ticker;
 
 public class SkillCheckCharacterResource extends SimpleCharacterResource {
 	private int ticksPerUnit;
