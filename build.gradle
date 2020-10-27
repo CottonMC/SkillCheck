@@ -21,7 +21,6 @@ minecraft {
 }
 
 repositories {
-	mavenLocal()
 	maven {
 		url "https://server.bbkr.space/artifactory/libs-release"
 	}
