@@ -1,10 +1,9 @@
 package io.github.cottonmc.skillcheck.util;
 
-import io.github.cottonmc.cottonrpg.data.CharacterData;
-import io.github.cottonmc.cottonrpg.data.clazz.CharacterClassEntry;
-import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
-import io.github.cottonmc.cottonrpg.data.resource.CharacterResourceEntry;
-import io.github.cottonmc.cottonrpg.data.resource.CharacterResources;
+import io.github.cottonmc.cottonrpg.data.rpgclass.CharacterClassEntry;
+import io.github.cottonmc.cottonrpg.data.rpgclass.CharacterClasses;
+import io.github.cottonmc.cottonrpg.data.rpgresource.CharacterResourceEntry;
+import io.github.cottonmc.cottonrpg.data.rpgresource.CharacterResources;
 import io.github.cottonmc.skillcheck.SkillCheck;
 import io.github.cottonmc.skillcheck.container.CharacterSheetContainer;
 import io.netty.buffer.Unpooled;
@@ -49,7 +48,7 @@ public class SkillCheckNetworking {
 		ServerSidePacketRegistry.INSTANCE.register(SYNC_LEVELUP, (packetContext, packetByteBuf) -> {
 			if (((CharacterSheetContainer)packetContext.getPlayer().currentScreenHandler).canLevelUp()) {
 				Identifier id = packetByteBuf.readIdentifier();
-				CharacterClasses classes = CharacterData.get(packetContext.getPlayer()).getClasses();
+				CharacterClasses classes = CharacterClasses.get(packetContext.getPlayer());
 				CharacterClassEntry entry = classes.giveIfAbsent(id);
 				int currentLevel = entry.getLevel();
 				entry.getType().applyLevelUp(currentLevel, packetContext.getPlayer());
@@ -61,7 +60,7 @@ public class SkillCheckNetworking {
 			player.fallDistance = 0;
 		});
 		ServerSidePacketRegistry.INSTANCE.register(CONSUME_STAMINA, ((packetContext, packetByteBuf) -> {
-			CharacterResources resources = CharacterData.get(packetContext.getPlayer()).getResources();
+			CharacterResources resources = CharacterResources.get(packetContext.getPlayer());
 			if (resources.has(SkillCheck.STAMINA)) {
 				CharacterResourceEntry entry = resources.get(SkillCheck.STAMINA);
 				entry.setCurrent(entry.getCurrent() - packetByteBuf.readInt());
