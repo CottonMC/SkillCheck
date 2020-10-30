@@ -1,7 +1,8 @@
 package io.github.cottonmc.skillcheck.item;
 
-import io.github.cottonmc.cottonrpg.data.CharacterData;
-import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
+import io.github.cottonmc.cottonrpg.data.rpgclass.CharacterClass;
+import io.github.cottonmc.cottonrpg.data.rpgclass.CharacterClasses;
+import io.github.cottonmc.cottonrpg.data.rpgresource.CharacterResources;
 import io.github.cottonmc.skillcheck.SkillCheck;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,12 +22,12 @@ public class ClassPrestigeItem extends Item {
 
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-		CharacterClasses classes = CharacterData.get(player).getClasses();
-		for (Identifier id : SkillCheck.getCharSheetClasses()) {
+		CharacterClasses classes = CharacterClasses.get(player);
+		for (CharacterClass id : SkillCheck.getCharSheetClasses()) {
 			classes.remove(id);
 		}
-		CharacterData.get(player).getResources().remove(SkillCheck.STAMINA);
-		player.addChatMessage(new TranslatableText("msg.skillcheck.prestige"), true);
+		CharacterResources.get(player).remove(SkillCheck.STAMINA);
+		player.sendMessage(new TranslatableText("msg.skillcheck.prestige"), true);
 		return new TypedActionResult<>(ActionResult.SUCCESS, player.getStackInHand(hand));
 	}
 

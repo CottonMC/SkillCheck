@@ -1,11 +1,11 @@
 package io.github.cottonmc.skillcheck.mixins;
 
-import io.github.cottonmc.cottonrpg.data.CharacterData;
+import io.github.cottonmc.cottonrpg.data.rpgclass.CharacterClasses;
 import io.github.cottonmc.skillcheck.SkillCheck;
 import net.minecraft.client.gui.screen.ingame.LoomScreen;
-import net.minecraft.container.LoomContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.screen.LoomScreenHandler;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,13 +19,13 @@ public abstract class MixinLoomScreen {
 	private PlayerEntity player;
 
 	@Inject(method = "<init>", at = @At("RETURN"))
-	public void construct(LoomContainer container, PlayerInventory inv, Text name, CallbackInfo ci) {
+	public void construct(LoomScreenHandler container, PlayerInventory inv, Text name, CallbackInfo ci) {
 		player = inv.player;
 	}
 
 	@ModifyConstant(method = "onInventoryChanged", constant = @Constant(intValue = 6))
 	private int changeBannerPatternLimit(int orig) {
-		if (CharacterData.get(player).getClasses().has(SkillCheck.ARTISAN)) return 16;
+		if (CharacterClasses.get(player).has(SkillCheck.ARTISAN)) return 16;
 		else return orig;
 	}
 }

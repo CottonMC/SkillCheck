@@ -39,7 +39,7 @@
   "desc.class.skillcheck.brawler.1": "Lv2+: Chance to weaken an un-armored enemy on an empty-hand attack.",
   "desc.class.skillcheck.brawler.2": "Per lv 2+: +1 to enemy weaken chance.",
 
-  "text.skillcheck.level": "Lv%s",
+  "text.skillcheck.level": "%s: Lv%d",
   "text.skillcheck.cost": "Next level: %s experience",
   "btn.skillcheck.levelup": "Level up"
 }

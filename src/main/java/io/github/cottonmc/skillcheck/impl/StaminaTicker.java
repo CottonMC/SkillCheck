@@ -1,7 +1,7 @@
 package io.github.cottonmc.skillcheck.impl;
 
-import io.github.cottonmc.cottonrpg.data.resource.CharacterResourceEntry;
-import io.github.cottonmc.cottonrpg.data.resource.Ticker;
+import io.github.cottonmc.cottonrpg.data.rpgresource.CharacterResourceEntry;
+import io.github.cottonmc.cottonrpg.data.rpgresource.Ticker;
 import net.minecraft.nbt.CompoundTag;
 
 public class StaminaTicker implements Ticker {

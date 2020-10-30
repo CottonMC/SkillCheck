@@ -1,10 +1,9 @@
 package io.github.cottonmc.skillcheck.mixins;
 
 import com.mojang.authlib.GameProfile;
-import io.github.cottonmc.cottonrpg.data.CharacterData;
-import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
-import io.github.cottonmc.cottonrpg.data.resource.CharacterResourceEntry;
-import io.github.cottonmc.cottonrpg.data.resource.CharacterResources;
+import io.github.cottonmc.cottonrpg.data.rpgclass.CharacterClasses;
+import io.github.cottonmc.cottonrpg.data.rpgresource.CharacterResourceEntry;
+import io.github.cottonmc.cottonrpg.data.rpgresource.CharacterResources;
 import io.github.cottonmc.skillcheck.SkillCheck;
 import io.github.cottonmc.skillcheck.util.ClassUtils;
 import io.github.cottonmc.skillcheck.util.SkillCheckNetworking;
@@ -27,6 +26,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.util.shape.VoxelShape;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -45,12 +45,13 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 
 	@Shadow public Input input;
 
-	@Shadow public abstract boolean isInWater();
-
 	//Wall-Jump config default values
-	private static float wallJumpHeight = 0.8f;
-	private static int wallSlideDelay = 15;
-	private static double wallSlideSpeed = 0.1;
+	@Unique
+	private static final float wallJumpHeight = 0.8f;
+	@Unique
+	private static final int wallSlideDelay = 15;
+	@Unique
+	private static final double wallSlideSpeed = 0.1;
 
 	//Wall-Jump cling/jump fields
 	private static int clingTime;
@@ -73,7 +74,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 
 	@Inject(method = "tick", at = @At("TAIL"))
 	public void thiefMovement(CallbackInfo ci) {
-		CharacterClasses classes = CharacterData.get(this).getClasses();
+		CharacterClasses classes = CharacterClasses.get(this);
 
 		// wall-cling/wall-jump code from Wall-Jump
 		if (classes.has(SkillCheck.THIEF)) this.handleWallJump();
@@ -87,7 +88,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 
 		if (this.input.sneaking) keyTimer++;
 		else keyTimer = 0;
-		CharacterResources resources = CharacterData.get(this).getResources();
+		CharacterResources resources = CharacterResources.get(this);
 
 		if (this.onGround || this.abilities.flying) {
 
@@ -117,7 +118,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 
 			} else {
 
-				this.setPosition(clingX, this.getPos().getY(), clingZ);
+				this.updatePosition(clingX, this.getPos().getY(), clingZ);
 				Vec3d previousVelocity = this.getVelocity();
 				SkillCheckNetworking.clearFall();
 				double velY = previousVelocity.y;
@@ -214,11 +215,11 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 	}
 
 	private static boolean nearWall(Entity entity, double dist) {
-		return entity.world.isAreaNotEmpty(entity.getBoundingBox().expand(dist, 0, dist));
+		return !entity.world.isSpaceEmpty(entity.getBoundingBox().expand(dist, 0, dist));
 	}
 
 	private static boolean canWallCling(PlayerEntity player) {
-		CharacterResources resources = CharacterData.get(player).getResources();
+		CharacterResources resources = CharacterResources.get(player);
 		long currentStamina = 0;
 		if (resources.has(SkillCheck.STAMINA)) {
 			currentStamina = resources.get(SkillCheck.STAMINA).getCurrent();
@@ -243,7 +244,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 		int i = 0;
 		for (Box axis : axes) {
 			direction = fromHorizontal(i++);
-			if (player.world.isAreaNotEmpty(axis)) {
+			if (!player.world.isSpaceEmpty(axis)) {
 
 				if (clingDirection == UP) clingDirection = direction;
 				else clingDirection2 = direction;
@@ -258,7 +259,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 				|| player.world.getBlockState(getWallPos(player)).getBlock() instanceof FluidBlock) return false;
 
 		//let players vault up walls if they're a good enough thief
-		if (player.getPos().getY() < lastJumpY || CharacterData.get(player).getClasses().get(SkillCheck.THIEF).getLevel() >= 5) return true;
+		if (player.getPos().getY() < lastJumpY || CharacterClasses.get(player).get(SkillCheck.THIEF).getLevel() >= 5) return true;
 
 		if (walls.size() == 1) {
 
@@ -269,7 +270,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 	}
 
 	private static BlockPos getWallPos(Entity entity) {
-		BlockPos pos = new BlockPos(entity).offset(clingDirection.getOpposite());
+		BlockPos pos = entity.getBlockPos().offset(clingDirection.getOpposite());
 		return entity.world.getBlockState(pos).getMaterial().isSolid()? pos : pos.offset(UP);
 	}
 
@@ -313,7 +314,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 
 		BlockState state = entity.world.getBlockState(pos);
 		if (state.getRenderType() != BlockRenderType.INVISIBLE) {
-			entity.world.addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, state), entity.x, entity.y, entity.z, 0.0D, 0.0D, 0.0D);
+			entity.world.addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, state), entity.getX(), entity.getY(), entity.getZ(), 0.0D, 0.0D, 0.0D);
 		}
 
 	}
@@ -326,7 +327,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 
 		} else if (this.input.jumping && !this.abilities.flying) {
 
-			if (!jumpKey && jumpCount < 2 && airTime > 1 && (tryUseStamina(CharacterData.get(this).getResources(), 5) || !SkillCheck.config.useStamina)) {
+			if (!jumpKey && jumpCount < 2 && airTime > 1 && (tryUseStamina(CharacterResources.get(this), 5) || !SkillCheck.config.useStamina)) {
 
 				this.jump();
 				jumpCount++;
@@ -353,4 +354,3 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 	}
 
 }
- 

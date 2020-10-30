@@ -1,7 +1,7 @@
 package io.github.cottonmc.skillcheck.impl;
 
 import io.github.cottonmc.cottonrpg.CottonRPG;
-import io.github.cottonmc.cottonrpg.data.clazz.CharacterClass;
+import io.github.cottonmc.cottonrpg.data.rpgclass.CharacterClass;
 import io.github.cottonmc.skillcheck.util.SkillCheckNetworking;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.player.PlayerEntity;
@@ -50,7 +50,7 @@ public class SkillCheckCharacterClass implements CharacterClass {
 	}
 
 	public List<Text> getDescription() {
-		List<Text> lines = new ArrayList();
+		List<Text> lines = new ArrayList<>();
 		Identifier id = CottonRPG.CLASSES.getId(this);
 		if (id != null) {
 			for(int i = 0; i < 10; ++i) {

@@ -1,11 +1,10 @@
 package io.github.cottonmc.skillcheck.mixins;
 
-import io.github.cottonmc.cottonrpg.data.CharacterData;
-import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
+import io.github.cottonmc.cottonrpg.data.rpgclass.CharacterClasses;
 import io.github.cottonmc.skillcheck.SkillCheck;
-import io.github.cottonmc.skillcheck.util.ArrowEffects;
 import io.github.cottonmc.skillcheck.api.dice.Dice;
 import io.github.cottonmc.skillcheck.api.dice.RollResult;
+import io.github.cottonmc.skillcheck.util.ArrowEffects;
 import io.github.cottonmc.skillcheck.util.ClassUtils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
@@ -22,6 +21,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -39,23 +39,23 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 	}
 
 	@Inject(method = "damage", at = @At("HEAD"), cancellable = true)
-	public void catchArrow(DamageSource source, float amount, CallbackInfoReturnable ci) {
+	public void catchArrow(DamageSource source, float amount, CallbackInfoReturnable<Boolean> ci) {
 		if (source.isProjectile() && source.getSource() instanceof ArrowEntity) {
-			CharacterClasses classes = CharacterData.get((PlayerEntity)(Object)this).getClasses();
+			CharacterClasses classes = CharacterClasses.get((PlayerEntity)(Object)this);
 			if (ClassUtils.hasLevel(classes, SkillCheck.THIEF, 3)
 					&& canCatchArrow()) {
 				RollResult roll = Dice.roll("1d20+"+ classes.get(SkillCheck.THIEF).getLevel());
 				if (SkillCheck.config.showDiceRolls) {
-					if (roll.isCritFail()) ((PlayerEntity)(Object)this).addChatMessage(new TranslatableText("msg.skillcheck.roll.fail", roll.getFormattedNaturals()), false);
-					else ((PlayerEntity)(Object)this).addChatMessage(new TranslatableText("msg.skillcheck.roll.result", roll.getTotal(), roll.getFormattedNaturals()), false);
+					if (roll.isCritFail()) ((PlayerEntity)(Object)this).sendMessage(new TranslatableText("msg.skillcheck.roll.fail", roll.getFormattedNaturals()), false);
+					else ((PlayerEntity)(Object)this).sendMessage(new TranslatableText("msg.skillcheck.roll.result", roll.getTotal(), roll.getFormattedNaturals()), false);
 				}
 				if (roll.isCritFail()) {
-					this.addPotionEffect(new StatusEffectInstance(StatusEffects.INSTANT_DAMAGE, 2, 1));
+					this.addStatusEffect(new StatusEffectInstance(StatusEffects.INSTANT_DAMAGE, 2, 1));
 				} else if (roll.getTotal() >= SkillCheck.config.arrowCatchRoll) {
 					ArrowEntity arrow = (ArrowEntity) source.getSource();
 					if (!((ArrowEffects) arrow).getEffects().isEmpty()) {
 						for (StatusEffectInstance effect : (((ArrowEffects) arrow).getEffects())) {
-							this.addPotionEffect(effect);
+							this.addStatusEffect(effect);
 						}
 					}
 					if (arrow.isOnFire()) this.setOnFireFor(5);
@@ -81,6 +81,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 		}
 	}
 
+	@Unique
 	private boolean canCatchArrow() {
 		return this.getMainHandStack().isEmpty() || this.getOffHandStack().isEmpty()
 				|| (this.getMainHandStack().getItem() == Items.ARROW && this.getMainHandStack().getCount() < Items.ARROW.getMaxCount())

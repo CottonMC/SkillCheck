@@ -1,7 +1,7 @@
 package io.github.cottonmc.skillcheck.item;
 
 import io.github.cottonmc.cottonrpg.CottonRPG;
-import io.github.cottonmc.cottonrpg.data.clazz.CharacterClass;
+import io.github.cottonmc.cottonrpg.data.rpgclass.CharacterClass;
 import io.github.cottonmc.skillcheck.SkillCheck;
 import io.github.cottonmc.skillcheck.util.ClassUtils;
 import net.fabricmc.fabric.api.util.NbtType;
@@ -39,7 +39,7 @@ public class ClassScrollItem extends Item {
 		ItemStack held = player.getStackInHand(hand);
 		if (!player.abilities.creativeMode) held.decrement(1);
 		player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
-		player.addChatMessage(new TranslatableText("msg.skillcheck.levelup", getTraitName()), true);
+		player.sendMessage(new TranslatableText("msg.skillcheck.levelup", getTraitName()), true);
 		return new TypedActionResult<>(ActionResult.SUCCESS, held);
 	}
 
@@ -47,7 +47,7 @@ public class ClassScrollItem extends Item {
 	public void appendTooltip(ItemStack stack, World world, List<Text> tooltips, TooltipContext ctx) {
 		int flavor;
 		CompoundTag tag = stack.getOrCreateTag();
-		if (tag.containsKey(FLAVOR_TEXT, NbtType.INT)) {
+		if (tag.contains(FLAVOR_TEXT, NbtType.INT)) {
 			flavor = tag.getInt(FLAVOR_TEXT);
 		} else {
 			flavor = new Random().nextInt(6);

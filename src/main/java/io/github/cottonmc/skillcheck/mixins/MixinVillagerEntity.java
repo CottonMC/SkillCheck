@@ -1,10 +1,9 @@
 package io.github.cottonmc.skillcheck.mixins;
 
-import io.github.cottonmc.cottonrpg.data.CharacterData;
-import io.github.cottonmc.cottonrpg.data.clazz.CharacterClasses;
+import io.github.cottonmc.cottonrpg.data.rpgclass.CharacterClasses;
 import io.github.cottonmc.skillcheck.SkillCheck;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.AbstractTraderEntity;
+import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
@@ -17,15 +16,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(VillagerEntity.class)
-public abstract class MixinVillagerEntity extends AbstractTraderEntity {
+public abstract class MixinVillagerEntity extends MerchantEntity {
 
-	public MixinVillagerEntity(EntityType<? extends AbstractTraderEntity> type, World world) {
+	public MixinVillagerEntity(EntityType<? extends MerchantEntity> type, World world) {
 		super(type, world);
 	}
 
 	@Inject(method = "prepareRecipesFor", at = @At(value = "TAIL"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
 	public void improveArtisanPrice(PlayerEntity player, CallbackInfo ci) {
-		CharacterClasses classes = CharacterData.get(player).getClasses();
+		CharacterClasses classes = CharacterClasses.get(player);
 		if (classes.has(SkillCheck.ARTISAN)) {
 			int level = classes.get(SkillCheck.ARTISAN).getLevel();
 			for (TradeOffer offer : this.getOffers()) {

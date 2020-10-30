@@ -6,7 +6,7 @@
   "name": "SkillCheck",
   "icon": "assets/skillcheck/icon.png",
   "description": "RPG-style classes and abilities",
-  "licence": "LGPL v3",
+  "license": "LGPL-3.0-or-later",
   "contact": {
     "sources": "https://github.com/CottonMC/skillcheck"
   },
@@ -24,16 +24,17 @@
     ]
   },
   "mixins": [
-    "skillcheck.common.json",
+    "mixins.skillcheck.common.json",
     {
-      "config": "skillcheck.client.json",
+      "config": "mixins.skillcheck.client.json",
       "environment": "client"
     }
   ],
   "depends": {
     "fabricloader": ">=0.4.0",
     "fabric": "*",
-    "cotton": "*",
-    "crochet": "*"
+		"cottonrpg": "*",
+    "cardinal-components-base": "*",
+    "cardinal-components-entity": "*"
   }
 }
