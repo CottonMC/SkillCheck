@@ -1,8 +1,7 @@
 plugins {
 	id "fabric-loom" version "0.5-SNAPSHOT"
-	id 'com.github.johnrengelman.shadow' version '6.1.0'
 	id "maven-publish"
-	id "com.jfrog.artifactory" version "4.9.0"
+	id "com.jfrog.artifactory" version "4.15.2"
 }
 
 sourceCompatibility = 1.8
@@ -12,9 +11,9 @@ if(rootProject.file("private.gradle").exists()) { //Publishing details
 	apply from: "private.gradle"
 }
 
-archivesBaseName = "skillcheck"
-group = "io.github.cottonmc"
-version = "2.0.0+1.14.4"
+archivesBaseName = "${project.archives_base_name}"
+group = "${project.maven_group}"
+version = "${project.mod_version}+${project.minecraft_version}"
 
 minecraft {
 	refmapName = "mixins.skillcheck.refmap.json"
@@ -37,10 +36,10 @@ repositories {
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	mappings "net.fabricmc:yarn:${project.minecraft_version}+build.${project.yarn_build}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
+	compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 	modApi ("io.github.cottonmc.cotton:cotton-config:1.0.0-rc.7") {
 		transitive = false
 	}
@@ -88,7 +87,7 @@ tasks.withType(JavaCompile) {
 // if it is present.
 // If you remove this task, sources will not be generated.
 task sourcesJar(type: Jar, dependsOn: classes) {
-	classifier = "sources"
+	archiveClassifier = "sources"
 	from sourceSets.main.allSource
 }
 
@@ -101,18 +100,15 @@ publishing {
 	publications {
 		maven(MavenPublication) {
 			// add all the jars that should be included when publishing to maven
-			//artifact(jar) {
-			//	builtBy remapJar
-			//}
-			artifact ("${project.buildDir.absolutePath}/libs/${archivesBaseName}-${project.version}.jar") { //release jar - file location not provided anywhere in loom
+			artifact(remapJar) {
 				classifier null
 				builtBy remapJar
 			}
 
-			artifact ("${project.buildDir.absolutePath}/libs/${archivesBaseName}-${project.version}-dev.jar") { //release jar - file location not provided anywhere in loom
+			/*artifact ("${project.buildDir.absolutePath}/libs/${archivesBaseName}-${project.version}-dev.jar") { //release jar - file location not provided anywhere in loom
 				classifier "dev"
 				builtBy remapJar
-			}
+			}*/
 
 			artifact(sourcesJar) {
 				builtBy remapSourcesJar
@@ -129,7 +125,7 @@ publishing {
 
 artifactory {
 	if (project.hasProperty("artifactoryUsername")) {
-		contextUrl = "http://server.bbkr.space:8081/artifactory/"
+		contextUrl = "https://server.bbkr.space/artifactory/"
 		publish {
 			repository {
 				if (version.contains("SNAPSHOT")) {
